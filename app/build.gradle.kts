@@ -45,7 +45,6 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
 
 
-
     // Room dependencies for database management
     implementation("androidx.room:room-runtime:2.6.1")
     // Provides the Room library, which offers an abstraction layer over SQLite
@@ -99,12 +98,13 @@ dependencies {
     // Some of the components included are buttons, text fields, bottom navigation bars, and dialogs.
     // For more information and to explore all the available components, visit the Material Components for Android documentation:
     // https://material.io/develop/android
-    implementation ("com.google.android.material:material:1.12.0")
+    implementation("com.google.android.material:material:1.12.0")
 
-    // RoundedImageView library for Android
-    // Provides an easy way to create images with rounded corners or circular shapes.
-    // Customizable corner radius, border width, and border color.
-    implementation("com.makeramen:roundedimageview:2.3.0")
+    // GridLayout library for flexible grid-based layouts
+    implementation("androidx.gridlayout:gridlayout:1.0.0")
+
+    // CircleImageView library for easy circular image views
+    implementation("de.hdodenhof:circleimageview:3.1.0")
 
     // Lottie library for Android
     // Provides support for rendering animations and vector graphics from JSON files
