@@ -86,11 +86,6 @@ dependencies {
     implementation("androidx.navigation:navigation-ui:2.7.7")
     // Latest version of Navigation UI
 
-    // Core library for Android-Iconics, providing support for multiple icon fonts
-    implementation("com.mikepenz:iconics-core:5.3.4")
-
-    // FontAwesome icon pack for Android-Iconics, allowing you to use FontAwesome icons in your project
-    implementation("com.mikepenz:fontawesome-typeface:5.9.0.0-kotlin")
 
     // Google Material Components for Android
     // This library provides components that follow Google's Material Design guidelines, including UI components, themes, and more.
@@ -111,4 +106,8 @@ dependencies {
     // created with Adobe After Effects. Ideal for integrating high-quality, lightweight animations
     // into your application with minimal performance impact.
     implementation("com.airbnb.android:lottie:5.1.0")
+
+
+    implementation("com.google.android.material:material:1.12.0")
+
 }

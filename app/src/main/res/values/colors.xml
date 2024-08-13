@@ -2,4 +2,21 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+
+    <!-- textColor -->
+
+    <!-- Button -->
+    <color name="colorBUT">#fe734c</color>
+    <color name="colorBUTtransparent">#5EFE4C4C</color>
+    <color name="textColorBTU">#FFFFFFFF</color>
+
+    <!-- startScreenFragment -->
+    <color name="startScreenBackgroundColor">#909b47</color>
+
+    <!-- Login SingUp Screen Fragment -->
+    <color name="loginSingUpScreenBackgroundColor">#e2e2c6</color>
+    <color name="loginsignupinputtext">#cbd4b6</color>
+
+
 </resources>

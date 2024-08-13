@@ -2,4 +2,18 @@
     <string name="app_name">Meal Mate</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="start">Start</string>
+    <string name="signupwithemail">Sign Up With Email</string>
+    <string name="continuewithgoogle">Continue with Google</string>
+    <string name="alreadyhaveanaccountloginin">Already Have An Account? Login In</string>
+    <string name="loginin"> Login In</string>
+    <string name="signup"> Sign Up</string>
+    <string name="orusesocialsignup">or use social signup</string>
+    <string name="name_hint">Name</string>
+    <string name="username_hint">Username</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="confirm_password_hint">Confirm Password</string>
+    <string name="orusesociallogin">or use social login</string>
+    <string name="loginwithgoogle">Login With Google</string>
 </resources>
