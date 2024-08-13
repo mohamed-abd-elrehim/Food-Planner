@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <!--
+        Permission for Internet Access
+        This permission allows the application to open network sockets and use the internet.
+        It is necessary for applications that need to make network requests, such as downloading data from a web service,
+        communicating with APIs, or accessing remote servers.
+
+        Usage:
+        - Required for any operation that involves network communication, such as HTTP requests, socket connections, or data synchronization.
+        - Ensure that your application only requests permissions that are essential for its functionality to adhere to best practices for user privacy and security.
+
+        Note:
+        - Be cautious with internet permissions, as misuse can lead to security vulnerabilities or excessive data usage.
+        - Always handle network operations on background threads to avoid blocking the main UI thread and provide a smooth user experience.
+
+        For more information, visit the official documentation:
+        https://developer.android.com/guide/components/intents-filters
+    -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
