@@ -16,4 +16,7 @@
     <string name="confirm_password_hint">Confirm Password</string>
     <string name="orusesociallogin">or use social login</string>
     <string name="loginwithgoogle">Login With Google</string>
+    <string name="image_description">Back Ground</string>
+
+
 </resources>
