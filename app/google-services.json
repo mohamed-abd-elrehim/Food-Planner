@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "860340410088",
+    "project_id": "meal-meta",
+    "storage_bucket": "meal-meta.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:860340410088:android:eb7e7e0272a031f5e35b5d",
+        "android_client_info": {
+          "package_name": "com.example.mealmate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbfwDQYABG3JLsnFZZDgtxStKJngPjEgc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

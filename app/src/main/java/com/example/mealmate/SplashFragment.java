@@ -1,21 +1,19 @@
 package com.example.mealmate;
 
-import android.content.Intent;
 import android.os.Bundle;
-
+import android.os.Handler;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-import android.os.Handler;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.Button;
 
 public class SplashFragment extends Fragment {
-    private static final int SPLASH_DURATION = 4000; // Duration of splash screen in milliseconds
-
+    private Button start;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,9 +30,14 @@ public class SplashFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // Delay starting the main activity to allow the animation to complete
-        new Handler().postDelayed(() -> {
+        start = view.findViewById(R.id.startBTU);
 
-        }, SPLASH_DURATION);
+        // Use a safe way to get the NavController
+        NavController navController = Navigation.findNavController(view);
+        start.setOnClickListener(v -> {
+            navController.navigate(R.id.action_splashFragment_to_startFragment);
+        });
+
+
     }
 }

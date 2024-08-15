@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     // Apply the Safe Args plugin for type-safe navigation arguments
-    id("androidx.navigation.safeargs")  // Use the latest version
+    id("androidx.navigation.safeargs")
+    alias(libs.plugins.google.gms.google.services)  // Use the latest version
 
 }
 
@@ -107,10 +108,21 @@ dependencies {
     // into your application with minimal performance impact.
     implementation("com.airbnb.android:lottie:5.1.0")
 
-
+// Material Design Components for UI elements
     implementation("com.google.android.material:material:1.12.0")
+
+// Glide for image loading and caching
     implementation ("com.github.bumptech.glide:glide:4.11.0")
+
+// Annotation processor for Glide to generate API
     annotationProcessor ("com.github.bumptech.glide:compiler:4.11.0")
+
+// Glide Transformations for advanced image manipulation
     implementation ("jp.wasabeef:glide-transformations:4.3.0")
 
+// Firebase Authentication for user sign-up and login
+    implementation ("com.google.firebase:firebase-auth:21.0.1")
+
+//Google Sign-In Integration
+    implementation ("com.google.android.gms:play-services-auth:20.5.0")
 }
