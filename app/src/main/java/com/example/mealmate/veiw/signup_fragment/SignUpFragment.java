@@ -1,4 +1,4 @@
-package com.example.mealmate;
+package com.example.mealmate.veiw.signup_fragment;
 
 import android.os.Bundle;
 
@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.mealmate.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;

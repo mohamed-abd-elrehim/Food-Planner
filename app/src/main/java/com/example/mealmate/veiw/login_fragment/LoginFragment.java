@@ -1,4 +1,4 @@
-package com.example.mealmate;
+package com.example.mealmate.veiw.login_fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,7 +20,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.mealmate.veiw.HomeActivity;
+import com.example.mealmate.R;
+import com.example.mealmate.veiw.home_activity.HomeActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;

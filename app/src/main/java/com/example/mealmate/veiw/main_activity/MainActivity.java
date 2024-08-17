@@ -1,14 +1,10 @@
-package com.example.mealmate;
+package com.example.mealmate.veiw.main_activity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.animation.ObjectAnimator;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.ImageView;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+import com.example.mealmate.R;
 
 
 public class MainActivity extends AppCompatActivity {

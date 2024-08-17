@@ -18,5 +18,7 @@
     <string name="loginwithgoogle">Login With Google</string>
     <string name="image_description">Back Ground</string>
 
+    <string name="client_id">860340410088-v9rra57fibagr5gr0isnei5gg15o5puc.apps.googleusercontent.com</string>
+
 
 </resources>

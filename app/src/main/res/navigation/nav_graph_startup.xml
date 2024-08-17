@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.example.mealmate.SplashFragment"
+        android:name="com.example.mealmate.veiw.splash_fragment.SplashFragment"
         tools:layout="@layout/fragment_splash">
         <action
             android:id="@+id/action_splashFragment_to_startFragment"
@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/startFragment"
-        android:name="com.example.mealmate.StartFragment"
+        android:name="com.example.mealmate.veiw.start_fragment.StartFragment"
         android:label="Welcome"
         tools:layout="@layout/fragment_start">
         <action
@@ -30,13 +30,13 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.mealmate.LoginFragment"
+        android:name="com.example.mealmate.veiw.login_fragment.LoginFragment"
         android:label="Login"
         tools:layout="@layout/fragment_login" />
 
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.example.mealmate.SignUpFragment"
+        android:name="com.example.mealmate.veiw.signup_fragment.SignUpFragment"
         android:label="Sign Up"
         tools:layout="@layout/fragment_sign_up">
         <action
