@@ -17,8 +17,12 @@
     <string name="orusesociallogin">or use social login</string>
     <string name="loginwithgoogle">Login With Google</string>
     <string name="image_description">Back Ground</string>
+    <string name="meal_image">Home Slider Image</string>
 
     <string name="client_id">860340410088-v9rra57fibagr5gr0isnei5gg15o5puc.apps.googleusercontent.com</string>
+    <string name="loading">Loading</string>
+    <string name="meal_of_the_day">" Meal of the day"</string>
 
+    <string name="profile_image">" Profile Image"</string>
 
 </resources>

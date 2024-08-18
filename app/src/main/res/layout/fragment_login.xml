@@ -39,8 +39,8 @@
         android:layout_width="360dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        app:hintEnabled="false"
-        app:boxStrokeColor="@color/red"
+        android:background="@color/white"
+        app:boxStrokeColor="@color/black"
         app:layout_constraintEnd_toEndOf="@+id/textView2"
         app:layout_constraintHorizontal_bias="0.458"
         app:layout_constraintStart_toStartOf="@+id/textView2"
@@ -50,12 +50,11 @@
             android:id="@+id/email_input_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_edit_text"
             android:drawableLeft="@drawable/person"
             android:hint="@string/email_hint"
             android:importantForAccessibility="yes"
-            android:padding="16dp"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:padding="16dp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -63,8 +62,8 @@
         android:layout_width="360dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        app:hintEnabled="false"
-        app:boxStrokeColor="@color/red"
+        android:background="@color/white"
+        app:boxStrokeColor="@color/black"
         app:layout_constraintEnd_toEndOf="@+id/textInputLayout"
         app:layout_constraintStart_toStartOf="@+id/textInputLayout"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
@@ -73,7 +72,6 @@
             android:id="@+id/password_input_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_edit_text"
             android:drawableLeft="@drawable/lock"
             android:hint="@string/password_hint"
             android:inputType="textPassword"

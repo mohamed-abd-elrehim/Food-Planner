@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.mealmate.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.mealmate.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/favoriteMealsFragment"
+        android:name="com.example.mealmate.FavoriteMealsFragment"
+        android:label="fragment_favorite_meals"
+        tools:layout="@layout/fragment_favorite_meals" />
+    <fragment
+        android:id="@+id/planOfTheWeekFragment"
+        android:name="com.example.mealmate.PlanOfTheWeekFragment"
+        android:label="fragment_plan_of_the_week"
+        tools:layout="@layout/fragment_plan_of_the_week" />
+    <fragment
+        android:id="@+id/allMealsFragment"
+        android:name="com.example.mealmate.AllMealsFragment"
+        android:label="All Meals"
+        tools:layout="@layout/fragment_all_meals" />
+</navigation>

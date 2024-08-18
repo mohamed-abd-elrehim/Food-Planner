@@ -85,4 +85,11 @@ dependencies {
 
     // Google Sign-In Integration
     implementation("com.google.android.gms:play-services-auth:20.5.0")
+
+    implementation ("androidx.viewpager2:viewpager2:1.0.0")
+
+    implementation ("com.github.bumptech.glide:glide:4.11.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.11.0")
+    implementation ("jp.wasabeef:glide-transformations:4.3.0")
+
 }

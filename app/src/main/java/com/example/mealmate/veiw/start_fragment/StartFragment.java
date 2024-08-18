@@ -1,6 +1,8 @@
 package com.example.mealmate.veiw.start_fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -37,6 +39,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
@@ -162,6 +165,11 @@ public class StartFragment extends Fragment {
                 .addOnCompleteListener(requireActivity(), task -> {
                     if (task.isSuccessful()) {
                         // Sign-in successful
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        if (user != null) {
+                            // Save user details
+                            saveUserDetails(user);
+                        }
                         Toast.makeText(getContext(), "Sign-In successful", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getContext(), HomeActivity.class));
                         requireActivity().finish(); // Finish the current activity if needed
@@ -170,6 +178,16 @@ public class StartFragment extends Fragment {
                         Toast.makeText(getContext(), "Sign-In failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
+    }
+
+    private void saveUserDetails(FirebaseUser user) {
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("user_id", user.getUid());
+        editor.putString("user_name", user.getDisplayName());
+        editor.putString("user_email", user.getEmail());
+        editor.putString("user_photo_url", user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : null);
+        editor.apply();
     }
 
     public class CustomUnderlineSpan extends UnderlineSpan {
