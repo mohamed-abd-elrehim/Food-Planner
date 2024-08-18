@@ -5,9 +5,7 @@ import com.example.mealmate.model.network.MealResponse;
 
 import java.util.List;
 
-public interface HomeFragmentView {
-
-    void showMeals(List<MealDTO> meals);
-
-    void showError(String message);
+public interface HomeFragmentView<T> {
+    void showData(List<T> data);
+    void showError(String errorMessage);
 }

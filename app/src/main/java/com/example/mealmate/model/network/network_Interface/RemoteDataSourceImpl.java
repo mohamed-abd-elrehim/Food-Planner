@@ -2,6 +2,7 @@ package com.example.mealmate.model.network.network_Interface;
 
 import android.util.Log;
 
+import com.example.mealmate.model.network.MealCategoryResponse;
 import com.example.mealmate.model.network.MealResponse;
 
 import retrofit2.Call;
@@ -48,6 +49,7 @@ public class RemoteDataSourceImpl implements RemoteDataSource {
         }
     }
 
+
     // Method to update the BASE_URL (if needed)
     @Override
     public void updateBaseUrl(String newBaseUrl) {
@@ -55,61 +57,66 @@ public class RemoteDataSourceImpl implements RemoteDataSource {
     }
 
     @Override
-    public void makeNetworkCallback(NetworkCallback networkCallback, String endpoint, String... params) {
+    public <T> void makeNetworkCallback(NetworkCallback<T> networkCallback, String endpoint, String... params) {
         // Ensure Retrofit is initialized
         if (mealService == null) {
             throw new IllegalStateException("Retrofit has not been initialized. Please set the BASE_URL first.");
         }
 
-        Call<MealResponse> call;
+        Call<T> call = null;
+
         switch (endpoint) {
             case "randomMeal":
-                call = mealService.getRandomMeal();
+                call = (Call<T>) mealService.getRandomMeal();
                 break;
             case "searchMealByName":
-                call = mealService.searchMealByName(params[0]);
+                call = (Call<T>) mealService.searchMealByName(params[0]);
                 break;
             case "listMealsByFirstLetter":
-                call = mealService.listMealsByFirstLetter(params[0]);
+                call = (Call<T>) mealService.listMealsByFirstLetter(params[0]);
                 break;
             case "lookupMealById":
-                call = mealService.lookupMealById(params[0]);
+                call = (Call<T>) mealService.lookupMealById(params[0]);
                 break;
             case "listAllCategories":
-                call = mealService.listAllCategories();
+                call = (Call<T>) mealService.listAllCategories();
                 break;
             case "listAll":
-                call = mealService.listAll(params[0]);
+                call = (Call<T>) mealService.listAll(params[0]);
                 break;
             case "filterByIngredient":
-                call = mealService.filterByIngredient(params[0]);
+                call = (Call<T>) mealService.filterByIngredient(params[0]);
                 break;
             case "filterByCategory":
-                call = mealService.filterByCategory(params[0]);
+                call = (Call<T>) mealService.filterByCategory(params[0]);
                 break;
             case "filterByArea":
-                call = mealService.filterByArea(params[0]);
+                call = (Call<T>) mealService.filterByArea(params[0]);
                 break;
             default:
                 throw new IllegalArgumentException("Invalid endpoint: " + endpoint);
         }
 
-        call.enqueue(new Callback<MealResponse>() {
-            @Override
-            public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    networkCallback.onSuccessResult(response);
-                } else {
-                    networkCallback.onFailureResult("Error: Response is unsuccessful or empty");
+        if (call != null) {
+            Log.i(TAG, "makeNetworkCallback: "+call);
+            call.enqueue(new Callback<T>() {
+                @Override
+                public void onResponse(Call<T> call, Response<T> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        networkCallback.onSuccessResult(response);
+                    } else {
+                        networkCallback.onFailureResult("Error: Response is unsuccessful or empty");
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<MealResponse> call, Throwable t) {
-                Log.i(TAG, "onFailure: CallBack");
-                networkCallback.onFailureResult(t.getMessage());
-                t.printStackTrace();
-            }
-        });
+                @Override
+                public void onFailure(Call<T> call, Throwable t) {
+                    Log.i(TAG, "onFailure: CallBack");
+                    networkCallback.onFailureResult(t.getMessage());
+                    t.printStackTrace();
+                }
+            });
+        }
     }
+
 }

@@ -1,5 +1,6 @@
 package com.example.mealmate.model.network.network_Interface;
 
+import com.example.mealmate.model.network.MealCategoryResponse;
 import com.example.mealmate.model.network.MealResponse;
 
 import retrofit2.Call;
@@ -20,7 +21,7 @@ public interface MealService {
     Call<MealResponse> lookupMealById(@Query("i") String mealId);
 
     @GET("categories.php")
-    Call<MealResponse> listAllCategories();
+    Call<MealCategoryResponse> listAllCategories();
 
     @GET("list.php")
     Call<MealResponse> listAll(@Query("c") String categoryType);

@@ -4,7 +4,7 @@ import com.example.mealmate.model.network.MealResponse;
 
 import retrofit2.Response;
 
-public interface NetworkCallback {
-    public void onSuccessResult(Response<MealResponse> response);
-    public void onFailureResult(String errorMsg);
+public interface NetworkCallback<T> {
+    void onSuccessResult(Response<T> response);
+    void onFailureResult(String errorMsg);
 }

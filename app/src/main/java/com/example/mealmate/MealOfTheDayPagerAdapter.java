@@ -14,11 +14,11 @@ import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
 
 import java.util.List;
 
-public class MealPagerAdapter extends RecyclerView.Adapter<MealPagerAdapter.MealViewHolder> {
+public class MealOfTheDayPagerAdapter extends RecyclerView.Adapter<MealOfTheDayPagerAdapter.MealViewHolder> {
     private List<MealDTO> mealList;
     private Context context;
 
-    public MealPagerAdapter(Context context, List<MealDTO> mealList) {
+    public MealOfTheDayPagerAdapter(Context context, List<MealDTO> mealList) {
         this.context = context;
         this.mealList = mealList;
     }
