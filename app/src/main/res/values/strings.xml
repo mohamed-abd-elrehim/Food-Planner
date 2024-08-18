@@ -24,5 +24,7 @@
     <string name="meal_of_the_day">" Meal of the day"</string>
 
     <string name="profile_image">" Profile Image"</string>
-
+    <string name="profile">Profile\n</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

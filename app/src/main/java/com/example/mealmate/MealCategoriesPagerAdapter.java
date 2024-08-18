@@ -39,9 +39,10 @@ public class MealCategoriesPagerAdapter extends RecyclerView.Adapter<MealCategor
         MealCategory meal = mealList.get(position);
         Glide.with(context)
                 .load(meal.getStrCategoryThumb())
+                .placeholder(R.drawable.nophotosign)
+                .error(R.drawable.errorloadingimag)
                 .centerCrop()
                 .into(holder.mealImage);
-
         holder.itemView.setOnClickListener(v -> {
             if (onMealCategoryClickListener != null) {
                 onMealCategoryClickListener.onMealCategoryClick(meal);

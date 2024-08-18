@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/loginSingUpScreenBackgroundColor"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Player Photo -->
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/player_profile_image"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:contentDescription="@string/profile_image"
+        android:src="@drawable/ic_profile" />
+
+    <!-- Player Name -->
+    <TextView
+        android:id="@+id/player_profile_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Player Name"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:textColor="@android:color/black" />
+
+    <!-- Player Email -->
+    <TextView
+        android:id="@+id/player_profile_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="player@example.com"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="@android:color/darker_gray" />
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@android:color/darker_gray" />
+
+    <!-- Logout Button -->
+    <Button
+        android:id="@+id/player_logout_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/transparent"
+        android:text="Log Out"
+        android:textColor="@android:color/holo_red_dark" />
+</LinearLayout>
