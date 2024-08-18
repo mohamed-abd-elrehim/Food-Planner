@@ -36,83 +36,117 @@
         app:layout_constraintStart_toStartOf="@+id/blurredImagesignupView"
         app:layout_constraintTop_toTopOf="@+id/blurredImagesignupView" />
 
-    <EditText
-        android:id="@+id/name_input"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout"
         android:layout_width="360dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/border_edit_text"
-        android:hint="@string/name_hint"
-        android:padding="16dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/white"
+        app:boxStrokeColor="@color/black"
         app:layout_constraintEnd_toEndOf="@+id/textViewsignup"
         app:layout_constraintHorizontal_bias="0.536"
         app:layout_constraintStart_toStartOf="@+id/textViewsignup"
-        app:layout_constraintTop_toBottomOf="@+id/textViewsignup" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewsignup" >
+
+    <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/name_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/name_hint"
+            android:importantForAccessibility="yes"
+            android:padding="16dp" />
+    </com.google.android.material.textfield.TextInputLayout>
 
 
-
-    <EditText
-        android:id="@+id/email_input"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout2"
         android:layout_width="360dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/border_edit_text"
-        android:hint="@string/email_hint"
-        android:inputType="textEmailAddress"
-        android:padding="16dp"
-        android:drawableLeft="@drawable/person"
-        app:layout_constraintEnd_toEndOf="@+id/name_input"
-        app:layout_constraintStart_toStartOf="@+id/name_input"
-        app:layout_constraintTop_toBottomOf="@+id/name_input" />
+        android:layout_marginTop="20dp"
+        android:background="@color/white"
+        app:boxStrokeColor="@color/black"
+        app:layout_constraintEnd_toEndOf="@+id/textInputLayout"
+        app:layout_constraintStart_toStartOf="@+id/textInputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" >
 
-    <EditText
-        android:id="@+id/password_input"
+    <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/email_input"
+            android:layout_width="match_parent"
+            android:drawableLeft="@drawable/person"
+            android:layout_height="wrap_content"
+            android:hint="@string/email_hint"
+            android:importantForAccessibility="yes"
+            android:inputType="textEmailAddress"
+            android:padding="16dp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout3"
         android:layout_width="360dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/border_edit_text"
-        android:hint="@string/password_hint"
-        android:inputType="textPassword"
-        android:padding="16dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/white"
+        app:boxStrokeColor="@color/black"
+        app:layout_constraintEnd_toEndOf="@+id/textInputLayout2"
+        app:layout_constraintStart_toStartOf="@+id/textInputLayout2"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout2" >
 
-        android:drawableLeft="@drawable/lock"
-        app:layout_constraintEnd_toEndOf="@+id/email_input"
-        app:layout_constraintStart_toStartOf="@+id/email_input"
-        app:layout_constraintTop_toBottomOf="@+id/email_input" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/password_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/lock"
+            android:hint="@string/password_hint"
+            android:inputType="textPassword"
+            android:importantForAccessibility="yes"
+            android:padding="16dp" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <ImageView
         android:id="@+id/toggle_password_visibility"
         android:layout_width="29dp"
         android:layout_height="28dp"
-        android:layout_marginEnd="8dp"
         android:src="@drawable/visiblepass"
-        app:layout_constraintBottom_toBottomOf="@+id/password_input"
-        app:layout_constraintEnd_toEndOf="@+id/password_input"
-        app:layout_constraintTop_toTopOf="@+id/password_input" />
+        app:layout_constraintBottom_toBottomOf="@+id/textInputLayout3"
+        app:layout_constraintEnd_toEndOf="@+id/textInputLayout3"
+        app:layout_constraintHorizontal_bias="0.96"
+        app:layout_constraintStart_toStartOf="@+id/textInputLayout3"
+        app:layout_constraintTop_toTopOf="@+id/textInputLayout3" />
 
-    <EditText
-        android:id="@+id/confirm_password_input"
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout4"
         android:layout_width="360dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/border_edit_text"
-        android:hint="@string/confirm_password_hint"
-        android:drawableLeft="@drawable/lock"
-        android:inputType="textPassword"
-        android:padding="16dp"
-        app:layout_constraintEnd_toEndOf="@+id/password_input"
-        app:layout_constraintStart_toStartOf="@+id/password_input"
-        app:layout_constraintTop_toBottomOf="@+id/password_input" />
+        android:layout_marginTop="12dp"
+        android:background="@color/white"
+        app:boxStrokeColor="@color/black"
+        app:layout_constraintEnd_toEndOf="@+id/textInputLayout3"
+        app:layout_constraintStart_toStartOf="@+id/textInputLayout3"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/confirm_password_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/lock"
+            android:hint="@string/confirm_password_hint"
+            android:inputType="textPassword"
+            android:importantForAccessibility="yes"
+            android:padding="16dp" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <ImageView
         android:id="@+id/toggle_confirmpassword_visibility"
         android:layout_width="29dp"
         android:layout_height="28dp"
-        android:layout_marginEnd="8dp"
         android:src="@drawable/visiblepass"
-        app:layout_constraintBottom_toBottomOf="@+id/confirm_password_input"
-        app:layout_constraintEnd_toEndOf="@+id/confirm_password_input"
-        app:layout_constraintTop_toTopOf="@+id/confirm_password_input" />
+        app:layout_constraintBottom_toBottomOf="@+id/textInputLayout4"
+        app:layout_constraintEnd_toEndOf="@+id/textInputLayout4"
+        app:layout_constraintHorizontal_bias="0.96"
+        app:layout_constraintStart_toStartOf="@+id/textInputLayout4"
+        app:layout_constraintTop_toTopOf="@+id/textInputLayout4" />
 
     <Button
         android:id="@+id/signup_button"
@@ -128,8 +162,8 @@
         android:textSize="17sp"
         app:cornerRadius="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/confirm_password_input"
-        app:layout_constraintStart_toStartOf="@+id/confirm_password_input"
-        app:layout_constraintTop_toBottomOf="@+id/confirm_password_input" />
+        app:layout_constraintEnd_toEndOf="@+id/textInputLayout4"
+        app:layout_constraintStart_toStartOf="@+id/textInputLayout4"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
