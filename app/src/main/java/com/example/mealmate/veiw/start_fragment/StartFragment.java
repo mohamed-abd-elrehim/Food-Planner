@@ -13,6 +13,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,11 +37,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
@@ -51,6 +58,7 @@ public class StartFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private GoogleSignInClient signInClient;
     private static final int RC_SIGN_IN = 9001;
+    private final String TAG = "StartFragment";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,7 +99,7 @@ public class StartFragment extends Fragment {
         applyClickableText();
 
         signupWithEmail.setOnClickListener(v -> {
-            navigateToLoginFragment();
+            navigateToSignUPFragment();
         });
 
         continueWithGoogle.setOnClickListener(v -> {
@@ -130,6 +138,10 @@ public class StartFragment extends Fragment {
         login.setMovementMethod(LinkMovementMethod.getInstance()); // Make the text clickable
     }
 
+    private void navigateToSignUPFragment() {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
+        navController.navigate(R.id.action_startFragment_to_signUpFragment);
+    }
     private void navigateToLoginFragment() {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
         navController.navigate(R.id.action_startFragment_to_loginFragment);
@@ -164,6 +176,22 @@ public class StartFragment extends Fragment {
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(requireActivity(), task -> {
                     if (task.isSuccessful()) {
+                        String name =  firebaseAuth.getCurrentUser().getDisplayName();
+                        Map<String, Object> userMap = new HashMap<>();
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        userMap.put("name", name);
+                        String id = firebaseAuth.getCurrentUser().getUid();
+                        db.collection("users").document(id).set(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "DocumentSnapshot added with ID: " + id);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error adding document", e);
+                            }});
+
                         // Sign-in successful
                         FirebaseUser user = firebaseAuth.getCurrentUser();
                         if (user != null) {

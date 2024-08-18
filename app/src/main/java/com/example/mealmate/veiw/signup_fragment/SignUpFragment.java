@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,17 +22,26 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.mealmate.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
 import android.text.InputType;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SignUpFragment extends Fragment {
 
     private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore db;
+    Map<String, Object> user = new HashMap<>();
+    private EditText sginupName;
     private EditText sginupEmail;
     private EditText sginupPassword;
     private EditText sginupconfirmPassword;
@@ -41,7 +51,7 @@ public class SignUpFragment extends Fragment {
 
     private boolean isPasswordVisible = false;
     private boolean isConfirmPasswordVisible = false;
-
+    private final String TAG = "SignUpFragment";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -51,6 +61,7 @@ public class SignUpFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        db = FirebaseFirestore.getInstance();
 
         ImageView imageView = view.findViewById(R.id.blurredImagesignupView);
         Glide.with(this)
@@ -63,10 +74,13 @@ public class SignUpFragment extends Fragment {
         sginupPassword = view.findViewById(R.id.password_input);
         sginupconfirmPassword = view.findViewById(R.id.confirm_password_input);
         sginup = view.findViewById(R.id.signup_button);
+        sginupName = view.findViewById(R.id.name_input);
         togglePasswordVisibility = view.findViewById(R.id.toggle_password_visibility);
         toggleConfirmPasswordVisibility = view.findViewById(R.id.toggle_confirmpassword_visibility);
 
         sginup.setOnClickListener(v -> {
+
+            String name = sginupName.getText().toString().trim();
             String email = sginupEmail.getText().toString().trim().toLowerCase();
             String password = sginupPassword.getText().toString().trim();
             String confirmPassword = sginupconfirmPassword.getText().toString().trim();
@@ -77,6 +91,22 @@ public class SignUpFragment extends Fragment {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
+
+                                    user.put("name", name);
+
+                                    String id = firebaseAuth.getCurrentUser().getUid();
+                                    db.collection("users").document(id).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Log.d(TAG, "DocumentSnapshot added with ID: " + id);
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.w(TAG, "Error adding document", e);
+                                        }
+                                    });
+
                                     Toast.makeText(getContext(), "Sign Up Successfully", Toast.LENGTH_SHORT).show();
                                     // Use a safe way to get the NavController
                                     // Use the correct NavController

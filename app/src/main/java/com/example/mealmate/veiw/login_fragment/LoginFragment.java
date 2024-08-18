@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.text.InputType;
+import android.util.Log;
 import android.util.Patterns;
 
 import android.view.LayoutInflater;
@@ -36,7 +37,10 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
@@ -49,7 +53,7 @@ public class LoginFragment extends Fragment {
     private Button login;
     private Button sign_in_with_google;
     private ImageView togglePasswordVisibility;
-
+    private final String TAG = "LoginFragment";
     private boolean isPasswordVisible = false;
     private static final int RC_SIGN_IN = 9001;
 
@@ -104,6 +108,8 @@ public class LoginFragment extends Fragment {
                 // Proceed with login if validation passes
                 firebaseAuth.signInWithEmailAndPassword(email, password)
                         .addOnSuccessListener(authResult -> {
+
+
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             if (user != null) {
                                 saveUserDetails(user);
@@ -181,6 +187,25 @@ public class LoginFragment extends Fragment {
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(requireActivity(), task -> {
                     if (task.isSuccessful()) {
+
+                        String name = firebaseAuth.getCurrentUser().getDisplayName();
+                        Map<String, Object> userMap = new HashMap<>();
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        userMap.put("name", name);
+                        String id = firebaseAuth.getCurrentUser().getUid();
+                        db.collection("users").document(id).set(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "DocumentSnapshot added with ID: " + id);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error adding document", e);
+                            }
+                        });
+
+
                         // Sign-in successful
                         FirebaseUser user = firebaseAuth.getCurrentUser();
                         if (user != null) {
