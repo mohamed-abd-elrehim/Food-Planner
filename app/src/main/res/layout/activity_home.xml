@@ -22,23 +22,25 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ScrollView
-            android:layout_width="match_parent"
+        <!--
+        <fragment
+
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="151dp"
+            android:layout_height="183dp"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/nav_graph" />
+-->
+        <fragment
+            android:id="@+id/nav_host_fragment2"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/bottomAppBar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/my_toolbar">
-
-            <fragment
-                android:id="@+id/nav_host_fragment2"
-                android:name="androidx.navigation.fragment.NavHostFragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:defaultNavHost="true"
-                app:navGraph="@navigation/nav_graph" />
-
-        </ScrollView>
+            app:layout_constraintTop_toBottomOf="@+id/my_toolbar"
+            app:navGraph="@navigation/nav_graph" />
 
         <com.google.android.material.bottomappbar.BottomAppBar
             android:id="@+id/bottomAppBar"
@@ -61,6 +63,8 @@
                 app:menu="@menu/bottom_navigation_menu" />
 
         </com.google.android.material.bottomappbar.BottomAppBar>
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
