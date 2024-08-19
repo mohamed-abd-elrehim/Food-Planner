@@ -16,17 +16,50 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:weightSum="3">
+            android:weightSum="5">
+
+
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/Marigold" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:text="@string/most_popular_categories"
+                android:textSize="20sp"
+                android:textStyle="bold|italic" />
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/viewPagerCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/Marigold" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/fillter_by_ingredients"
+                android:textSize="20sp"
+                android:textStyle="bold|italic" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/viewPagerIngredient"

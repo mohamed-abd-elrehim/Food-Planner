@@ -35,5 +35,7 @@
     <string name="favoritemeals">Favorite Meals</string>
     <string name="addplanmeal">Add Plan Meal</string>">
     <string name="planmeals">Plan Meals</string>
+    <string name="fillter_by_ingredients">Fillter By Ingredients</string>
+    <string name="most_popular_categories">Most Popular Categories</string>
 
 </resources>
