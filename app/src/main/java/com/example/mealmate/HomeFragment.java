@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import com.example.mealmate.model.MealCategory;
+import com.example.mealmate.model.MealIngredient;
 import com.example.mealmate.model.MealRepository.MealRepository;
 import com.example.mealmate.model.database.AppDataBase;
 import com.example.mealmate.model.database.local_data_source.LocalDataSourceImpl;
@@ -26,10 +27,16 @@ import java.util.List;
 public class HomeFragment extends Fragment implements HomeFragmentView {
     private ViewPager2 viewPager;
     private RecyclerView recyclerView;
+    private RecyclerView recyclerView2;
+
     private MealCategoriesPagerAdapter mealCategoriesPagerAdapter;
+    private MealIngredientesPagerAdapter mealIngredientesPagerAdapter;
+
     private MealOfTheDayPagerAdapter mealOfTheDayPagerAdapter;
     private HomeFragmentPresenterImpl presenter;
     private ArrayList<MealCategory> mealCategoriesDTOS;
+    private ArrayList<MealIngredient> mealIngredientsDTOS;
+
     private static final String TAG = "HomeFragment";
 
     @Nullable
@@ -44,6 +51,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
 
         viewPager = view.findViewById(R.id.viewPager);
         recyclerView = view.findViewById(R.id.viewPagerCategory);
+        recyclerView2 =view.findViewById(R.id.viewPagerIngredient);
 
         presenter = new HomeFragmentPresenterImpl(AppDataBase.getInstance(getContext())
                 , MealRepository.getInstance(
@@ -67,9 +75,21 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
         recyclerView.setAdapter(mealCategoriesPagerAdapter);
 
+        mealIngredientsDTOS = new ArrayList<>();
+        mealIngredientesPagerAdapter = new MealIngredientesPagerAdapter(
+                getContext(),
+                mealIngredientsDTOS,
+                mealIngredient -> Toast.makeText(getContext(), mealIngredient.getStrIngredient(), Toast.LENGTH_SHORT).show()
+        );
+        recyclerView2.setHasFixedSize(true);
+        recyclerView2.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+        recyclerView2.setAdapter(mealIngredientesPagerAdapter);
+
+
         // Load data
         presenter.loadMeals();
         presenter.loadMealsCategory();
+        presenter.loadMealsIngredient();
     }
 
     @Override
@@ -88,6 +108,11 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
             mealCategoriesDTOS.addAll(categories);
             Log.i(TAG, "showData: ===="+mealCategoriesDTOS.size());
             mealCategoriesPagerAdapter.notifyDataSetChanged();
+        }else if (data.get(0) instanceof MealIngredient) {
+            List<MealIngredient> ingredients = (List<MealIngredient>) data;
+            mealIngredientsDTOS.addAll(ingredients);
+            Log.i(TAG, "showData: ===="+mealIngredientsDTOS.size());
+            mealIngredientesPagerAdapter.notifyDataSetChanged();
         }
     }
 

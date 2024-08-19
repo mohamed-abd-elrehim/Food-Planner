@@ -3,10 +3,12 @@ package com.example.mealmate;
 import android.util.Log;
 
 import com.example.mealmate.model.MealCategory;
+import com.example.mealmate.model.MealIngredient;
 import com.example.mealmate.model.MealRepository.MealRepository;
 import com.example.mealmate.model.database.AppDataBase;
 import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
 import com.example.mealmate.model.network.MealCategoryResponse;
+import com.example.mealmate.model.network.MealIngredientResponse;
 import com.example.mealmate.model.network.MealResponse;
 import com.example.mealmate.model.network.network_Interface.NetworkCallback;
 
@@ -39,6 +41,12 @@ public class HomeFragmentPresenterImpl implements HomeFragmentPresenterInterface
     }
 
     @Override
+    public void loadMealsIngredient() {
+        mealRepository.makeNetworkCallback(this, "listAllIngredients");
+
+    }
+
+    @Override
     public void onSuccessResult(Response response) {
         if (response.isSuccessful()) {
             Object body = response.body();
@@ -53,17 +61,29 @@ public class HomeFragmentPresenterImpl implements HomeFragmentPresenterInterface
                     view.showError("No meals found.");
                     Log.w(TAG, "Meals response was successful but no meals were found.");
                 }
-            }  else if (body instanceof MealCategoryResponse) {
+            } else if (body instanceof MealCategoryResponse) {
                 // Handle MealCategoryResponse (CategoriesResponse)
                 MealCategoryResponse categoriesResponse = (MealCategoryResponse) body;
                 List<MealCategory> categories = categoriesResponse.getCategories();
                 if (categories != null && !categories.isEmpty()) {
-                    Log.i(TAG, "onSuccessResult: "+categories.size());
+                    Log.i(TAG, "onSuccessResult: " + categories.size());
                     view.showData(categories);
                     Log.i(TAG, "Categories loaded successfully: " + categories.size() + " categories found.");
                 } else {
                     view.showError("No categories found.");
                     Log.w(TAG, "Categories response was successful but no categories were found.");
+                }
+            } else if (body instanceof MealIngredientResponse) {
+                // Handle MealCategoryResponse (CategoriesResponse)
+                MealIngredientResponse ingredientResponse = (MealIngredientResponse) body;
+                List<MealIngredient> ingredients = ingredientResponse.getIngredients();
+                if (ingredients != null && !ingredients.isEmpty()) {
+                    Log.i(TAG, "onSuccessResult: " + ingredients.size());
+                    view.showData(ingredients);
+                    Log.i(TAG, "Ingredients loaded successfully: " + ingredients.size() + " Ingredients found.");
+                } else {
+                    view.showError("No ingredients found.");
+                    Log.w(TAG, "Ingredients response was successful but no ingredients were found.");
                 }
             } else {
                 view.showError("Unexpected response type.");

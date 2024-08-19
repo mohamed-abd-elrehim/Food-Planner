@@ -93,6 +93,10 @@ public class RemoteDataSourceImpl implements RemoteDataSource {
             case "filterByArea":
                 call = (Call<T>) mealService.filterByArea(params[0]);
                 break;
+            case "listAllIngredients":
+                call = (Call<T>) mealService.listAllIngredients();
+                break;
+
             default:
                 throw new IllegalArgumentException("Invalid endpoint: " + endpoint);
         }

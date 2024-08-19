@@ -1,6 +1,7 @@
 package com.example.mealmate.model.network.network_Interface;
 
 import com.example.mealmate.model.network.MealCategoryResponse;
+import com.example.mealmate.model.network.MealIngredientResponse;
 import com.example.mealmate.model.network.MealResponse;
 
 import retrofit2.Call;
@@ -23,11 +24,14 @@ public interface MealService {
     @GET("categories.php")
     Call<MealCategoryResponse> listAllCategories();
 
+    @GET("list.php?i=list")
+    Call<MealIngredientResponse> listAllIngredients();
+
     @GET("list.php")
     Call<MealResponse> listAll(@Query("c") String categoryType);
 
     @GET("filter.php")
-    Call<MealResponse> filterByIngredient(@Query("i") String ingredient);
+    Call<MealIngredientResponse> filterByIngredient(@Query("i") String ingredient);
 
     @GET("filter.php")
     Call<MealResponse> filterByCategory(@Query("c") String category);
