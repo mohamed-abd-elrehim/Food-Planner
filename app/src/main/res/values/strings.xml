@@ -27,4 +27,13 @@
     <string name="profile">Profile\n</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="skip">Skip</string>
+
+
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="favoritemeals">Favorite Meals</string>
+    <string name="addplanmeal">Add Plan Meal</string>">
+    <string name="planmeals">Plan Meals</string>
+
 </resources>
