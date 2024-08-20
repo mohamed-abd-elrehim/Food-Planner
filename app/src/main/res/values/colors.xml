@@ -20,7 +20,8 @@
     <color name="orange">#FFA500</color>
 
 
-    <color name="Marigold">#e69e30</color>#
+    <color name="Marigold">#e69e30</color>
+    <color name="search_meal_card_view_color">#DA9FA959</color>#
 
 
 

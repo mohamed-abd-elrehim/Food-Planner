@@ -57,7 +57,7 @@ private static final String TAG = "SearchFragment";
         filterArea = view.findViewById(R.id.area_chip);
         filterCategory = view.findViewById(R.id.categories_chip2);
         filterIngredient = view.findViewById(R.id.ingredients_chip);
-        recyclerView = view.findViewById(R.id.search_recylerview);
+        recyclerView = view.findViewById(R.id.search_recyclerview);
         recyclerView2 = view.findViewById(R.id.recyclerView);
 
         // Initialize the presenter
@@ -109,6 +109,8 @@ private static final String TAG = "SearchFragment";
                 filterList,
                 meal -> {
                     if (type.equals(MealCategory.class)) {
+                        presenter.loadFilteredCategoriess(((MealCategory) meal).getStrCategory());
+                        Log.i(TAG, "createFilterAdapter: "+ ((MealCategory) meal).getStrCategory());
                         Toast.makeText(getContext(), ((MealCategory) meal).getStrCategory(), Toast.LENGTH_SHORT).show();
                     } else if (type.equals(MealIngredient.class)) {
                         Toast.makeText(getContext(), ((MealIngredient) meal).getStrIngredient(), Toast.LENGTH_SHORT).show();
@@ -129,12 +131,15 @@ private static final String TAG = "SearchFragment";
         if (data == null || data.isEmpty()) return;
 
         if (data.get(0) instanceof MealCategory) {
-
-
             Log.i(TAG, "showData: "+((List<MealCategory>) data).size());
             filterAdapterCategory.updateFilterList((List<MealCategory>) data);
         } else if (data.get(0) instanceof MealIngredient) {
             filterAdapterIngredient.updateFilterList((List<MealIngredient>) data);
+        } else if (data.get(0) instanceof MealDTO) {
+            mealsList.clear();
+            mealsList.addAll((List<MealDTO>) data);
+            allMealPagerAdapter.notifyDataSetChanged();
+
         }
     }
 

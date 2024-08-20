@@ -31,7 +31,7 @@ public interface MealService {
     Call<MealResponse> listAll(@Query("c") String categoryType);
 
     @GET("filter.php")
-    Call<MealIngredientResponse> filterByIngredient(@Query("i") String ingredient);
+    Call<MealResponse> filterByIngredient(@Query("i") String ingredient);
 
     @GET("filter.php")
     Call<MealResponse> filterByCategory(@Query("c") String category);

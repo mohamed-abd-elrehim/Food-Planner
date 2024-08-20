@@ -43,5 +43,6 @@
     <string name="ingredients">Ingredients</string>
     <string name="filter_by">Filter By</string>
     <string name="meal_name">Meal Name</string>
+    <string name="see_more">See More</string>
 
 </resources>

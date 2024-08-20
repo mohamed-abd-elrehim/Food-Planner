@@ -47,8 +47,8 @@ public class Search_Fragment_PresenterImpl implements Search_Fragment_Presenter_
 
     @Override
     public void loadFilteredCategoriess(String categoryName) {
-      //  mealRepository.makeNetworkCallback(this, "listAllIngredients");
-
+        mealRepository.makeNetworkCallback(this, "filterByCategory", categoryName);
+        Log.i(TAG, "loadFilteredCategoriess: ");
     }
 
     @Override
@@ -78,6 +78,17 @@ public class Search_Fragment_PresenterImpl implements Search_Fragment_Presenter_
                 } else {
                     view.showError("No ingredients found.");
                     Log.w(TAG, "Ingredients response was successful but no ingredients were found.");
+                }
+            } else if (body instanceof MealResponse) {
+                // Handle MealResponse (RandomMealResponse)
+                MealResponse mealResponse = (MealResponse) body;
+                List<MealDTO> meals = mealResponse.getMeals();
+                if (meals != null && !meals.isEmpty()) {
+                    view.showData(meals);
+                    Log.i(TAG, "Meals loaded successfully: " + meals.size() + " meals found.");
+                } else {
+                    view.showError("No meals found.");
+                    Log.w(TAG, "Meals response was successful but no meals were found.");
                 }
             } else {
                 view.showError("Unexpected response type.");
