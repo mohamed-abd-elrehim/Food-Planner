@@ -2,11 +2,13 @@ package com.example.mealmate;
 
 import android.util.Log;
 
+import com.example.mealmate.model.MealArea;
 import com.example.mealmate.model.MealCategory;
 import com.example.mealmate.model.MealIngredient;
 import com.example.mealmate.model.MealRepository.MealRepository;
 import com.example.mealmate.model.database.AppDataBase;
 import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
+import com.example.mealmate.model.network.MealAreaResponse;
 import com.example.mealmate.model.network.MealCategoryResponse;
 import com.example.mealmate.model.network.MealIngredientResponse;
 import com.example.mealmate.model.network.MealResponse;
@@ -46,6 +48,12 @@ public class Search_Fragment_PresenterImpl implements Search_Fragment_Presenter_
     }
 
     @Override
+    public void loadAllArea() {
+        mealRepository.makeNetworkCallback(this, "listAllAreas");
+
+    }
+
+    @Override
     public void loadFilteredCategoriess(String categoryName) {
         mealRepository.makeNetworkCallback(this, "filterByCategory", categoryName);
         Log.i(TAG, "loadFilteredCategoriess: ");
@@ -54,6 +62,12 @@ public class Search_Fragment_PresenterImpl implements Search_Fragment_Presenter_
     @Override
     public void loadFilteredIngredient(String ingredientName) {
         mealRepository.makeNetworkCallback(this, "filterByIngredient", ingredientName);
+    }
+
+    @Override
+    public void loadFilteredArea(String areaName) {
+        mealRepository.makeNetworkCallback(this, "filterByArea", areaName);
+
     }
 
     @Override
@@ -95,7 +109,19 @@ public class Search_Fragment_PresenterImpl implements Search_Fragment_Presenter_
                     view.showError("No meals found.");
                     Log.w(TAG, "Meals response was successful but no meals were found.");
                 }
-            } else {
+            } else if (body instanceof MealAreaResponse) {
+                // Handle MealCategoryResponse (CategoriesResponse)
+                MealAreaResponse areaResponse = (MealAreaResponse) body;
+                List<MealArea> areas = areaResponse.getMealAreas();
+                if (areas != null && !areas.isEmpty()) {
+                    Log.i(TAG, "onSuccessResult: " + areas.size());
+                    view.showData(areas);
+                    Log.i(TAG, "Areas loaded successfully: " + areas.size() + " Areas found.");
+                } else {
+                    view.showError("No Areas found.");
+                    Log.w(TAG, "Areas response was successful but no Areas were found.");
+                }
+            }else {
                 view.showError("Unexpected response type.");
                 Log.e(TAG, "Unexpected response type: " + body.getClass().getSimpleName());
             }

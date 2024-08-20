@@ -97,6 +97,9 @@ public class RemoteDataSourceImpl implements RemoteDataSource {
             case "listAllIngredients":
                 call = (Call<T>) mealService.listAllIngredients();
                 break;
+            case "listAllAreas":
+                call = (Call<T>) mealService.listAllAreas();
+                break;
 
             default:
                 throw new IllegalArgumentException("Invalid endpoint: " + endpoint);

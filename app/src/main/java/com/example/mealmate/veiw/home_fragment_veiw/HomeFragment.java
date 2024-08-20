@@ -14,7 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.mealmate.FilterAdapter;
+import com.example.mealmate.model.MealArea;
 import com.example.mealmate.presenter.home_fragment_presenter.HomeFragmentPresenterImpl;
+import com.example.mealmate.veiw.home_fragment_veiw.related_adapter_views.ListAllFilterAdapter;
 import com.example.mealmate.veiw.home_fragment_veiw.related_adapter_views.MealCategoriesPagerAdapter;
 import com.example.mealmate.veiw.home_fragment_veiw.related_adapter_views.MealIngredientesPagerAdapter;
 import com.example.mealmate.veiw.home_fragment_veiw.related_adapter_views.MealOfTheDayPagerAdapter;
@@ -34,16 +37,20 @@ import java.util.List;
 
 public class HomeFragment extends Fragment implements HomeFragmentView {
     private ViewPager2 viewPager;
-    private RecyclerView recyclerView;
-    private RecyclerView recyclerView2;
-
+    private RecyclerView categoryRecyclerView;
+    private RecyclerView ingredientRecyclerView2;
+    private RecyclerView areaRecyclerView3;
     private MealCategoriesPagerAdapter mealCategoriesPagerAdapter;
     private MealIngredientesPagerAdapter mealIngredientesPagerAdapter;
+    private ListAllFilterAdapter<MealCategory> filterAdapterCategory;
+    private ListAllFilterAdapter<MealIngredient> filterAdapterIngredient;
+    private ListAllFilterAdapter<MealArea> filterAdapterArea;
 
     private MealOfTheDayPagerAdapter mealOfTheDayPagerAdapter;
     private HomeFragmentPresenterImpl presenter;
-    private ArrayList<MealCategory> mealCategoriesDTOS;
-    private ArrayList<MealIngredient> mealIngredientsDTOS;
+    private ArrayList<MealCategory> categoryFilterList = new ArrayList<>();
+    private ArrayList<MealIngredient> ingredientFilterList = new ArrayList<>();
+    private ArrayList<MealArea> areaFilterList = new ArrayList<>();
 
     private static final String TAG = "HomeFragment";
 
@@ -58,8 +65,9 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         super.onViewCreated(view, savedInstanceState);
 
         viewPager = view.findViewById(R.id.viewPager);
-        recyclerView = view.findViewById(R.id.viewPagerCategory);
-        recyclerView2 =view.findViewById(R.id.viewPagerIngredient);
+        categoryRecyclerView = view.findViewById(R.id.viewPagerCategory);
+        ingredientRecyclerView2 =view.findViewById(R.id.viewPagerIngredient);
+        areaRecyclerView3=view.findViewById(R.id.viewPagerArea);
 
         presenter = new HomeFragmentPresenterImpl(AppDataBase.getInstance(getContext())
                 , MealRepository.getInstance(
@@ -72,32 +80,46 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
 
                 this);
 
-        mealCategoriesDTOS = new ArrayList<>();
-        mealCategoriesPagerAdapter = new MealCategoriesPagerAdapter(
-                getContext(),
-                mealCategoriesDTOS,
-                mealCategory -> Toast.makeText(getContext(), mealCategory.getStrCategory(), Toast.LENGTH_SHORT).show()
-        );
 
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
-        recyclerView.setAdapter(mealCategoriesPagerAdapter);
 
-        mealIngredientsDTOS = new ArrayList<>();
-        mealIngredientesPagerAdapter = new MealIngredientesPagerAdapter(
-                getContext(),
-                mealIngredientsDTOS,
-                mealIngredient -> Toast.makeText(getContext(), mealIngredient.getStrIngredient(), Toast.LENGTH_SHORT).show()
-        );
-        recyclerView2.setHasFixedSize(true);
-        recyclerView2.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
-        recyclerView2.setAdapter(mealIngredientesPagerAdapter);
+        // Setup filter RecyclerViews
+        filterAdapterCategory = createFilterAdapter(categoryFilterList, MealCategory.class);
+        filterAdapterIngredient = createFilterAdapter(ingredientFilterList, MealIngredient.class);
+        filterAdapterArea=createFilterAdapter(areaFilterList,MealArea.class);
 
+        setupRecyclerView(categoryRecyclerView, filterAdapterCategory);
+        setupRecyclerView(ingredientRecyclerView2, filterAdapterIngredient);
+        setupRecyclerView(areaRecyclerView3, filterAdapterArea);
 
         // Load data
         presenter.loadMeals();
         presenter.loadMealsCategory();
         presenter.loadMealsIngredient();
+        presenter.loadMealsArea();
+    }
+
+    private <T> ListAllFilterAdapter<T> createFilterAdapter(List<T> filterList, Class<T> type) {
+        return new ListAllFilterAdapter<>(
+                getContext(),
+                filterList,
+                meal -> {
+                    if (type.equals(MealCategory.class)) {
+                        Log.i(TAG, "createFilterAdapter: "+ ((MealCategory) meal).getStrCategory());
+                        Toast.makeText(getContext(), ((MealCategory) meal).getStrCategory(), Toast.LENGTH_SHORT).show();
+                    } else if (type.equals(MealIngredient.class)) {
+                        Toast.makeText(getContext(), ((MealIngredient) meal).getStrIngredient(), Toast.LENGTH_SHORT).show();
+                    }else if (type.equals(MealArea.class)) {
+                        Toast.makeText(getContext(), ((MealArea) meal).getStrArea(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+    }
+
+    private void setupRecyclerView(RecyclerView recyclerView, RecyclerView.Adapter<?> adapter) {
+        Log.i(TAG, "setupRecyclerView: "+recyclerView.getAdapter());
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -112,15 +134,12 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
                 viewPager.setPageTransformer(new ZoomOutPageTransformer());
             }
         } else if (data.get(0) instanceof MealCategory) {
-            List<MealCategory> categories = (List<MealCategory>) data;
-            mealCategoriesDTOS.addAll(categories);
-            Log.i(TAG, "showData: ===="+mealCategoriesDTOS.size());
-            mealCategoriesPagerAdapter.notifyDataSetChanged();
+            Log.i(TAG, "showData: "+((List<MealCategory>) data).size());
+            filterAdapterCategory.updateFilterList((List<MealCategory>) data);
         }else if (data.get(0) instanceof MealIngredient) {
-            List<MealIngredient> ingredients = (List<MealIngredient>) data;
-            mealIngredientsDTOS.addAll(ingredients);
-            Log.i(TAG, "showData: ===="+mealIngredientsDTOS.size());
-            mealIngredientesPagerAdapter.notifyDataSetChanged();
+            filterAdapterIngredient.updateFilterList((List<MealIngredient>) data);
+        }else if (data.get(0) instanceof MealArea) {
+            filterAdapterArea.updateFilterList((List<MealArea>) data);
         }
     }
 

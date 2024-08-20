@@ -1,5 +1,6 @@
 package com.example.mealmate.model.network.network_Interface;
 
+import com.example.mealmate.model.network.MealAreaResponse;
 import com.example.mealmate.model.network.MealCategoryResponse;
 import com.example.mealmate.model.network.MealIngredientResponse;
 import com.example.mealmate.model.network.MealResponse;
@@ -26,6 +27,10 @@ public interface MealService {
 
     @GET("list.php?i=list")
     Call<MealIngredientResponse> listAllIngredients();
+
+    @GET("list.php?a=list")
+    Call<MealAreaResponse> listAllAreas();
+
 
     @GET("list.php")
     Call<MealResponse> listAll(@Query("c") String categoryType);

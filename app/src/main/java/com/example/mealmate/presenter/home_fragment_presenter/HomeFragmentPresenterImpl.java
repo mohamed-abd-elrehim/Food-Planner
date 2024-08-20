@@ -2,6 +2,8 @@ package com.example.mealmate.presenter.home_fragment_presenter;
 
 import android.util.Log;
 
+import com.example.mealmate.model.MealArea;
+import com.example.mealmate.model.network.MealAreaResponse;
 import com.example.mealmate.veiw.home_fragment_veiw.home_fragment_veiw_interface.HomeFragmentView;
 import com.example.mealmate.model.MealCategory;
 import com.example.mealmate.model.MealIngredient;
@@ -49,6 +51,12 @@ public class HomeFragmentPresenterImpl implements HomeFragmentPresenterInterface
     }
 
     @Override
+    public void loadMealsArea() {
+        mealRepository.makeNetworkCallback(this, "listAllAreas");
+
+    }
+
+    @Override
     public void onSuccessResult(Response response) {
         if (response.isSuccessful()) {
             Object body = response.body();
@@ -86,6 +94,18 @@ public class HomeFragmentPresenterImpl implements HomeFragmentPresenterInterface
                 } else {
                     view.showError("No ingredients found.");
                     Log.w(TAG, "Ingredients response was successful but no ingredients were found.");
+                }
+            }  else if (body instanceof MealAreaResponse) {
+                // Handle MealCategoryResponse (CategoriesResponse)
+                MealAreaResponse areaResponse = (MealAreaResponse) body;
+                List<MealArea> areas = areaResponse.getMealAreas();
+                if (areas != null && !areas.isEmpty()) {
+                    Log.i(TAG, "onSuccessResult: " + areas.size());
+                    view.showData(areas);
+                    Log.i(TAG, "Areas loaded successfully: " + areas.size() + " Areas found.");
+                } else {
+                    view.showError("No Areas found.");
+                    Log.w(TAG, "Areas response was successful but no Areas were found.");
                 }
             } else {
                 view.showError("Unexpected response type.");

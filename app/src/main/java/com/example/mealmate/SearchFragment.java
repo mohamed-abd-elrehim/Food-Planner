@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mealmate.model.MealArea;
 import com.example.mealmate.model.MealCategory;
 import com.example.mealmate.model.MealIngredient;
 import com.example.mealmate.model.MealRepository.MealRepository;
@@ -35,9 +36,11 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
     private AllMealPagerAdapter allMealPagerAdapter;
     private FilterAdapter<MealCategory> filterAdapterCategory;
     private FilterAdapter<MealIngredient> filterAdapterIngredient;
+    private FilterAdapter<MealArea> mealAreaFilterAdapter;
     private ArrayList<MealDTO> mealsList = new ArrayList<>();
     private ArrayList<MealCategory> categoryFilterList = new ArrayList<>();
     private ArrayList<MealIngredient> ingredientFilterList = new ArrayList<>();
+    private ArrayList<MealArea> areaFilterList = new ArrayList<>();
     private Search_Fragment_PresenterImpl presenter;
 private static final String TAG = "SearchFragment";
     @Override
@@ -85,6 +88,7 @@ private static final String TAG = "SearchFragment";
         // Setup filter RecyclerViews
         filterAdapterCategory = createFilterAdapter(categoryFilterList, MealCategory.class);
         filterAdapterIngredient = createFilterAdapter(ingredientFilterList, MealIngredient.class);
+        mealAreaFilterAdapter = createFilterAdapter(areaFilterList, MealArea.class);
 
 
 
@@ -99,6 +103,11 @@ private static final String TAG = "SearchFragment";
             presenter.loadAllIngredient();
             setupRecyclerView(recyclerView2, filterAdapterIngredient);
             Log.i(TAG, "filterIngredient: ");
+        });
+        filterArea.setOnClickListener(v -> {
+            presenter.loadAllArea();
+            setupRecyclerView(recyclerView2, mealAreaFilterAdapter);
+            Log.i(TAG, "filterArea: ");
         });
         // Add other filter actions as needed
     }
@@ -115,6 +124,9 @@ private static final String TAG = "SearchFragment";
                     } else if (type.equals(MealIngredient.class)) {
                         presenter.loadFilteredIngredient(((MealIngredient) meal).getStrIngredient());
                         Toast.makeText(getContext(), ((MealIngredient) meal).getStrIngredient(), Toast.LENGTH_SHORT).show();
+                    }else if (type.equals(MealArea.class)) {
+                        presenter.loadFilteredArea(((MealArea) meal).getStrArea());
+                        Toast.makeText(getContext(), ((MealArea) meal).getStrArea(), Toast.LENGTH_SHORT).show();
                     }
                 }
         );
@@ -136,6 +148,8 @@ private static final String TAG = "SearchFragment";
             filterAdapterCategory.updateFilterList((List<MealCategory>) data);
         } else if (data.get(0) instanceof MealIngredient) {
             filterAdapterIngredient.updateFilterList((List<MealIngredient>) data);
+        } else if (data.get(0) instanceof MealArea) {
+            mealAreaFilterAdapter.updateFilterList((List<MealArea>) data);
         } else if (data.get(0) instanceof MealDTO) {
             mealsList.clear();
             mealsList.addAll((List<MealDTO>) data);

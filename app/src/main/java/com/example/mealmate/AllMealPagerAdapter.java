@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,6 +38,7 @@ public class AllMealPagerAdapter extends RecyclerView.Adapter<AllMealPagerAdapte
     @Override
     public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
         MealDTO meal = mealList.get(position);
+        holder.mealName.setText(meal.getStrMeal());
         Glide.with(context)
                 .load(meal.getStrMealThumb())
                 .placeholder(R.drawable.nophotosign)
@@ -58,10 +60,11 @@ public class AllMealPagerAdapter extends RecyclerView.Adapter<AllMealPagerAdapte
     // ViewHolder class
     public static class MealViewHolder extends RecyclerView.ViewHolder {
         ImageView mealImage;
-
+        TextView mealName;
         public MealViewHolder(@NonNull View itemView) {
             super(itemView);
             mealImage = itemView.findViewById(R.id.mealImage);
+            mealName = itemView.findViewById(R.id.meal_name);
         }
     }
 

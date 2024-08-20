@@ -4,4 +4,5 @@ public interface HomeFragmentPresenterInterface {
     void loadMeals();
     void loadMealsCategory();
     void loadMealsIngredient();
+    void loadMealsArea();
 }
