@@ -45,5 +45,8 @@
     <string name="meal_name">Meal Name</string>
     <string name="see_more">See More</string>
     <string name="fillter_by_area">Filter By Area</string>
+    <string name="header_title">Header Title</string>
+    <string name="suggestion_title">Suggestion Title</string>
+    <string name="icon_description">Icon Description</string>
 
 </resources>

@@ -5,14 +5,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import androidx.appcompat.widget.SearchView;
 import com.example.mealmate.model.MealArea;
 import com.example.mealmate.model.MealCategory;
 import com.example.mealmate.model.MealIngredient;
@@ -41,8 +41,13 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
     private ArrayList<MealCategory> categoryFilterList = new ArrayList<>();
     private ArrayList<MealIngredient> ingredientFilterList = new ArrayList<>();
     private ArrayList<MealArea> areaFilterList = new ArrayList<>();
+    private SearchView searchView;
+    private RecyclerView suggestionsRecyclerView;
+    private SuggestionsAdapter<Object> suggestionsAdapter;
+    private TextView fallbackMessage;
     private Search_Fragment_PresenterImpl presenter;
-private static final String TAG = "SearchFragment";
+    private static final String TAG = "SearchFragment";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +67,35 @@ private static final String TAG = "SearchFragment";
         filterIngredient = view.findViewById(R.id.ingredients_chip);
         recyclerView = view.findViewById(R.id.search_recyclerview);
         recyclerView2 = view.findViewById(R.id.recyclerView);
+        searchView = view.findViewById(R.id.searchView);
+        suggestionsRecyclerView = view.findViewById(R.id.suggestionsRecyclerView);
+        fallbackMessage = view.findViewById(R.id.fallbackMessage);
+
+        suggestionsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        suggestionsAdapter = new SuggestionsAdapter<>(getContext(), new ArrayList<>(), item -> {
+            // Handle item click
+        });
+        suggestionsRecyclerView.setAdapter(suggestionsAdapter);
+
+        if (searchView == null) {
+            Log.e(TAG, "SearchView is null");
+            return;
+        }
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Handle query submission
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // Handle query text change
+                updateSuggestions(newText);
+                return true;
+            }
+        });
 
         // Initialize the presenter
         presenter = new Search_Fragment_PresenterImpl(
@@ -90,26 +124,68 @@ private static final String TAG = "SearchFragment";
         filterAdapterIngredient = createFilterAdapter(ingredientFilterList, MealIngredient.class);
         mealAreaFilterAdapter = createFilterAdapter(areaFilterList, MealArea.class);
 
-
+        presenter.loadAllCategoriess();
+        presenter.loadAllIngredient();
+        presenter.loadAllArea();
 
         // Set up filter button actions
-        filterCategory.setOnClickListener(v ->{
-            presenter.loadAllCategoriess();
+        filterCategory.setOnClickListener(v -> {
             setupRecyclerView(recyclerView2, filterAdapterCategory);
-            Log.i(TAG, "filterCategory: ");
-        } );
-        Log.i(TAG, "onViewCreated: ");
+            Log.i(TAG, "filterCategory clicked");
+        });
         filterIngredient.setOnClickListener(v -> {
-            presenter.loadAllIngredient();
             setupRecyclerView(recyclerView2, filterAdapterIngredient);
-            Log.i(TAG, "filterIngredient: ");
+            Log.i(TAG, "filterIngredient clicked");
         });
         filterArea.setOnClickListener(v -> {
-            presenter.loadAllArea();
             setupRecyclerView(recyclerView2, mealAreaFilterAdapter);
-            Log.i(TAG, "filterArea: ");
+            Log.i(TAG, "filterArea clicked");
         });
-        // Add other filter actions as needed
+    }
+
+    private void updateSuggestions(String query) {
+        List<Object> suggestions = new ArrayList<>();
+
+        if (query != null && !query.isEmpty()) {
+            addFilteredSuggestions(suggestions, query, mealsList);
+            addFilteredSuggestions(suggestions, query, categoryFilterList);
+            addFilteredSuggestions(suggestions, query, ingredientFilterList);
+            addFilteredSuggestions(suggestions, query, areaFilterList);
+
+            if (suggestions.isEmpty()) {
+                suggestionsRecyclerView.setVisibility(View.GONE);
+                fallbackMessage.setVisibility(View.VISIBLE);
+            } else {
+                suggestionsRecyclerView.setVisibility(View.VISIBLE);
+                fallbackMessage.setVisibility(View.GONE);
+                suggestionsAdapter.updateSuggestions(suggestions);
+            }
+        } else {
+            suggestionsRecyclerView.setVisibility(View.GONE);
+            fallbackMessage.setVisibility(View.GONE);
+        }
+    }
+
+    private <T> void addFilteredSuggestions(List<Object> suggestions, String query, ArrayList<T> list) {
+        for (T item : list) {
+            String itemName = getItemName(item);
+            if (itemName.toLowerCase().contains(query.toLowerCase())) {
+                suggestions.add(item);
+            }
+        }
+    }
+
+    private <T> String getItemName(T item) {
+        if (item instanceof MealDTO) {
+            return ((MealDTO) item).getStrMeal();
+        } else if (item instanceof MealCategory) {
+            return ((MealCategory) item).getStrCategory();
+        } else if (item instanceof MealIngredient) {
+            return ((MealIngredient) item).getStrIngredient();
+        } else if (item instanceof MealArea) {
+            return ((MealArea) item).getStrArea();
+        }
+        return "";
     }
 
     private <T> FilterAdapter<T> createFilterAdapter(List<T> filterList, Class<T> type) {
@@ -119,12 +195,12 @@ private static final String TAG = "SearchFragment";
                 meal -> {
                     if (type.equals(MealCategory.class)) {
                         presenter.loadFilteredCategoriess(((MealCategory) meal).getStrCategory());
-                        Log.i(TAG, "createFilterAdapter: "+ ((MealCategory) meal).getStrCategory());
+                        Log.i(TAG, "Category selected: " + ((MealCategory) meal).getStrCategory());
                         Toast.makeText(getContext(), ((MealCategory) meal).getStrCategory(), Toast.LENGTH_SHORT).show();
                     } else if (type.equals(MealIngredient.class)) {
                         presenter.loadFilteredIngredient(((MealIngredient) meal).getStrIngredient());
                         Toast.makeText(getContext(), ((MealIngredient) meal).getStrIngredient(), Toast.LENGTH_SHORT).show();
-                    }else if (type.equals(MealArea.class)) {
+                    } else if (type.equals(MealArea.class)) {
                         presenter.loadFilteredArea(((MealArea) meal).getStrArea());
                         Toast.makeText(getContext(), ((MealArea) meal).getStrArea(), Toast.LENGTH_SHORT).show();
                     }
@@ -133,7 +209,6 @@ private static final String TAG = "SearchFragment";
     }
 
     private void setupRecyclerView(RecyclerView recyclerView, RecyclerView.Adapter<?> adapter) {
-        Log.i(TAG, "setupRecyclerView: "+recyclerView.getAdapter());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
         recyclerView.setAdapter(adapter);
@@ -144,22 +219,26 @@ private static final String TAG = "SearchFragment";
         if (data == null || data.isEmpty()) return;
 
         if (data.get(0) instanceof MealCategory) {
-            Log.i(TAG, "showData: "+((List<MealCategory>) data).size());
-            filterAdapterCategory.updateFilterList((List<MealCategory>) data);
+            categoryFilterList.clear();
+            categoryFilterList.addAll((List<MealCategory>) data);
+            filterAdapterCategory.updateFilterList(categoryFilterList);
         } else if (data.get(0) instanceof MealIngredient) {
-            filterAdapterIngredient.updateFilterList((List<MealIngredient>) data);
+            ingredientFilterList.clear();
+            ingredientFilterList.addAll((List<MealIngredient>) data);
+            filterAdapterIngredient.updateFilterList(ingredientFilterList);
         } else if (data.get(0) instanceof MealArea) {
-            mealAreaFilterAdapter.updateFilterList((List<MealArea>) data);
+            areaFilterList.clear();
+            areaFilterList.addAll((List<MealArea>) data);
+            mealAreaFilterAdapter.updateFilterList(areaFilterList);
         } else if (data.get(0) instanceof MealDTO) {
             mealsList.clear();
             mealsList.addAll((List<MealDTO>) data);
             allMealPagerAdapter.notifyDataSetChanged();
-
         }
     }
 
     @Override
-    public void showError(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+    public void showError(String error) {
+        Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
     }
 }
