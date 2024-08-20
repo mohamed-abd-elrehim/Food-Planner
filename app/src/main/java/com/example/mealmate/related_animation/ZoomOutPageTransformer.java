@@ -1,4 +1,4 @@
-package com.example.mealmate.veiw;
+package com.example.mealmate.related_animation;
 
 import android.view.View;
 

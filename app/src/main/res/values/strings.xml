@@ -32,10 +32,16 @@
 
     <string name="home">Home</string>
     <string name="search">Search</string>
-    <string name="favoritemeals">Favorite Meals</string>
-    <string name="addplanmeal">Add Plan Meal</string>">
+    <string name="favoritemeals">Favorites</string>
+    <string name="addplanmeal">Add Y Plan</string>">
     <string name="planmeals">Plan Meals</string>
     <string name="fillter_by_ingredients">Fillter By Ingredients</string>
     <string name="most_popular_categories">Most Popular Categories</string>
+    <string name="all_meals">Meals</string>
+    <string name="categories">Categories</string>
+    <string name="area">Area</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="filter_by">Filter By</string>
+    <string name="meal_name">Meal Name</string>
 
 </resources>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeFragment">
+    tools:context=".veiw.home_fragment_veiw.HomeFragment">
 
     <!-- ScrollView wrapping the content to make it scrollable -->
     <ScrollView

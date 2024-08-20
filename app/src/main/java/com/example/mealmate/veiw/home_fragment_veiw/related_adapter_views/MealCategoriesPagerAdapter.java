@@ -1,4 +1,4 @@
-package com.example.mealmate;
+package com.example.mealmate.veiw.home_fragment_veiw.related_adapter_views;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,21 +10,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.mealmate.R;
 import com.example.mealmate.model.MealCategory;
-import com.example.mealmate.model.MealIngredient;
 
 import java.util.List;
 
-public class MealIngredientesPagerAdapter extends RecyclerView.Adapter<MealIngredientesPagerAdapter.MealViewHolder> {
-    private List<MealIngredient> mealList;
+public class MealCategoriesPagerAdapter extends RecyclerView.Adapter<MealCategoriesPagerAdapter.MealViewHolder> {
+    private List<MealCategory> mealList;
     private Context context;
-    private OnMealIngredientClickListener onMealIngredientClickListener;
+    private OnMealCategoryClickListener onMealCategoryClickListener;
 
     // Constructor
-    public MealIngredientesPagerAdapter(Context context, List<MealIngredient> mealList, OnMealIngredientClickListener onMealIngredientClickListener) {
+    public MealCategoriesPagerAdapter(Context context, List<MealCategory> mealList, OnMealCategoryClickListener onMealCategoryClickListener) {
         this.context = context;
         this.mealList = mealList;
-        this.onMealIngredientClickListener = onMealIngredientClickListener;
+        this.onMealCategoryClickListener = onMealCategoryClickListener;
     }
 
     @NonNull
@@ -36,16 +36,16 @@ public class MealIngredientesPagerAdapter extends RecyclerView.Adapter<MealIngre
 
     @Override
     public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
-        MealIngredient meal = mealList.get(position);
+        MealCategory meal = mealList.get(position);
         Glide.with(context)
-                .load("https://www.themealdb.com/images/ingredients/"+meal.getStrIngredient()+"-Small.png")
+                .load(meal.getStrCategoryThumb())
                 .placeholder(R.drawable.nophotosign)
                 .error(R.drawable.errorloadingimag)
                 .centerCrop()
                 .into(holder.mealImage);
         holder.itemView.setOnClickListener(v -> {
-            if (onMealIngredientClickListener != null) {
-                onMealIngredientClickListener.onMealIngredientClick(meal);
+            if (onMealCategoryClickListener != null) {
+                onMealCategoryClickListener.onMealCategoryClick(meal);
             }
         });
     }
@@ -66,7 +66,7 @@ public class MealIngredientesPagerAdapter extends RecyclerView.Adapter<MealIngre
     }
 
     // Custom listener interface
-    public interface OnMealIngredientClickListener {
-        void onMealIngredientClick(MealIngredient mealIngredient);
+    public interface OnMealCategoryClickListener {
+        void onMealCategoryClick(MealCategory mealCategory);
     }
 }

@@ -1,7 +1,8 @@
-package com.example.mealmate;
+package com.example.mealmate.presenter.home_fragment_presenter;
 
 import android.util.Log;
 
+import com.example.mealmate.veiw.home_fragment_veiw.home_fragment_veiw_interface.HomeFragmentView;
 import com.example.mealmate.model.MealCategory;
 import com.example.mealmate.model.MealIngredient;
 import com.example.mealmate.model.MealRepository.MealRepository;
@@ -11,6 +12,7 @@ import com.example.mealmate.model.network.MealCategoryResponse;
 import com.example.mealmate.model.network.MealIngredientResponse;
 import com.example.mealmate.model.network.MealResponse;
 import com.example.mealmate.model.network.network_Interface.NetworkCallback;
+import com.example.mealmate.presenter.home_fragment_presenter.home_fragment_presente_interface.HomeFragmentPresenterInterface;
 
 import java.util.List;
 

@@ -1,30 +1,30 @@
-package com.example.mealmate;
+package com.example.mealmate.veiw.home_fragment_veiw.related_adapter_views;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.mealmate.model.MealCategory;
+import com.example.mealmate.R;
+import com.example.mealmate.model.MealIngredient;
 
 import java.util.List;
 
-public class MealCategoriesPagerAdapter extends RecyclerView.Adapter<MealCategoriesPagerAdapter.MealViewHolder> {
-    private List<MealCategory> mealList;
+public class MealIngredientesPagerAdapter extends RecyclerView.Adapter<MealIngredientesPagerAdapter.MealViewHolder> {
+    private List<MealIngredient> mealList;
     private Context context;
-    private OnMealCategoryClickListener onMealCategoryClickListener;
+    private OnMealIngredientClickListener onMealIngredientClickListener;
 
     // Constructor
-    public MealCategoriesPagerAdapter(Context context, List<MealCategory> mealList, OnMealCategoryClickListener onMealCategoryClickListener) {
+    public MealIngredientesPagerAdapter(Context context, List<MealIngredient> mealList, OnMealIngredientClickListener onMealIngredientClickListener) {
         this.context = context;
         this.mealList = mealList;
-        this.onMealCategoryClickListener = onMealCategoryClickListener;
+        this.onMealIngredientClickListener = onMealIngredientClickListener;
     }
 
     @NonNull
@@ -36,16 +36,16 @@ public class MealCategoriesPagerAdapter extends RecyclerView.Adapter<MealCategor
 
     @Override
     public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
-        MealCategory meal = mealList.get(position);
+        MealIngredient meal = mealList.get(position);
         Glide.with(context)
-                .load(meal.getStrCategoryThumb())
+                .load("https://www.themealdb.com/images/ingredients/"+meal.getStrIngredient()+"-Small.png")
                 .placeholder(R.drawable.nophotosign)
                 .error(R.drawable.errorloadingimag)
                 .centerCrop()
                 .into(holder.mealImage);
         holder.itemView.setOnClickListener(v -> {
-            if (onMealCategoryClickListener != null) {
-                onMealCategoryClickListener.onMealCategoryClick(meal);
+            if (onMealIngredientClickListener != null) {
+                onMealIngredientClickListener.onMealIngredientClick(meal);
             }
         });
     }
@@ -66,7 +66,7 @@ public class MealCategoriesPagerAdapter extends RecyclerView.Adapter<MealCategor
     }
 
     // Custom listener interface
-    public interface OnMealCategoryClickListener {
-        void onMealCategoryClick(MealCategory mealCategory);
+    public interface OnMealIngredientClickListener {
+        void onMealIngredientClick(MealIngredient mealIngredient);
     }
 }

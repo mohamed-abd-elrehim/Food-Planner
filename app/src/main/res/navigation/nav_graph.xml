@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/searchFragment">
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.mealmate.HomeFragment"
+        android:name="com.example.mealmate.veiw.home_fragment_veiw.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action

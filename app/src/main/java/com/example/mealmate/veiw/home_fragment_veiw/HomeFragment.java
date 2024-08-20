@@ -1,4 +1,4 @@
-package com.example.mealmate;
+package com.example.mealmate.veiw.home_fragment_veiw;
 
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -13,6 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.example.mealmate.presenter.home_fragment_presenter.HomeFragmentPresenterImpl;
+import com.example.mealmate.veiw.home_fragment_veiw.related_adapter_views.MealCategoriesPagerAdapter;
+import com.example.mealmate.veiw.home_fragment_veiw.related_adapter_views.MealIngredientesPagerAdapter;
+import com.example.mealmate.veiw.home_fragment_veiw.related_adapter_views.MealOfTheDayPagerAdapter;
+import com.example.mealmate.R;
 import com.example.mealmate.model.MealCategory;
 import com.example.mealmate.model.MealIngredient;
 import com.example.mealmate.model.MealRepository.MealRepository;
@@ -20,7 +26,9 @@ import com.example.mealmate.model.database.AppDataBase;
 import com.example.mealmate.model.database.local_data_source.LocalDataSourceImpl;
 import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
 import com.example.mealmate.model.network.network_Interface.RemoteDataSourceImpl;
-import com.example.mealmate.veiw.ZoomOutPageTransformer;
+import com.example.mealmate.related_animation.ZoomOutPageTransformer;
+import com.example.mealmate.veiw.home_fragment_veiw.home_fragment_veiw_interface.HomeFragmentView;
+
 import java.util.ArrayList;
 import java.util.List;
 

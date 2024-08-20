@@ -1,4 +1,4 @@
-package com.example.mealmate;
+package com.example.mealmate.presenter.home_fragment_presenter.home_fragment_presente_interface;
 
 public interface HomeFragmentPresenterInterface {
     void loadMeals();

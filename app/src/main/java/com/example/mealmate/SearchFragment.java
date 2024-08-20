@@ -1,64 +1,145 @@
 package com.example.mealmate;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SearchFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class SearchFragment extends Fragment {
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+import com.example.mealmate.model.MealCategory;
+import com.example.mealmate.model.MealIngredient;
+import com.example.mealmate.model.MealRepository.MealRepository;
+import com.example.mealmate.model.database.AppDataBase;
+import com.example.mealmate.model.database.local_data_source.LocalDataSourceImpl;
+import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
+import com.example.mealmate.model.network.network_Interface.RemoteDataSourceImpl;
+import com.google.android.material.chip.Chip;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+import java.util.ArrayList;
+import java.util.List;
 
-    public SearchFragment() {
-        // Required empty public constructor
-    }
+public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Interface {
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SearchFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SearchFragment newInstance(String param1, String param2) {
-        SearchFragment fragment = new SearchFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    private Chip filterArea;
+    private Chip filterCategory;
+    private Chip filterIngredient;
+    private RecyclerView recyclerView;
+    private RecyclerView recyclerView2;
+    private AllMealPagerAdapter allMealPagerAdapter;
+    private FilterAdapter<MealCategory> filterAdapterCategory;
+    private FilterAdapter<MealIngredient> filterAdapterIngredient;
+    private ArrayList<MealDTO> mealsList = new ArrayList<>();
+    private ArrayList<MealCategory> categoryFilterList = new ArrayList<>();
+    private ArrayList<MealIngredient> ingredientFilterList = new ArrayList<>();
+    private Search_Fragment_PresenterImpl presenter;
+private static final String TAG = "SearchFragment";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_search, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        filterArea = view.findViewById(R.id.area_chip);
+        filterCategory = view.findViewById(R.id.categories_chip2);
+        filterIngredient = view.findViewById(R.id.ingredients_chip);
+        recyclerView = view.findViewById(R.id.search_recylerview);
+        recyclerView2 = view.findViewById(R.id.recyclerView);
+
+        // Initialize the presenter
+        presenter = new Search_Fragment_PresenterImpl(
+                AppDataBase.getInstance(getContext()),
+                MealRepository.getInstance(
+                        LocalDataSourceImpl.getInstance(
+                                AppDataBase.getInstance(getContext()).getFavoriteMealDAO(),
+                                AppDataBase.getInstance(getContext()).getMealDAO(),
+                                AppDataBase.getInstance(getContext()).getMealPlanDAO()
+                        ),
+                        RemoteDataSourceImpl.getInstance()
+                ),
+                this
+        );
+
+        // Setup meal list RecyclerView
+        allMealPagerAdapter = new AllMealPagerAdapter(
+                getContext(),
+                mealsList,
+                mealDTO -> Toast.makeText(getContext(), mealDTO.getStrMeal(), Toast.LENGTH_SHORT).show()
+        );
+        setupRecyclerView(recyclerView, allMealPagerAdapter);
+
+        // Setup filter RecyclerViews
+        filterAdapterCategory = createFilterAdapter(categoryFilterList, MealCategory.class);
+        filterAdapterIngredient = createFilterAdapter(ingredientFilterList, MealIngredient.class);
+
+
+
+        // Set up filter button actions
+        filterCategory.setOnClickListener(v ->{
+            presenter.loadAllCategoriess();
+            setupRecyclerView(recyclerView2, filterAdapterCategory);
+            Log.i(TAG, "filterCategory: ");
+        } );
+        Log.i(TAG, "onViewCreated: ");
+        filterIngredient.setOnClickListener(v -> {
+            presenter.loadAllIngredient();
+            setupRecyclerView(recyclerView2, filterAdapterIngredient);
+            Log.i(TAG, "filterIngredient: ");
+        });
+        // Add other filter actions as needed
+    }
+
+    private <T> FilterAdapter<T> createFilterAdapter(List<T> filterList, Class<T> type) {
+        return new FilterAdapter<>(
+                getContext(),
+                filterList,
+                meal -> {
+                    if (type.equals(MealCategory.class)) {
+                        Toast.makeText(getContext(), ((MealCategory) meal).getStrCategory(), Toast.LENGTH_SHORT).show();
+                    } else if (type.equals(MealIngredient.class)) {
+                        Toast.makeText(getContext(), ((MealIngredient) meal).getStrIngredient(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+    }
+
+    private void setupRecyclerView(RecyclerView recyclerView, RecyclerView.Adapter<?> adapter) {
+        Log.i(TAG, "setupRecyclerView: "+recyclerView.getAdapter());
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void showData(List data) {
+        if (data == null || data.isEmpty()) return;
+
+        if (data.get(0) instanceof MealCategory) {
+
+
+            Log.i(TAG, "showData: "+((List<MealCategory>) data).size());
+            filterAdapterCategory.updateFilterList((List<MealCategory>) data);
+        } else if (data.get(0) instanceof MealIngredient) {
+            filterAdapterIngredient.updateFilterList((List<MealIngredient>) data);
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false);
+    public void showError(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 }
