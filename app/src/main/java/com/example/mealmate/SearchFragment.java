@@ -167,6 +167,7 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
     }
 
     private <T> void addFilteredSuggestions(List<Object> suggestions, String query, ArrayList<T> list) {
+       presenter.loadFilteredByName(query);
         for (T item : list) {
             String itemName = getItemName(item);
             if (itemName.toLowerCase().contains(query.toLowerCase())) {
@@ -177,6 +178,7 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
 
     private <T> String getItemName(T item) {
         if (item instanceof MealDTO) {
+
             return ((MealDTO) item).getStrMeal();
         } else if (item instanceof MealCategory) {
             return ((MealCategory) item).getStrCategory();

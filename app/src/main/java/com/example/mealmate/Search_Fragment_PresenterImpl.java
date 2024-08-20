@@ -71,6 +71,12 @@ public class Search_Fragment_PresenterImpl implements Search_Fragment_Presenter_
     }
 
     @Override
+    public void loadFilteredByName(String name) {
+        mealRepository.makeNetworkCallback(this, "searchMealByName", name);
+
+    }
+
+    @Override
     public void onSuccessResult(Response response) {
         if (response.isSuccessful()) {
             Object body = response.body();

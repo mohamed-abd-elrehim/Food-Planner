@@ -8,4 +8,6 @@ public interface Search_Fragment_Presenter_Interface {
     void loadFilteredCategoriess(String categoryName);
     void loadFilteredIngredient(String ingredientName);
     void loadFilteredArea(String areaName);
+
+    void loadFilteredByName(String name);
   }
