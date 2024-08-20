@@ -19,7 +19,7 @@ import com.example.mealmate.model.MealRepository.MealRepository;
 import com.example.mealmate.model.database.AppDataBase;
 import com.example.mealmate.model.database.local_data_source.LocalDataSourceImpl;
 import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
-import com.example.mealmate.model.network.network_Interface.RemoteDataSourceImpl;
+import com.example.mealmate.model.network.RemoteDataSourceImpl;
 import com.google.android.material.chip.Chip;
 
 import java.util.ArrayList;
@@ -113,6 +113,7 @@ private static final String TAG = "SearchFragment";
                         Log.i(TAG, "createFilterAdapter: "+ ((MealCategory) meal).getStrCategory());
                         Toast.makeText(getContext(), ((MealCategory) meal).getStrCategory(), Toast.LENGTH_SHORT).show();
                     } else if (type.equals(MealIngredient.class)) {
+                        presenter.loadFilteredIngredient(((MealIngredient) meal).getStrIngredient());
                         Toast.makeText(getContext(), ((MealIngredient) meal).getStrIngredient(), Toast.LENGTH_SHORT).show();
                     }
                 }

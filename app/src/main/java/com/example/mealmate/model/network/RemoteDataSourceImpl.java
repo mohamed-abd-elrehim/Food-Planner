@@ -1,9 +1,10 @@
-package com.example.mealmate.model.network.network_Interface;
+package com.example.mealmate.model.network;
 
 import android.util.Log;
 
-import com.example.mealmate.model.network.MealCategoryResponse;
-import com.example.mealmate.model.network.MealResponse;
+import com.example.mealmate.model.network.network_Interface.MealService;
+import com.example.mealmate.model.network.network_Interface.NetworkCallback;
+import com.example.mealmate.model.network.network_Interface.RemoteDataSource;
 
 import retrofit2.Call;
 import retrofit2.Callback;

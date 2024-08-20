@@ -3,7 +3,6 @@ package com.example.mealmate.model.MealRepository;
 import androidx.lifecycle.LiveData;
 
 import com.example.mealmate.model.database.local_data_source.LocalDataSourceImpl;
-import com.example.mealmate.model.database.local_data_source.local_data_source_interface.LocalDataSource;
 import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
 import com.example.mealmate.model.mealDTOs.all_meal_details.MealMeasureIngredient;
 import com.example.mealmate.model.mealDTOs.all_meal_details.MealWithDetails;
@@ -12,7 +11,7 @@ import com.example.mealmate.model.mealDTOs.favorite_meals.FavoriteMealWithMeals;
 import com.example.mealmate.model.mealDTOs.meal_plan.MealPlan;
 import com.example.mealmate.model.mealDTOs.meal_plan.MealPlanWithMeals;
 import com.example.mealmate.model.network.network_Interface.NetworkCallback;
-import com.example.mealmate.model.network.network_Interface.RemoteDataSourceImpl;
+import com.example.mealmate.model.network.RemoteDataSourceImpl;
 
 import java.util.List;
 

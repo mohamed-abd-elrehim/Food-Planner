@@ -6,6 +6,6 @@ public interface Search_Fragment_Presenter_Interface {
 //    void loadAllArea();
 
     void loadFilteredCategoriess(String categoryName);
-    //void loadFilteredIngredient();
-    //void loadFilteredArea();
+    void loadFilteredIngredient(String ingredientName);
+    //void loadFilteredArea(String areaName);
   }

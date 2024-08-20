@@ -25,7 +25,7 @@ import com.example.mealmate.model.MealRepository.MealRepository;
 import com.example.mealmate.model.database.AppDataBase;
 import com.example.mealmate.model.database.local_data_source.LocalDataSourceImpl;
 import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
-import com.example.mealmate.model.network.network_Interface.RemoteDataSourceImpl;
+import com.example.mealmate.model.network.RemoteDataSourceImpl;
 import com.example.mealmate.related_animation.ZoomOutPageTransformer;
 import com.example.mealmate.veiw.home_fragment_veiw.home_fragment_veiw_interface.HomeFragmentView;
 
