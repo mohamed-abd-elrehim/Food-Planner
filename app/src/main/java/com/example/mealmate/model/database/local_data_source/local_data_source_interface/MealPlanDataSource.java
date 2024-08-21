@@ -10,11 +10,11 @@ import com.example.mealmate.model.mealDTOs.meal_plan.MealPlanWithMeals;
 import java.util.List;
 
 public interface MealPlanDataSource {
-    LiveData<List<MealPlanWithMeals>> getMealPlansWithMeals(String clientEmail);
-    LiveData<MealPlan> getMealPlan(String mealId, String clientEmail);
-    void insertMealPlan(MealPlan mealPlan);
-    void deleteMealPlan(MealPlan mealPlan);
-
+//    LiveData<List<MealPlanWithMeals>> getMealPlansWithMeals(String clientEmail);
+//    LiveData<MealPlan> getMealPlan(String mealId, String clientEmail);
+//    void insertMealPlan(MealPlan mealPlan);
+//    void deleteMealPlan(MealPlan mealPlan);
+//
 
 
 }

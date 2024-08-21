@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
 
@@ -15,16 +16,21 @@ import java.util.List;
 
 @Dao
 public interface MealPlanDAO {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMealPlan(MealPlan mealPlan);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMeal(MealDTO meal);
 
     @Delete
     void deleteMealPlan(MealPlan mealPlan);
     @Delete
     void deleteMeal(MealDTO meal);
+
+    @Transaction
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertPlanWithMeal(MealDTO meal, List<MealDTO> mealDTOS);
+
 
     @Transaction
     @Query("SELECT * FROM MealPlan WHERE client_email = :clientEmail")

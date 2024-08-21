@@ -18,6 +18,16 @@ public class MealDTO {
         this.idMeal = idMeal;
     }
 
+
+    @ColumnInfo(name = "meal_category")
+    public String strCategory;
+    @ColumnInfo(name = "str_imageSource")
+    public String strImageSource;
+    @ColumnInfo(name = "str_creativeCommonsConfirmed")
+    public String strCreativeCommonsConfirmed;
+    @ColumnInfo(name = "date_modified")
+    public String dateModified;
+
     @ColumnInfo(name = "meal_id")
     private String idMeal;
 
@@ -45,8 +55,15 @@ public class MealDTO {
     @ColumnInfo(name = "str_source")
     private String strSource;
 
-    public MealDTO(int id, String idMeal, String strMeal, String strDrinkAlternate, String strArea, String strInstructions, String strMealThumb, String strTags, String strYoutube, String strSource) {
-        this.id = id;
+    public MealDTO(String strCategory, String strImageSource, String strCreativeCommonsConfirmed,
+                   String dateModified, String idMeal, String strMeal, String strDrinkAlternate,
+                   String strArea, String strInstructions, String strMealThumb, String strTags,
+                   String strYoutube, String strSource) {
+
+        this.strCategory = strCategory;
+        this.strImageSource = strImageSource;
+        this.strCreativeCommonsConfirmed = strCreativeCommonsConfirmed;
+        this.dateModified = dateModified;
         this.idMeal = idMeal;
         this.strMeal = strMeal;
         this.strDrinkAlternate = strDrinkAlternate;
@@ -58,6 +75,38 @@ public class MealDTO {
         this.strSource = strSource;
     }
 // Getters and setters...
+
+    public String getStrCategory() {
+        return strCategory;
+    }
+
+    public void setStrCategory(String strCategory) {
+        this.strCategory = strCategory;
+    }
+
+    public String getStrImageSource() {
+        return strImageSource;
+    }
+
+    public void setStrImageSource(String strImageSource) {
+        this.strImageSource = strImageSource;
+    }
+
+    public String getStrCreativeCommonsConfirmed() {
+        return strCreativeCommonsConfirmed;
+    }
+
+    public void setStrCreativeCommonsConfirmed(String strCreativeCommonsConfirmed) {
+        this.strCreativeCommonsConfirmed = strCreativeCommonsConfirmed;
+    }
+
+    public String getDateModified() {
+        return dateModified;
+    }
+
+    public void setDateModified(String dateModified) {
+        this.dateModified = dateModified;
+    }
 
     public int getId() {
         return id;

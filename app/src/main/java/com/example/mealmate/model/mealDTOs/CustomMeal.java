@@ -55,6 +55,14 @@ public class CustomMeal {
     public String strCreativeCommonsConfirmed;
     public String dateModified;
 
+
+
+
+
+    public CustomMeal() {
+
+    }
+
     public String getIdMeal() {
         return idMeal;
     }

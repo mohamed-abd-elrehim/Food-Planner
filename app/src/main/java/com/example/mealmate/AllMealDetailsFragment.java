@@ -13,7 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mealmate.model.MealIngredient;
 import com.example.mealmate.model.MealRepository.MealRepository;
@@ -31,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFragment_Veiw_Interface {
+public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFragment_Veiw_Interface, HandelAddToFavoritesClick {
 
     private static final String TAG = "AllMealDetailsFragment";
     private ArrayList<MealIngredient> mealIngredients = new ArrayList<>();
@@ -53,6 +55,9 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
     private TextView mealName;
     private TextView mealCategory;
     private TextView mealArea;
+    private Button addToFavoritesButton;
+
+    CustomMeal customMeal = new CustomMeal();
 
     private AllMealDetailsFragment_presenter presenter;
 
@@ -76,8 +81,9 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
         all_Meal_detil_ViewPager = view.findViewById(R.id.all_Meal_detil_ViewPager);
         ingredientRecyclerView = view.findViewById(R.id.all_Meal_detil_mealIngredients_recyclerView2);
         mealName = view.findViewById(R.id.all_Meal_detil_meal_name);
-        mealCategory= view.findViewById(R.id.all_Meal_detil_meal_categorie);
-        mealArea= view.findViewById(R.id.all_Meal_detil_meal_area);
+        mealCategory = view.findViewById(R.id.all_Meal_detil_meal_categorie);
+        mealArea = view.findViewById(R.id.all_Meal_detil_meal_area);
+        addToFavoritesButton = view.findViewById(R.id.add_to_Fav_button2);
         // Set up RecyclerView
         stepsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         ingredientRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -116,6 +122,11 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
         String mealID = AllMealDetailsFragmentArgs.fromBundle(getArguments()).getMealID();
         Log.i(TAG, "onViewCreated: Meal ID - " + mealID);
         presenter.loadAllMealDetailsById(mealID);
+
+        addToFavoritesButton.setOnClickListener(view1 -> {
+            onAddToFavoritesClick(customMeal);
+        });
+
     }
 
 
@@ -125,19 +136,19 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
             Log.e(TAG, "showData: No meal data received");
             return;
         }
-    // Clear any existing data
+        // Clear any existing data
         stepsList.clear();
         mediaItems.clear();
 
         mealMeasureIngredients.clear();
-
-        mealMeasureIngredients .addAll(presenter.getMealMeasureIngredients(data.get(0)));
+        customMeal=data.get(0);
+        mealMeasureIngredients.addAll(presenter.getMealMeasureIngredients(data.get(0)));
 
         mealName.setText(data.get(0).getStrMeal());
         mealCategory.setText(data.get(0).getStrCategory());
         mealArea.setText(data.get(0).getStrArea());
 
-        Log.i(TAG, "showData:+============= "+mealMeasureIngredients.size());
+        Log.i(TAG, "showData:+============= " + mealMeasureIngredients.size());
         String imagUrl = data.get(0).getStrMealThumb();
         String videoUrl = data.get(0).getStrYoutube();
         mediaItems.add(new MediaItem(imagUrl, false));
@@ -148,8 +159,6 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
         // Process instructions into steps
         // Populate the stepsList with Step objects
         stepsList.addAll(presenter.processInstructions(instructions));
-
-
 
 
         // Notify the adapter that the data has changed
@@ -163,11 +172,23 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
 
     @Override
     public void showError(String errorMessage) {
+        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+
 
     }
 
 
-
-
-
+    @Override
+    public void onAddToFavoritesClick(CustomMeal customMeal) {
+        if(customMeal!=null) {
+            presenter.addMealToFAV(customMeal);
+            Toast.makeText(getContext(), "Meal added to favorites", Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "onAddToFavoritesClick: "+ customMeal.getStrMeal());
+        }
+        else
+        {
+            Toast.makeText(getContext(), "Meal is null", Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "onAddToFavoritesClick: " + "meal is null");
+        }
+    }
 }

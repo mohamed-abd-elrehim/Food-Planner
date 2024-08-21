@@ -50,76 +50,116 @@ public class LocalDataSourceImpl implements LocalDataSource {
 
 
 
+
+
     // Implementation of FavoriteMealDataSource
     @Override
-    public LiveData<List<FavoriteMealWithMeals>> getFavoritesWithMeals(String clientEmail) {
-        return favoriteMealDAO.getFavoritesWithMeals(clientEmail);
+    public void insertFavoriteMealWithMeals(FavoriteMeal meal, MealDTO mealDTO ,List<MealMeasureIngredient> ingredients) {
+        executorService.execute(() -> {
+            favoriteMealDAO.insertFavoriteMeal(meal,mealDTO, ingredients);
+        });
+
     }
 
     @Override
-    public LiveData<FavoriteMeal> getFavoriteMeal(String mealId, String clientEmail) {
-        return favoriteMealDAO.getFavoriteMeal(mealId, clientEmail);
+    public void insertMealWithDetails(MealDTO meal, List<MealMeasureIngredient> ingredients) {
+        executorService.execute(() -> {
+            mealDAO.insertMealWithDetails(meal, ingredients);
+        });
     }
 
-    @Override
-    public void insertFavoriteMeal(final FavoriteMeal favoriteMeal) {
-        executorService.execute(() -> favoriteMealDAO.insertFavoriteMeal(favoriteMeal));
-    }
 
-    @Override
-    public void deleteFavoriteMeal(final FavoriteMeal favoriteMeal) {
-        executorService.execute(() -> favoriteMealDAO.deleteFavoriteMeal(favoriteMeal));
-    }
-
-    // Implementation of MealDataSource
-    @Override
-    public LiveData<List<MealDTO>> getAllMeals() {
-        return mealDAO.getAllMeals();
-    }
-
-    @Override
-    public LiveData<MealWithDetails> getMealWithIngredients(String mealId) {
-        return mealDAO.getMealWithIngredients(mealId);
-    }
-
-    @Override
-    public LiveData<List<MealMeasureIngredient>> getIngredientsByMealId(String mealId) {
-        return mealDAO.getIngredientsByMealId(mealId);
-    }
-
-    @Override
-    public void insertMeal(final MealDTO meal) {
-        executorService.execute(() -> mealDAO.insertMeal(meal));
-    }
-
-    @Override
-    public void deleteMeal(final MealDTO meal) {
-        executorService.execute(() -> mealDAO.deleteMeal(meal));
-    }
-
-    // Implementation of MealPlanDataSource
-    @Override
-    public LiveData<List<MealPlanWithMeals>> getMealPlansWithMeals(String clientEmail) {
-        return mealPlanDAO.getMealPlansWithMeals(clientEmail);
-    }
-
-    @Override
-    public LiveData<MealPlan> getMealPlan(String mealId, String clientEmail) {
-        return mealPlanDAO.getMealPlan(mealId, clientEmail);
-    }
-
-    @Override
-    public void insertMealPlan(final MealPlan mealPlan) {
-        executorService.execute(() -> mealPlanDAO.insertMealPlan(mealPlan));
-    }
-
-    @Override
-    public void deleteMealPlan(final MealPlan mealPlan) {
-        executorService.execute(() -> mealPlanDAO.deleteMealPlan(mealPlan));
-    }
+//    @Override
+//    public LiveData<List<FavoriteMealWithMeals>> getFavoritesWithMeals(String clientEmail) {
+//        return favoriteMealDAO.getFavoritesWithMeals(clientEmail);
+//    }
+//
+//    @Override
+//    public LiveData<FavoriteMeal> getFavoriteMeal(String mealId, String clientEmail) {
+//        return favoriteMealDAO.getFavoriteMeal(mealId, clientEmail);
+//    }
+//
+//    @Override
+//    public void insertFavoriteMeal(final FavoriteMeal favoriteMeal) {
+//        executorService.execute(() -> favoriteMealDAO.insertFavoriteMeal(favoriteMeal));
+//    }
+//
+//    @Override
+//    public void deleteFavoriteMeal(final FavoriteMeal favoriteMeal) {
+//        executorService.execute(() -> favoriteMealDAO.deleteFavoriteMeal(favoriteMeal));
+//    }
+//
+//    // Implementation of MealDataSource
+//    @Override
+//    public LiveData<List<MealDTO>> getAllMeals() {
+//        return mealDAO.getAllMeals();
+//    }
+//
+//    @Override
+//    public LiveData<MealWithDetails> getMealWithIngredients(String mealId) {
+//        return mealDAO.getMealWithIngredients(mealId);
+//    }
+//
+//    @Override
+//    public LiveData<List<MealMeasureIngredient>> getIngredientsByMealId(String mealId) {
+//        return mealDAO.getIngredientsByMealId(mealId);
+//    }
+//
+//    @Override
+//    public void insertMeal(final MealDTO meal) {
+//        executorService.execute(() -> mealDAO.insertMeal(meal));
+//    }
+//
+//    @Override
+//    public void deleteMeal(final MealDTO meal) {
+//        executorService.execute(() -> mealDAO.deleteMeal(meal));
+//    }
+//
+//    // Implementation of MealPlanDataSource
+//    @Override
+//    public LiveData<List<MealPlanWithMeals>> getMealPlansWithMeals(String clientEmail) {
+//        return mealPlanDAO.getMealPlansWithMeals(clientEmail);
+//    }
+//
+//    @Override
+//    public LiveData<MealPlan> getMealPlan(String mealId, String clientEmail) {
+//        return mealPlanDAO.getMealPlan(mealId, clientEmail);
+//    }
+//
+//    @Override
+//    public void insertMealPlan(final MealPlan mealPlan) {
+//        executorService.execute(() -> mealPlanDAO.insertMealPlan(mealPlan));
+//    }
+//
+//    @Override
+//    public void deleteMealPlan(final MealPlan mealPlan) {
+//        executorService.execute(() -> mealPlanDAO.deleteMealPlan(mealPlan));
+//    }
+//
+//    @Override
+//    public LiveData<List<MealPlan>> getAllMealPlans() {
+//        return null;
+//    }
+//
+//    @Override
+//    public LiveData<MealPlanWithMeals> getMealPlanWithMeals(String mealPlanId) {
+//        return null;
+//    }
+//
+//    @Override
+//    public void insertIngredients(List<MealMeasureIngredient> ingredients) {
+//
+//    }
+//
+//    @Override
+//    public void deleteIngredientsByMealId(String mealId) {
+//
+//    }
 
     // Shutdown the ExecutorService when it's no longer needed (e.g., in the ViewModel's onCleared method)
     public void shutdownExecutorService() {
         executorService.shutdown();
     }
+
+
 }

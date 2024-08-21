@@ -7,11 +7,16 @@ import com.example.mealmate.model.MealRepository.MealRepository;
 import com.example.mealmate.model.Step;
 import com.example.mealmate.model.database.AppDataBase;
 import com.example.mealmate.model.mealDTOs.CustomMeal;
+import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
 import com.example.mealmate.model.mealDTOs.all_meal_details.MealMeasureIngredient;
+import com.example.mealmate.model.mealDTOs.all_meal_details.MealWithDetails;
+import com.example.mealmate.model.mealDTOs.favorite_meals.FavoriteMeal;
+import com.example.mealmate.model.mealDTOs.favorite_meals.FavoriteMealWithMeals;
 import com.example.mealmate.model.network.CustomMealResponse;
 import com.example.mealmate.model.network.MealCategoryResponse;
 import com.example.mealmate.model.network.network_Interface.NetworkCallback;
 import com.example.mealmate.veiw.home_fragment_veiw.home_fragment_veiw_interface.HomeFragmentView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -106,6 +111,32 @@ public class AllMealDetailsFragment_presenter implements AllMealDetailsFragment_
         }
 
         return ingredientsList;
+    }
+
+    @Override
+    public void addMealToFAV(CustomMeal meal)
+    {
+
+        FavoriteMeal favoriteMeal=new FavoriteMeal(meal.getIdMeal(),FirebaseAuth.getInstance().getCurrentUser().getEmail(),meal.getStrMealThumb());
+        List<MealMeasureIngredient> mealMeasureIngredient=getMealMeasureIngredients(meal);
+        MealDTO mealDTO = new MealDTO(
+                meal.getStrCategory(),                // String
+                meal.getStrImageSource(),             // String
+                meal.getStrCreativeCommonsConfirmed(),// String
+                meal.getDateModified(),               // String
+                meal.getIdMeal(),                     // String
+                meal.getStrMeal(),                    // String
+                meal.getStrDrinkAlternate(),          // String
+                meal.getStrArea(),                    // String
+                meal.getStrInstructions(),            // String
+                meal.getStrMealThumb(),               // String
+                meal.getStrTags(),                    // String
+                meal.getStrYoutube(),                 // String
+                meal.getStrSource()                   // String
+        );
+        mealRepository.insertFavoriteMealWithMeals( favoriteMeal,mealDTO,mealMeasureIngredient);
+
+
     }
 
     @Override
