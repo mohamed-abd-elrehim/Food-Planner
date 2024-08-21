@@ -2,63 +2,172 @@ package com.example.mealmate;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AllMealDetailsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class AllMealDetailsFragment extends Fragment {
+import com.example.mealmate.model.MealIngredient;
+import com.example.mealmate.model.MealRepository.MealRepository;
+import com.example.mealmate.model.MediaItem;
+import com.example.mealmate.model.Step;
+import com.example.mealmate.model.database.AppDataBase;
+import com.example.mealmate.model.database.local_data_source.LocalDataSourceImpl;
+import com.example.mealmate.model.mealDTOs.CustomMeal;
+import com.example.mealmate.model.mealDTOs.all_meal_details.MealMeasureIngredient;
+import com.example.mealmate.model.network.CustomMealResponse;
+import com.example.mealmate.model.network.RemoteDataSourceImpl;
+import com.example.mealmate.presenter.search_fragment_presenter.Search_Fragment_PresenterImpl;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+import java.util.ArrayList;
+import java.util.List;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
-    public AllMealDetailsFragment() {
-        // Required empty public constructor
-    }
+public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFragment_Veiw_Interface {
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AllMealDetailsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AllMealDetailsFragment newInstance(String param1, String param2) {
-        AllMealDetailsFragment fragment = new AllMealDetailsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private static final String TAG = "AllMealDetailsFragment";
+    private ArrayList<MealIngredient> mealIngredients = new ArrayList<>();
+    private ArrayList<CustomMeal> customMeals = new ArrayList<>();
+
+    private RecyclerView stepsRecyclerView;
+    private StepsAdapter stepsAdapter;
+    private List<Step> stepsList;
+    private ArrayList<String> stepsListHandeled = new ArrayList<>();
+    private MediaPagerAdapter mediaPagerAdapter;
+
+    private ViewPager2 all_Meal_detil_ViewPager;
+    private List<MediaItem> mediaItems = new ArrayList<>();
+
+    private List<MealMeasureIngredient> mealMeasureIngredients = new ArrayList<>();
+    private IngredientAdapter ingredientAdapter;
+    private RecyclerView ingredientRecyclerView;
+
+    private TextView mealName;
+    private TextView mealCategory;
+    private TextView mealArea;
+
+    private AllMealDetailsFragment_presenter presenter;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_all_meal_details, container, false);
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        stepsRecyclerView = view.findViewById(R.id.all_Meal_detil_mealDirections_recyclerView3);
+        all_Meal_detil_ViewPager = view.findViewById(R.id.all_Meal_detil_ViewPager);
+        ingredientRecyclerView = view.findViewById(R.id.all_Meal_detil_mealIngredients_recyclerView2);
+        mealName = view.findViewById(R.id.all_Meal_detil_meal_name);
+        mealCategory= view.findViewById(R.id.all_Meal_detil_meal_categorie);
+        mealArea= view.findViewById(R.id.all_Meal_detil_meal_area);
+        // Set up RecyclerView
+        stepsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        ingredientRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+
+        // Initialize steps list and adapter
+        stepsList = new ArrayList<>();
+        stepsAdapter = new StepsAdapter(getContext(), stepsList);
+        stepsRecyclerView.setAdapter(stepsAdapter);
+
+        // Initialize ViewPager
+        mediaItems = new ArrayList<>();
+        mediaPagerAdapter = new MediaPagerAdapter(getContext(), mediaItems);
+        all_Meal_detil_ViewPager.setAdapter(mediaPagerAdapter);
+
+        mealMeasureIngredients = new ArrayList<>();
+        ingredientAdapter = new IngredientAdapter(getContext(), mealMeasureIngredients);
+        ingredientRecyclerView.setAdapter(ingredientAdapter);
+
+
+        // Initialize the presenter
+        presenter = new AllMealDetailsFragment_presenter(
+                AppDataBase.getInstance(getContext()),
+                MealRepository.getInstance(
+                        LocalDataSourceImpl.getInstance(
+                                AppDataBase.getInstance(getContext()).getFavoriteMealDAO(),
+                                AppDataBase.getInstance(getContext()).getMealDAO(),
+                                AppDataBase.getInstance(getContext()).getMealPlanDAO()
+                        ),
+                        RemoteDataSourceImpl.getInstance()
+                ),
+                this
+        );
+
+        // Load meal details by ID
+        String mealID = AllMealDetailsFragmentArgs.fromBundle(getArguments()).getMealID();
+        Log.i(TAG, "onViewCreated: Meal ID - " + mealID);
+        presenter.loadAllMealDetailsById(mealID);
+    }
+
+
+    @Override
+    public void showData(List<CustomMeal> data) {
+        if (data == null || data.isEmpty()) {
+            Log.e(TAG, "showData: No meal data received");
+            return;
+        }
+    // Clear any existing data
+        stepsList.clear();
+        mediaItems.clear();
+
+        mealMeasureIngredients.clear();
+
+        mealMeasureIngredients .addAll(presenter.getMealMeasureIngredients(data.get(0)));
+
+        mealName.setText(data.get(0).getStrMeal());
+        mealCategory.setText(data.get(0).getStrCategory());
+        mealArea.setText(data.get(0).getStrArea());
+
+        Log.i(TAG, "showData:+============= "+mealMeasureIngredients.size());
+        String imagUrl = data.get(0).getStrMealThumb();
+        String videoUrl = data.get(0).getStrYoutube();
+        mediaItems.add(new MediaItem(imagUrl, false));
+        mediaItems.add(new MediaItem(videoUrl, true));
+        // Get the instructions from the first CustomMeal
+        String instructions = data.get(0).getStrInstructions();
+
+        // Process instructions into steps
+        // Populate the stepsList with Step objects
+        stepsList.addAll(presenter.processInstructions(instructions));
+
+
+
+
+        // Notify the adapter that the data has changed
+        stepsAdapter.notifyDataSetChanged();
+        mediaPagerAdapter.notifyDataSetChanged();
+        ingredientAdapter.notifyDataSetChanged();
+
+
+    }
+
+
+    @Override
+    public void showError(String errorMessage) {
+
+    }
+
+
+
+
+
 }

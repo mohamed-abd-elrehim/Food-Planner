@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchFragment">
+    tools:context=".veiw.search_fragment.SearchFragment">
 
     <LinearLayout
         android:id="@+id/search_layout"
@@ -110,7 +110,7 @@
 
         <com.google.android.material.chip.Chip
             android:id="@+id/categories_chip2"
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:text="@string/categories"
             android:textAlignment="center"
@@ -120,7 +120,7 @@
 
         <com.google.android.material.chip.Chip
             android:id="@+id/area_chip"
-            android:layout_width="110dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:text="@string/area"
             android:textAlignment="center"
@@ -130,7 +130,7 @@
 
         <com.google.android.material.chip.Chip
             android:id="@+id/ingredients_chip"
-            android:layout_width="110dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:text="@string/ingredients"
             android:textAlignment="center"

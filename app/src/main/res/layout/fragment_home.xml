@@ -21,7 +21,7 @@
 
 
             <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/viewPager"
+                android:id="@+id/all_Meal_detil_ViewPager"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <View

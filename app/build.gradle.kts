@@ -97,5 +97,7 @@ dependencies {
     annotationProcessor ("com.github.bumptech.glide:compiler:4.11.0")
     implementation ("jp.wasabeef:glide-transformations:4.3.0")
     implementation ("androidx.appcompat:appcompat:1.6.1")
+    implementation ("com.google.android.exoplayer:exoplayer:2.18.2")
+
 
 }

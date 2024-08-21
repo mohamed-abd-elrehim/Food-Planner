@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.mealmate.FilterAdapter;
 import com.example.mealmate.model.MealArea;
 import com.example.mealmate.presenter.home_fragment_presenter.HomeFragmentPresenterImpl;
 import com.example.mealmate.veiw.home_fragment_veiw.related_adapter_views.ListAllFilterAdapter;
@@ -64,7 +63,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewPager = view.findViewById(R.id.viewPager);
+        viewPager = view.findViewById(R.id.all_Meal_detil_ViewPager);
         categoryRecyclerView = view.findViewById(R.id.viewPagerCategory);
         ingredientRecyclerView2 =view.findViewById(R.id.viewPagerIngredient);
         areaRecyclerView3=view.findViewById(R.id.viewPagerArea);

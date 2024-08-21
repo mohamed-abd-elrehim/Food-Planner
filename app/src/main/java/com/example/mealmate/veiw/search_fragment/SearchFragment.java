@@ -1,4 +1,4 @@
-package com.example.mealmate;
+package com.example.mealmate.veiw.search_fragment;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -10,9 +10,19 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.SearchView;
+
+import com.example.mealmate.veiw.search_fragment.related_adapter_views.AllMealPagerAdapter;
+import com.example.mealmate.veiw.search_fragment.related_adapter_views.FilterAdapter;
+import com.example.mealmate.R;
+import com.example.mealmate.presenter.search_fragment_presenter.Search_Fragment_PresenterImpl;
+import com.example.mealmate.veiw.search_fragment.search_fragment_veiw_interface.HandelSeeMoreClick;
+import com.example.mealmate.veiw.search_fragment.search_fragment_veiw_interface.Search_Fragment_Veiw_Interface;
+import com.example.mealmate.veiw.search_fragment.related_adapter_views.SuggestionsAdapter;
 import com.example.mealmate.model.MealArea;
 import com.example.mealmate.model.MealCategory;
 import com.example.mealmate.model.MealIngredient;
@@ -26,7 +36,7 @@ import com.google.android.material.chip.Chip;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Interface {
+public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Interface, HandelSeeMoreClick {
 
     private Chip filterArea;
     private Chip filterCategory;
@@ -38,6 +48,7 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
     private FilterAdapter<MealIngredient> filterAdapterIngredient;
     private FilterAdapter<MealArea> mealAreaFilterAdapter;
     private ArrayList<MealDTO> mealsList = new ArrayList<>();
+    private ArrayList<MealDTO> mealsSearchList = new ArrayList<>();
     private ArrayList<MealCategory> categoryFilterList = new ArrayList<>();
     private ArrayList<MealIngredient> ingredientFilterList = new ArrayList<>();
     private ArrayList<MealArea> areaFilterList = new ArrayList<>();
@@ -91,6 +102,7 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
 
             @Override
             public boolean onQueryTextChange(String newText) {
+
                 // Handle query text change
                 updateSuggestions(newText);
                 return true;
@@ -115,7 +127,8 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
         allMealPagerAdapter = new AllMealPagerAdapter(
                 getContext(),
                 mealsList,
-                mealDTO -> Toast.makeText(getContext(), mealDTO.getStrMeal(), Toast.LENGTH_SHORT).show()
+                mealDTO -> Toast.makeText(getContext(), mealDTO.getStrMeal(), Toast.LENGTH_SHORT).show(),
+                this
         );
         setupRecyclerView(recyclerView, allMealPagerAdapter);
 
@@ -147,7 +160,8 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
         List<Object> suggestions = new ArrayList<>();
 
         if (query != null && !query.isEmpty()) {
-            addFilteredSuggestions(suggestions, query, mealsList);
+            presenter.loadFilteredByName(query);
+            addFilteredSuggestions(suggestions, query, mealsSearchList);
             addFilteredSuggestions(suggestions, query, categoryFilterList);
             addFilteredSuggestions(suggestions, query, ingredientFilterList);
             addFilteredSuggestions(suggestions, query, areaFilterList);
@@ -167,7 +181,6 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
     }
 
     private <T> void addFilteredSuggestions(List<Object> suggestions, String query, ArrayList<T> list) {
-       presenter.loadFilteredByName(query);
         for (T item : list) {
             String itemName = getItemName(item);
             if (itemName.toLowerCase().contains(query.toLowerCase())) {
@@ -233,14 +246,27 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
             areaFilterList.addAll((List<MealArea>) data);
             mealAreaFilterAdapter.updateFilterList(areaFilterList);
         } else if (data.get(0) instanceof MealDTO) {
-            mealsList.clear();
-            mealsList.addAll((List<MealDTO>) data);
-            allMealPagerAdapter.notifyDataSetChanged();
+
+                mealsList.clear();
+                mealsList.addAll((List<MealDTO>) data);
+               Log.i(TAG, "showData: "+mealsList.size());
+                allMealPagerAdapter.notifyDataSetChanged();
+
         }
     }
 
     @Override
     public void showError(String error) {
         Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onSeeMoreClick(String id) {
+        Log.i(TAG, "onSeeMoreClick: "+id);
+       SearchFragmentDirections.ActionSearchFragmentToAllMealDetailsFragment2 action = SearchFragmentDirections.actionSearchFragmentToAllMealDetailsFragment2(id);
+        Navigation.findNavController(getView()).navigate(action);
+
+
+
     }
 }

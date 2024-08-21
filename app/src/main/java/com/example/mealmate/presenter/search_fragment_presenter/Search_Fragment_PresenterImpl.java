@@ -1,4 +1,4 @@
-package com.example.mealmate;
+package com.example.mealmate.presenter.search_fragment_presenter;
 
 import android.util.Log;
 
@@ -13,13 +13,14 @@ import com.example.mealmate.model.network.MealCategoryResponse;
 import com.example.mealmate.model.network.MealIngredientResponse;
 import com.example.mealmate.model.network.MealResponse;
 import com.example.mealmate.model.network.network_Interface.NetworkCallback;
+import com.example.mealmate.presenter.search_fragment_presenter.search_fragment_presenter_interface.Search_Fragment_Presenter_Interface;
 import com.example.mealmate.veiw.search_fragment.search_fragment_veiw_interface.Search_Fragment_Veiw_Interface;
 
 import java.util.List;
 
 import retrofit2.Response;
 
-public class Search_Fragment_PresenterImpl implements Search_Fragment_Presenter_Interface , NetworkCallback {
+public class Search_Fragment_PresenterImpl implements Search_Fragment_Presenter_Interface, NetworkCallback {
 
     private Search_Fragment_Veiw_Interface view;
     public static final String TAG = "Search_Fragment_PresenterImpl";
@@ -73,6 +74,11 @@ public class Search_Fragment_PresenterImpl implements Search_Fragment_Presenter_
     @Override
     public void loadFilteredByName(String name) {
         mealRepository.makeNetworkCallback(this, "searchMealByName", name);
+
+    }
+
+    @Override
+    public void seeMore(String Id) {
 
     }
 

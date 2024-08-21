@@ -18,8 +18,8 @@ public class MealMeasureIngredient {
     @ColumnInfo(name = "measure")
     private String measure;
 
-    public MealMeasureIngredient(int id, String mealId, String ingredientName, String measure) {
-        this.id = id;
+
+    public MealMeasureIngredient(String mealId, String ingredientName, String measure) {
         this.mealId = mealId;
         this.ingredientName = ingredientName;
         this.measure = measure;

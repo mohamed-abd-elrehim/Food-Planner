@@ -1,9 +1,9 @@
-package com.example.listproductmvc.view_all_products.veiw.veiw_interface;
+package com.example.mealmate;
 
-import com.example.listproductmvc.model.ProductDTO;
+import com.example.mealmate.model.mealDTOs.CustomMeal;
 
 public interface HandelAddToFavoritesClick {
-    void onAddToFavoritesClick(ProductDTO product);
+    void onAddToFavoritesClick(CustomMeal customMeal);
 
 }
 

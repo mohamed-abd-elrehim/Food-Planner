@@ -1,6 +1,4 @@
-package com.example.mealmate;
-
-import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
+package com.example.mealmate.veiw.search_fragment.search_fragment_veiw_interface;
 
 import java.util.List;
 

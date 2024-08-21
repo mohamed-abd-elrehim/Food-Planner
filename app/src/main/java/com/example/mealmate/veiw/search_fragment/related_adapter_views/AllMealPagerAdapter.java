@@ -1,9 +1,11 @@
-package com.example.mealmate;
+package com.example.mealmate.veiw.search_fragment.related_adapter_views;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,8 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.mealmate.model.MealCategory;
+import com.example.mealmate.R;
 import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
+import com.example.mealmate.veiw.search_fragment.search_fragment_veiw_interface.HandelSeeMoreClick;
 
 import java.util.List;
 
@@ -20,12 +23,14 @@ public class AllMealPagerAdapter extends RecyclerView.Adapter<AllMealPagerAdapte
     private List<MealDTO> mealList;
     private Context context;
     private OnMealClickListener onMealClickListener;
-
+    private HandelSeeMoreClick handelSeeMoreClick;
+    private static final String TAG = "AllMealPagerAdapter";
     // Constructor
-    public AllMealPagerAdapter(Context context, List<MealDTO> mealList, OnMealClickListener onMealClickListener) {
+    public AllMealPagerAdapter(Context context, List<MealDTO> mealList, OnMealClickListener onMealClickListener,HandelSeeMoreClick handelSeeMoreClick) {
         this.context = context;
         this.mealList = mealList;
         this.onMealClickListener = onMealClickListener;
+        this.handelSeeMoreClick = handelSeeMoreClick;
     }
 
     @NonNull
@@ -50,6 +55,15 @@ public class AllMealPagerAdapter extends RecyclerView.Adapter<AllMealPagerAdapte
                 onMealClickListener.onMealClick(meal);
             }
         });
+
+        holder.seeMore.setOnClickListener(v -> {
+            if (handelSeeMoreClick != null) {
+                handelSeeMoreClick.onSeeMoreClick(meal.getIdMeal());
+                Log.i(TAG, "onBindViewHolder: "+meal.getIdMeal());
+
+            }
+        });
+
     }
 
     @Override
@@ -61,10 +75,12 @@ public class AllMealPagerAdapter extends RecyclerView.Adapter<AllMealPagerAdapte
     public static class MealViewHolder extends RecyclerView.ViewHolder {
         ImageView mealImage;
         TextView mealName;
+        Button seeMore;
         public MealViewHolder(@NonNull View itemView) {
             super(itemView);
             mealImage = itemView.findViewById(R.id.mealImage);
             mealName = itemView.findViewById(R.id.meal_name);
+            seeMore = itemView.findViewById(R.id.seeMorebutton);
         }
     }
 

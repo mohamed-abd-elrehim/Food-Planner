@@ -1,5 +1,6 @@
 package com.example.mealmate.model.network.network_Interface;
 
+import com.example.mealmate.model.network.CustomMealResponse;
 import com.example.mealmate.model.network.MealAreaResponse;
 import com.example.mealmate.model.network.MealCategoryResponse;
 import com.example.mealmate.model.network.MealIngredientResponse;
@@ -21,6 +22,13 @@ public interface MealService {
 
     @GET("lookup.php")
     Call<MealResponse> lookupMealById(@Query("i") String mealId);
+
+    @GET("lookup.php")
+    Call<CustomMealResponse> lookupAllMealDitailsById(@Query("i") String mealId);
+    @GET("search.php")
+    Call<CustomMealResponse> lookupAllMealDitailsByName(@Query("s") String mealName);
+
+
 
     @GET("categories.php")
     Call<MealCategoryResponse> listAllCategories();

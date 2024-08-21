@@ -48,5 +48,10 @@
     <string name="header_title">Header Title</string>
     <string name="suggestion_title">Suggestion Title</string>
     <string name="icon_description">Icon Description</string>
+    <string name="directions">Directions</string>
+    <string name="add_to_favourites">ADD TO FAVOURITES</string>
+    <string name="add_to_plan">ADD TO PLAN</string>
+    <string name="category">Category</string>
+    <string name="categorie">Categorie</string>
 
 </resources>

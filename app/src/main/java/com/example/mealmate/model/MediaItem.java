@@ -1,9 +1,9 @@
 package com.example.mealmate.model;
-public class MediaItems {
+public class MediaItem {
     private String url;
     private boolean isVideo;
 
-    public MediaItems(String url, boolean isVideo) {
+    public MediaItem(String url, boolean isVideo) {
         this.url = url;
         this.isVideo = isVideo;
     }

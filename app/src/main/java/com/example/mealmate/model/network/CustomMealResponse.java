@@ -1,20 +1,20 @@
 package com.example.mealmate.model.network;
 
 import com.example.mealmate.model.MealArea;
-import com.example.mealmate.model.MealIngredient;
+import com.example.mealmate.model.mealDTOs.CustomMeal;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class MealAreaResponse {
+public class CustomMealResponse {
     @SerializedName("meals")
-    private List<MealArea> mealAreas;
+    private List<CustomMeal> customMeals;
 
-    public List<MealArea> getMealAreas() {
-        return mealAreas;
+    public List<CustomMeal> getCustomMeals() {
+        return customMeals;
     }
 
-    public void setMealAreas(List<MealArea> mealAreas) {
-        this.mealAreas = mealAreas;
+    public void setCustomMeals(List<CustomMeal> customMeals) {
+        this.customMeals = customMeals;
     }
 }

@@ -9,16 +9,16 @@
         android:id="@+id/homeFragment"
         android:name="com.example.mealmate.veiw.home_fragment_veiw.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
-        <action
-            android:id="@+id/action_homeFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.example.mealmate.SearchFragment"
+        android:name="com.example.mealmate.veiw.search_fragment.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_allMealDetailsFragment2"
+            app:destination="@id/allMealDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/favoriteMealsFragment"
         android:name="com.example.mealmate.FavoriteMealsFragment"
@@ -39,4 +39,14 @@
         android:name="com.example.mealmate.ProfileFragment"
         android:label="@string/profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/allMealDetailsFragment"
+        android:name="com.example.mealmate.AllMealDetailsFragment"
+        android:label="fragment_all_meal_details"
+        tools:layout="@layout/fragment_all_meal_details" >
+        <argument
+            android:name="mealID"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
 </navigation>

@@ -1,9 +1,8 @@
-package com.example.listproductmvc.view_all_products.veiw.veiw_interface;
+package com.example.mealmate.veiw.search_fragment.search_fragment_veiw_interface;
 
-import com.example.listproductmvc.model.ProductDTO;
 
-public interface HandelAddToFavoritesClick {
-    void onAddToFavoritesClick(ProductDTO product);
+public interface HandelSeeMoreClick {
+    void onSeeMoreClick(String id);
 
 }
 

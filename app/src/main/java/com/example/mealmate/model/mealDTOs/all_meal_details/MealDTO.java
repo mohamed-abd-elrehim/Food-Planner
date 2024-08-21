@@ -10,8 +10,16 @@ public class MealDTO {
     @ColumnInfo(name = "id")
     private int id;
 
+    public String getIdMeal() {
+        return idMeal;
+    }
+
+    public void setIdMeal(String idMeal) {
+        this.idMeal = idMeal;
+    }
+
     @ColumnInfo(name = "meal_id")
-    private String mealId;
+    private String idMeal;
 
     @ColumnInfo(name = "str_meal")
     private String strMeal;
@@ -37,9 +45,9 @@ public class MealDTO {
     @ColumnInfo(name = "str_source")
     private String strSource;
 
-    public MealDTO(int id, String mealId, String strMeal, String strDrinkAlternate, String strArea, String strInstructions, String strMealThumb, String strTags, String strYoutube, String strSource) {
+    public MealDTO(int id, String idMeal, String strMeal, String strDrinkAlternate, String strArea, String strInstructions, String strMealThumb, String strTags, String strYoutube, String strSource) {
         this.id = id;
-        this.mealId = mealId;
+        this.idMeal = idMeal;
         this.strMeal = strMeal;
         this.strDrinkAlternate = strDrinkAlternate;
         this.strArea = strArea;
@@ -59,13 +67,7 @@ public class MealDTO {
         this.id = id;
     }
 
-    public String getMealId() {
-        return mealId;
-    }
 
-    public void setMealId(String mealId) {
-        this.mealId = mealId;
-    }
 
     public String getStrMeal() {
         return strMeal;
