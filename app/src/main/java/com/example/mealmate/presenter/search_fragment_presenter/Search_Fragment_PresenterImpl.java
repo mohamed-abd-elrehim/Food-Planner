@@ -13,7 +13,7 @@ import com.example.mealmate.model.network.MealCategoryResponse;
 import com.example.mealmate.model.network.MealIngredientResponse;
 import com.example.mealmate.model.network.MealResponse;
 import com.example.mealmate.model.network.network_Interface.NetworkCallback;
-import com.example.mealmate.veiw.home_fragment_veiw.home_fragment_veiw_interface.HomeFragmentView;
+import com.example.mealmate.veiw.search_fragment.search_fragment_veiw_interface.Search_Fragment_Veiw_Interface;
 
 import java.util.List;
 
