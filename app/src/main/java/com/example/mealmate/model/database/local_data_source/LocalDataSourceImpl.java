@@ -62,10 +62,18 @@ public class LocalDataSourceImpl implements LocalDataSource {
     }
 
     @Override
-    public void insertMealWithDetails(MealDTO meal, List<MealMeasureIngredient> ingredients) {
-        executorService.execute(() -> {
-            mealDAO.insertMealWithDetails(meal, ingredients);
-        });
+    public LiveData<List<FavoriteMeal>> getFavoriteMeal(String clientEmail) {
+        return favoriteMealDAO.getFavoriteMeal(clientEmail);
+    }
+
+    @Override
+    public LiveData<MealDTO> getMealById(String mealId) {
+        return favoriteMealDAO.getMealById(mealId);
+    }
+
+    @Override
+    public LiveData<List<MealMeasureIngredient>> getIngredientsByMealId(String mealId) {
+        return favoriteMealDAO.getIngredientsByMealId(mealId);
     }
 
 

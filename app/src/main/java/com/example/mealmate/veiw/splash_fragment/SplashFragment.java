@@ -77,12 +77,12 @@ public class SplashFragment extends Fragment implements Splash_Fragment_Interfac
     }
 
     private void navigateToStartScreen() {
-        navController.navigate(R.id.startFragment);
+        Navigation.findNavController(requireView()).navigate(R.id.action_splashFragment_to_startFragment);
     }
 
 
     @Override
     public void navigateToStartFragment() {
-        navController.navigate(R.id.action_splashFragment_to_startFragment);
+
     }
 }

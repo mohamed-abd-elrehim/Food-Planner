@@ -9,28 +9,15 @@
         android:id="@+id/homeFragment"
         android:name="com.example.mealmate.veiw.home_fragment_veiw.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
-        <action
-            android:id="@+id/action_homeFragment_to_searchFragment"
-            app:destination="@id/searchFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_planOfTheWeekFragment"
-            app:destination="@id/planOfTheWeekFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_favoriteMealsFragment"
-            app:destination="@id/favoriteMealsFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.mealmate.veiw.search_fragment.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" >
         <action
-            android:id="@+id/action_searchFragment_to_allMealDetailsFragment2"
+            android:id="@+id/action_searchFragment_to_allMealDetailsFragment"
             app:destination="@id/allMealDetailsFragment" />
-        <action
-            android:id="@+id/action_searchFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/favoriteMealsFragment"
@@ -40,16 +27,15 @@
         <action
             android:id="@+id/action_favoriteMealsFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_favoriteMealsFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/planOfTheWeekFragment"
         android:name="com.example.mealmate.PlanOfTheWeekFragment"
         android:label="fragment_plan_of_the_week"
-        tools:layout="@layout/fragment_plan_of_the_week" >
-        <action
-            android:id="@+id/action_planOfTheWeekFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_plan_of_the_week" />
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.mealmate.ProfileFragment"
@@ -57,15 +43,11 @@
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/allMealDetailsFragment"
-        android:name="com.example.mealmate.AllMealDetailsFragment"
+        android:name="com.example.mealmate.veiw.all_meal_details_fragment.AllMealDetailsFragment"
         android:label="fragment_all_meal_details"
-        tools:layout="@layout/fragment_all_meal_details" >
+        tools:layout="@layout/fragment_add_plan_meal">
         <argument
-            android:name="mealID"
-            app:argType="string"
-            app:nullable="true" />
-        <action
-            android:id="@+id/action_allMealDetailsFragment_to_searchFragment"
-            app:destination="@id/searchFragment" />
+            android:name="meal"
+            app:argType="string" />
     </fragment>
 </navigation>

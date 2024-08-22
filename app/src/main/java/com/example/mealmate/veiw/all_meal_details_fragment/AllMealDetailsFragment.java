@@ -1,4 +1,4 @@
-package com.example.mealmate;
+package com.example.mealmate.veiw.all_meal_details_fragment;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -19,6 +19,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mealmate.veiw.all_meal_details_fragment.all_meal_details_fragment_veiw_interface.AllMealDetailsFragment_Veiw_Interface;
+import com.example.mealmate.presenter.all_meal_details_fragment_presenter.AllMealDetailsFragment_presenter;
+import com.example.mealmate.veiw.all_meal_details_fragment.all_meal_details_fragment_veiw_interface.HandelAddToFavoritesClick;
+import com.example.mealmate.veiw.all_meal_details_fragment.related_adapter_views.IngredientAdapter;
+import com.example.mealmate.veiw.all_meal_details_fragment.related_adapter_views.MediaPagerAdapter;
+import com.example.mealmate.R;
+import com.example.mealmate.StepsAdapter;
 import com.example.mealmate.model.MealIngredient;
 import com.example.mealmate.model.MealRepository.MealRepository;
 import com.example.mealmate.model.MediaItem;
@@ -27,9 +34,7 @@ import com.example.mealmate.model.database.AppDataBase;
 import com.example.mealmate.model.database.local_data_source.LocalDataSourceImpl;
 import com.example.mealmate.model.mealDTOs.CustomMeal;
 import com.example.mealmate.model.mealDTOs.all_meal_details.MealMeasureIngredient;
-import com.example.mealmate.model.network.CustomMealResponse;
 import com.example.mealmate.model.network.RemoteDataSourceImpl;
-import com.example.mealmate.presenter.search_fragment_presenter.Search_Fragment_PresenterImpl;
 import com.example.mealmate.veiw.main_activity.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -123,9 +128,15 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
         );
 
         // Load meal details by ID
-        String mealID = AllMealDetailsFragmentArgs.fromBundle(getArguments()).getMealID();
-        Log.i(TAG, "onViewCreated: Meal ID - " + mealID);
-        presenter.loadAllMealDetailsById(mealID);
+        String arguments = AllMealDetailsFragmentArgs.fromBundle(getArguments()).getMeal();
+        if (arguments != null) {
+            presenter.loadAllMealDetailsById(arguments);
+
+        }
+        else {
+            Toast.makeText(getContext(), "mealID is null", Toast.LENGTH_SHORT).show();
+        }
+
 
         addToFavoritesButton.setOnClickListener(view1 -> {
             if(FirebaseAuth.getInstance().getCurrentUser()!=null) {

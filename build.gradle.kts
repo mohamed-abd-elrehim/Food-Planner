@@ -2,7 +2,7 @@
 buildscript {
     dependencies {
         // Adds the Safe Args Gradle plugin to the classpath
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.7.4")
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.5.3")
         // The Safe Args plugin is used for generating type-safe classes for passing data between Android Navigation components
     }
 }

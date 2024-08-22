@@ -1,5 +1,7 @@
 package com.example.mealmate.model.MealRepository;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 
 import com.example.mealmate.model.database.local_data_source.LocalDataSourceImpl;
@@ -119,7 +121,22 @@ public class MealRepository implements MealRepositoryInterface {
     }
 
     @Override
-    public void insertMealWithDetails(MealDTO meal, List<MealMeasureIngredient> ingredients) {
-        localDataSource.insertMealWithDetails(meal, ingredients);
+    public LiveData<List<FavoriteMeal>> getFavoriteMeal(String clientEmail) {
+        return localDataSource.getFavoriteMeal(clientEmail);
     }
+
+
+
+
+    @Override
+    public LiveData<MealDTO> getMealById(String mealId) {
+        return localDataSource.getMealById(mealId);
+    }
+
+    @Override
+    public LiveData<List<MealMeasureIngredient>> getIngredientsByMealId(String mealId) {
+        return localDataSource.getIngredientsByMealId(mealId);
+    }
+
+
 }

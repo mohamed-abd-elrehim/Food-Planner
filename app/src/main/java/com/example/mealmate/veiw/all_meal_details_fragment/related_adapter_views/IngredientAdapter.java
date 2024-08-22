@@ -1,4 +1,4 @@
-package com.example.mealmate;
+package com.example.mealmate.veiw.all_meal_details_fragment.related_adapter_views;
 
 import android.content.Context;
 import android.util.Log;
@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.mealmate.R;
 import com.example.mealmate.model.mealDTOs.all_meal_details.MealMeasureIngredient;
 
 import de.hdodenhof.circleimageview.CircleImageView;

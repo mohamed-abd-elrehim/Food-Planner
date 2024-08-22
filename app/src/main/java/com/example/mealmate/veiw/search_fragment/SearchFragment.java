@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -247,10 +248,10 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
             mealAreaFilterAdapter.updateFilterList(areaFilterList);
         } else if (data.get(0) instanceof MealDTO) {
 
-                mealsList.clear();
-                mealsList.addAll((List<MealDTO>) data);
-               Log.i(TAG, "showData: "+mealsList.size());
-                allMealPagerAdapter.notifyDataSetChanged();
+            mealsList.clear();
+            mealsList.addAll((List<MealDTO>) data);
+            Log.i(TAG, "showData: " + mealsList.size());
+            allMealPagerAdapter.notifyDataSetChanged();
 
         }
     }
@@ -262,11 +263,13 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
 
     @Override
     public void onSeeMoreClick(String id) {
-        Log.i(TAG, "onSeeMoreClick: "+id);
-       SearchFragmentDirections.ActionSearchFragmentToAllMealDetailsFragment2 action = SearchFragmentDirections.actionSearchFragmentToAllMealDetailsFragment2(id);
-        Navigation.findNavController(getView()).navigate(action);
+        Log.i(TAG, "onSeeMoreClick: " + id);
+        if (id != null) {
+            SearchFragmentDirections.ActionSearchFragmentToAllMealDetailsFragment action = SearchFragmentDirections.actionSearchFragmentToAllMealDetailsFragment(id);
+            NavController navController = Navigation.findNavController(requireView());
+            navController.navigate(action);
 
-
+        }
 
     }
 }

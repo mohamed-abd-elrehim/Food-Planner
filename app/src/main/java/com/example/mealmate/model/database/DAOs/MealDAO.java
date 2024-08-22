@@ -17,27 +17,27 @@ import java.util.List;
 @Dao
 public interface MealDAO {
 
-    // Insert a meal along with its associated ingredients in a single transaction
-
-    @Transaction
-    default void insertMealWithDetails(MealDTO meal, List<MealMeasureIngredient> ingredients) {
-        // Insert the meal first
-        insertMeal(meal);
-        // Insert all ingredients associated with the meal
-        insertIngredients(ingredients);
-    }
-
-    //   Insert a MealDTO into the database. If the meal already exists, it will be replaced.
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertMeal(MealDTO meal);
-
-    // Insert a MealMeasureIngredient into the database. If the ingredient already exists, it will be replaced.
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertIngredient(MealMeasureIngredient ingredient);
-
-    // Insert a list of MealMeasureIngredients into the database. If any ingredient already exists, it will be replaced.
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertIngredients(List<MealMeasureIngredient> ingredients);
+//    // Insert a meal along with its associated ingredients in a single transaction
+//
+//    @Transaction
+//    default void insertMealWithDetails(MealDTO meal, List<MealMeasureIngredient> ingredients) {
+//        // Insert the meal first
+//        insertMeal(meal);
+//        // Insert all ingredients associated with the meal
+//        insertIngredients(ingredients);
+//    }
+//
+//    //   Insert a MealDTO into the database. If the meal already exists, it will be replaced.
+//    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    void insertMeal(MealDTO meal);
+//
+//    // Insert a MealMeasureIngredient into the database. If the ingredient already exists, it will be replaced.
+//    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    void insertIngredient(MealMeasureIngredient ingredient);
+//
+//    // Insert a list of MealMeasureIngredients into the database. If any ingredient already exists, it will be replaced.
+//    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    void insertIngredients(List<MealMeasureIngredient> ingredients);
 
 
 //    // Delete a meal and its associated ingredients in a single transaction

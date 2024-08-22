@@ -1,6 +1,7 @@
 package com.example.mealmate.model.database.local_data_source.local_data_source_interface;
 
 import androidx.lifecycle.LiveData;
+import androidx.room.Query;
 
 import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
 import com.example.mealmate.model.mealDTOs.all_meal_details.MealMeasureIngredient;
@@ -17,6 +18,10 @@ public interface FavoriteMealDataSource {
 //    void deleteFavoriteMeal(FavoriteMeal favoriteMeal);
 
     void insertFavoriteMealWithMeals(FavoriteMeal meal, MealDTO mealDTO,List<MealMeasureIngredient> mealDTOS);
+
+    LiveData<List<FavoriteMeal>> getFavoriteMeal(String clientEmail);
+    LiveData<MealDTO> getMealById(String mealId);
+    LiveData<List<MealMeasureIngredient>> getIngredientsByMealId(String mealId);
 
 
 }

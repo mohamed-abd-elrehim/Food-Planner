@@ -1,4 +1,4 @@
-package com.example.mealmate;
+package com.example.mealmate.veiw.all_meal_details_fragment.all_meal_details_fragment_veiw_interface;
 
 import com.example.mealmate.model.mealDTOs.CustomMeal;
 

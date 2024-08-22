@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     id("androidx.navigation.safeargs")  // Apply the Safe Args plugin for type-safe navigation arguments
     alias(libs.plugins.google.gms.google.services)  // Use the latest version
+
+
 }
 
 android {
@@ -86,18 +88,22 @@ dependencies {
     implementation("com.airbnb.android:lottie:5.1.0")
 
     // Firebase Authentication for user sign-up and login
-    implementation("com.google.firebase:firebase-auth:21.0.1")
-
+    implementation("com.google.firebase:firebase-auth:22.0.0")
     // Google Sign-In Integration
-    implementation("com.google.android.gms:play-services-auth:20.5.0")
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
 
-    implementation ("androidx.viewpager2:viewpager2:1.0.0")
+    implementation ("androidx.viewpager2:viewpager2:1.1.0")
 
     implementation ("com.github.bumptech.glide:glide:4.11.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.11.0")
     implementation ("jp.wasabeef:glide-transformations:4.3.0")
-    implementation ("androidx.appcompat:appcompat:1.6.1")
-    implementation ("com.google.android.exoplayer:exoplayer:2.18.2")
+    implementation ("androidx.appcompat:appcompat:1.7.0")
 
+    implementation ("com.google.android.exoplayer:exoplayer:2.19.1")
+
+
+
+    implementation ("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    implementation ("androidx.navigation:navigation-ui-ktx:2.7.7")
 
 }

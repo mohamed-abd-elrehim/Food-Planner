@@ -34,6 +34,4 @@ public interface MealDataSource {
 //    // Delete ingredients associated with a specific meal_id
 //    void deleteIngredientsByMealId(String mealId);
 
-    void insertMealWithDetails(MealDTO meal, List<MealMeasureIngredient> ingredients);
-
 }

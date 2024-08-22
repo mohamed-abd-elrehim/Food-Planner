@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 import com.example.mealmate.R;
 import com.example.mealmate.veiw.home_activity.HomeActivity;
@@ -41,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
 //
     private void navigateToFragment(String fragmentName) {
         if ("loginFragment".equals(fragmentName)) {
-            navController.navigate(R.id.loginFragment);
 
         }else if ("startFragment".equals(fragmentName)) {
             navController.navigate(R.id.startFragment);

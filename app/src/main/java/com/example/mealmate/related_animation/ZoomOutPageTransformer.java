@@ -15,16 +15,28 @@ public class ZoomOutPageTransformer implements ViewPager2.PageTransformer {
         int pageHeight = page.getHeight();
 
         if (position < -1) {
-            // [-Infinity,-1)
+            // Page is way off-screen to the left.
             page.setAlpha(0);
         } else if (position <= 1) {
-            // [-1,1]
-            page.setAlpha(1);
-            page.setScaleX(Math.max(MIN_SCALE, 1 - Math.abs(position)));
-            page.setScaleY(Math.max(MIN_SCALE, 1 - Math.abs(position)));
-            page.setTranslationX(-position * pageWidth);
+            // Modify the default slide transition to shrink the page as well.
+            float scaleFactor = Math.max(MIN_SCALE, 1 - Math.abs(position));
+            float verticalMargin = pageHeight * (1 - scaleFactor) / 2;
+            float horizontalMargin = pageWidth * (1 - scaleFactor) / 2;
+
+            if (position < 0) {
+                page.setTranslationX(horizontalMargin - verticalMargin / 2);
+            } else {
+                page.setTranslationX(-horizontalMargin + verticalMargin / 2);
+            }
+
+            // Scale the page down (between MIN_SCALE and 1).
+            page.setScaleX(scaleFactor);
+            page.setScaleY(scaleFactor);
+
+            // Fade the page relative to its size.
+            page.setAlpha(MIN_ALPHA + (scaleFactor - MIN_SCALE) / (1 - MIN_SCALE) * (1 - MIN_ALPHA));
         } else {
-            // (1,+Infinity]
+            // Page is way off-screen to the right.
             page.setAlpha(0);
         }
     }

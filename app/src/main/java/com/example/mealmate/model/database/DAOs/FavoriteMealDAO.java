@@ -30,8 +30,8 @@ public interface FavoriteMealDAO {
 //    void deleteMeal(MealDTO meal);
 
     @Transaction
-    default void insertFavoriteMeal(FavoriteMeal favoriteMeal,MealDTO meal, List<MealMeasureIngredient> ingredients) {
-       // Insert the favorite meal first
+    default void insertFavoriteMeal(FavoriteMeal favoriteMeal, MealDTO meal, List<MealMeasureIngredient> ingredients) {
+        // Insert the favorite meal first
         insertFavoriteMeal(favoriteMeal);
         // Insert the meal first
         insertMeal(meal);
@@ -41,18 +41,32 @@ public interface FavoriteMealDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertFavoriteMeal(FavoriteMeal meal);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMeal(MealDTO meal);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertIngredients(List<MealMeasureIngredient> ingredients);
+
+
+    // Query to fetch the favorite meal for a specific client
+    @Query("SELECT * FROM FavoriteMeal WHERE client_email = :clientEmail")
+    LiveData<List<FavoriteMeal>> getFavoriteMeal(String clientEmail);
+
+    // Query to fetch the meal by meal ID
+    @Query("SELECT * FROM MealDTO WHERE meal_id = :mealId")
+    LiveData<MealDTO> getMealById(String mealId);
+
+    // Query to fetch all ingredients associated with a specific meal ID
+    @Query("SELECT * FROM MealMeasureIngredient WHERE meal_id = :mealId")
+    LiveData<List<MealMeasureIngredient>> getIngredientsByMealId(String mealId);
+
 
 
 //    @Transaction
 //    @Query("SELECT * FROM FavoriteMeal WHERE client_email = :clientEmail")
 //    LiveData<List<FavoriteMealWithMeals>> getFavoritesWithMeals(String clientEmail);
 //
-//    @Query("SELECT * FROM FavoriteMeal WHERE meal_id = :mealId AND client_email = :clientEmail")
-//    LiveData<FavoriteMeal> getFavoriteMeal(String mealId, String clientEmail);
 //
 //    @Query("SELECT * FROM MealDTO WHERE meal_id = :mealId")
 //    LiveData<List<MealDTO>> getMealsByMealId(String mealId);

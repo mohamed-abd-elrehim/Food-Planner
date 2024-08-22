@@ -1,15 +1,9 @@
-package com.example.mealmate;
+package com.example.mealmate.presenter.all_meal_details_fragment_presenter.all_meal_details_fragment_presenter_interface;
 
 import com.example.mealmate.model.Step;
-import com.example.mealmate.model.database.DAOs.FavoriteMealDAO;
 import com.example.mealmate.model.mealDTOs.CustomMeal;
-import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
 import com.example.mealmate.model.mealDTOs.all_meal_details.MealMeasureIngredient;
-import com.example.mealmate.model.mealDTOs.all_meal_details.MealWithDetails;
-import com.example.mealmate.model.mealDTOs.favorite_meals.FavoriteMeal;
-import com.example.mealmate.model.mealDTOs.favorite_meals.FavoriteMealWithMeals;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface AllMealDetailsFragment_presenter_Interface {
