@@ -14,6 +14,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.mealmate.model.mealDTOs.CustomMeal;
 import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
+import com.example.mealmate.model.mealDTOs.favorite_meals.FavoriteMeal;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -51,7 +53,9 @@ public class FavMealPagerAdapter extends RecyclerView.Adapter<FavMealPagerAdapte
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.mealImage);
 
-      holder.deleteButton.setOnClickListener(V->handelDeleteFavorites.onDeleteFavoritesClick(meal));
+
+      FavoriteMeal favoriteMeal = new FavoriteMeal(meal.getIdMeal(), FirebaseAuth.getInstance().getCurrentUser().getEmail(),null);
+      holder.deleteButton.setOnClickListener(V->handelDeleteFavorites.onDeleteFavoritesClick(favoriteMeal));
       holder.seeMoreButton.setOnClickListener(V->handelSeeMoreClick.onSeeMoreClick(meal));
 
     }

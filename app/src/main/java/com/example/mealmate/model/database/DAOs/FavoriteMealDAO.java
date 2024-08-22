@@ -61,6 +61,25 @@ public interface FavoriteMealDAO {
     @Query("SELECT * FROM MealMeasureIngredient WHERE meal_id = :mealId")
     LiveData<List<MealMeasureIngredient>> getIngredientsByMealId(String mealId);
 
+    // Delete a specific favorite meal
+    @Delete
+    void deleteFavorite(FavoriteMeal favoriteMeal);
+
+    // Delete a meal by its ID
+    @Query("DELETE FROM MealDTO WHERE meal_id = :mealId")
+    void deleteMealById(String mealId);
+
+    // Delete all ingredients associated with a specific meal ID
+    @Query("DELETE FROM MealMeasureIngredient WHERE meal_id = :mealId")
+    void deleteIngredientsByMealId(String mealId);
+
+    @Transaction
+    default void deleteFavoriteMeal(FavoriteMeal favoriteMeal) {
+        String mealId = favoriteMeal.getMealId();
+        deleteFavorite(favoriteMeal);
+        deleteMealById(mealId);
+        deleteIngredientsByMealId(mealId);
+    }
 
 
 //    @Transaction

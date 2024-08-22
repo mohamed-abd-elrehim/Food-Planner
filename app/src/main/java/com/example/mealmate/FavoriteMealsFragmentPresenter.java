@@ -1,6 +1,7 @@
 package com.example.mealmate;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
@@ -67,7 +68,10 @@ public class FavoriteMealsFragmentPresenter implements FavoriteMealsFragmentPres
 
 
     @Override
-    public void deleteProductFromFAV(CustomMeal customMeal) {
+    public void deleteFavoriteMeal(FavoriteMeal favoriteMeal) {
+
+        mealRepository.deleteFavoriteMeal( favoriteMeal);
+        Log.i(TAG, "deleteProductFromFAV: ");
 
     }
 
@@ -75,6 +79,8 @@ public class FavoriteMealsFragmentPresenter implements FavoriteMealsFragmentPres
     public void seeMore(CustomMeal customMeal) {
 
     }
+
+
 }
 
 

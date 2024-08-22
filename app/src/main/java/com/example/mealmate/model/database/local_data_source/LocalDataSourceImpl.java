@@ -76,6 +76,10 @@ public class LocalDataSourceImpl implements LocalDataSource {
         return favoriteMealDAO.getIngredientsByMealId(mealId);
     }
 
+    @Override
+    public void deleteFavoriteMeal(FavoriteMeal favoriteMeal) {
+        executorService.execute(() -> favoriteMealDAO.deleteFavoriteMeal(favoriteMeal));
+    }
 
 //    @Override
 //    public LiveData<List<FavoriteMealWithMeals>> getFavoritesWithMeals(String clientEmail) {

@@ -23,5 +23,6 @@ public interface FavoriteMealDataSource {
     LiveData<MealDTO> getMealById(String mealId);
     LiveData<List<MealMeasureIngredient>> getIngredientsByMealId(String mealId);
 
+     void deleteFavoriteMeal(FavoriteMeal favoriteMeal);
 
 }

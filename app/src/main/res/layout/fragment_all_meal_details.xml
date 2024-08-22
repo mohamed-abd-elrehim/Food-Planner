@@ -130,6 +130,15 @@
             app:icon="@drawable/ic_baseline_favorite_24" />
 
         <Button
+            android:id="@+id/back"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:text="@string/back" />
+
+
+        <Button
             android:id="@+id/add_to_plan_button3"
             android:layout_width="match_parent"
             android:layout_height="50dp"

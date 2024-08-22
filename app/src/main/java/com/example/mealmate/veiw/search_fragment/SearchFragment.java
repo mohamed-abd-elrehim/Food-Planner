@@ -265,7 +265,7 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
     public void onSeeMoreClick(String id) {
         Log.i(TAG, "onSeeMoreClick: " + id);
         if (id != null) {
-            SearchFragmentDirections.ActionSearchFragmentToAllMealDetailsFragment action = SearchFragmentDirections.actionSearchFragmentToAllMealDetailsFragment(id);
+            SearchFragmentDirections.ActionSearchFragmentToAllMealDetailsFragment action = SearchFragmentDirections.actionSearchFragmentToAllMealDetailsFragment(id,"searchFragment");
             NavController navController = Navigation.findNavController(requireView());
             navController.navigate(action);
 

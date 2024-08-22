@@ -13,6 +13,7 @@ public interface AllMealDetailsFragment_presenter_Interface {
 
     void addMealToFAV(CustomMeal meal);
 
+     void getFavMeals(String id);
 
     //void addMealToPlan(CustomMeal customMeal);
     //void loadAllMealDetailsByName(String name);

@@ -76,9 +76,11 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         void bind(MediaItem mediaItem) {
+
             Glide.with(context)
                     .load(mediaItem.getUrl())
                     .into(imageView);
+
         }
     }
 

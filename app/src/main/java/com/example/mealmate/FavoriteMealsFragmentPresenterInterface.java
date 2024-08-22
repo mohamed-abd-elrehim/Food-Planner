@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface FavoriteMealsFragmentPresenterInterface {
     void getAllFAVMeals(String email);
-    void deleteProductFromFAV(CustomMeal  customMeal);
+    void deleteFavoriteMeal(FavoriteMeal favoriteMeal);
     void seeMore(CustomMeal customMeal);
+
 }

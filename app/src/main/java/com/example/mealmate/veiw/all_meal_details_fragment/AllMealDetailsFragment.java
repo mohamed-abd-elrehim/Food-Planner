@@ -65,6 +65,7 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
     private TextView mealCategory;
     private TextView mealArea;
     private Button addToFavoritesButton;
+    private Button backButton;
 
     CustomMeal customMeal = new CustomMeal();
 
@@ -92,6 +93,7 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
         mealName = view.findViewById(R.id.all_Meal_detil_meal_name);
         mealCategory = view.findViewById(R.id.all_Meal_detil_meal_categorie);
         mealArea = view.findViewById(R.id.all_Meal_detil_meal_area);
+        backButton = view.findViewById(R.id.back);
         addToFavoritesButton = view.findViewById(R.id.add_to_Fav_button2);
         // Set up RecyclerView
         stepsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -129,23 +131,43 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
 
         // Load meal details by ID
         String arguments = AllMealDetailsFragmentArgs.fromBundle(getArguments()).getMeal();
-        if (arguments != null) {
-            presenter.loadAllMealDetailsById(arguments);
+        String fragment = AllMealDetailsFragmentArgs.fromBundle(getArguments()).getPage();
+        // Check if arguments are not null and not empty
+        if (arguments != null && !arguments.isEmpty()) {
+            // Handle the case where the fragment is "searchFragment"
+            if (fragment.equals("searchFragment")) {
+                backButton.setVisibility(View.GONE);
+                addToFavoritesButton.setVisibility(View.VISIBLE);
+                presenter.loadAllMealDetailsById(arguments);
 
-        }
-        else {
-            Toast.makeText(getContext(), "mealID is null", Toast.LENGTH_SHORT).show();
+                // Handle the case where the fragment is "favoriteFragment"
+            } else if (fragment.equals("favoriteFragment")) {
+                backButton.setVisibility(View.VISIBLE);
+                addToFavoritesButton.setVisibility(View.GONE);
+                presenter.getFavMeals(arguments);
+
+
+            } else if (fragment.equals("planFragment")) {
+                Toast.makeText(getContext(), "mealID is null", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            // Handle the case where arguments are null or empty
+            // e.g., show an error message, default view, etc.
+            Toast.makeText(getContext(), "Arguments are null or empty", Toast.LENGTH_SHORT).show();
         }
 
 
         addToFavoritesButton.setOnClickListener(view1 -> {
-            if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                 onAddToFavoritesClick(customMeal);
-            }else{
+            } else {
                 showRestrictedAccessDialog();
             }
 
 
+        });
+        backButton.setOnClickListener(view1 -> {
+            getActivity().onBackPressed();
         });
 
     }
@@ -162,7 +184,7 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
         mediaItems.clear();
 
         mealMeasureIngredients.clear();
-        customMeal=data.get(0);
+        customMeal = data.get(0);
         mealMeasureIngredients.addAll(presenter.getMealMeasureIngredients(data.get(0)));
 
         mealName.setText(data.get(0).getStrMeal());
@@ -201,13 +223,11 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
 
     @Override
     public void onAddToFavoritesClick(CustomMeal customMeal) {
-        if(customMeal!=null) {
+        if (customMeal != null) {
             presenter.addMealToFAV(customMeal);
             Toast.makeText(getContext(), "Meal added to favorites", Toast.LENGTH_SHORT).show();
-            Log.i(TAG, "onAddToFavoritesClick: "+ customMeal.getStrMeal());
-        }
-        else
-        {
+            Log.i(TAG, "onAddToFavoritesClick: " + customMeal.getStrMeal());
+        } else {
             Toast.makeText(getContext(), "Meal is null", Toast.LENGTH_SHORT).show();
             Log.i(TAG, "onAddToFavoritesClick: " + "meal is null");
         }
@@ -221,7 +241,8 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
                 .setMessage("Add your food preferences ,plan your meals and more!")
                 .setPositiveButton("Sign Up", (dialog, which) -> {
                     Intent intent = new Intent(getContext(), MainActivity.class);
-                    intent.putExtra("destination_fragment", "startFragment");;
+                    intent.putExtra("destination_fragment", "startFragment");
+                    ;
                     startActivity(intent);
                     this.getActivity().finish();
                 })

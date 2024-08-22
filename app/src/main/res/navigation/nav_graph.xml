@@ -30,6 +30,9 @@
         <action
             android:id="@+id/action_favoriteMealsFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_favoriteMealsFragment_to_allMealDetailsFragment"
+            app:destination="@id/allMealDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/planOfTheWeekFragment"
@@ -48,6 +51,9 @@
         tools:layout="@layout/fragment_add_plan_meal">
         <argument
             android:name="meal"
+            app:argType="string" />
+        <argument
+            android:name="page"
             app:argType="string" />
     </fragment>
 </navigation>

@@ -55,5 +55,6 @@
     <string name="categorie">Categorie</string>
     <string name="your_favorite_meals">Your Favorite Meals</string>
     <string name="delete_from_favorites">Delete</string>
+    <string name="back">Back</string>
 
 </resources>

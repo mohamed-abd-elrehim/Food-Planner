@@ -42,6 +42,7 @@ private  static final String TAG = "IngredientAdapter";
         MealMeasureIngredient item = mealMeasureIngredients.get(position);
         holder.measureTextView.setText(item.getMeasure());
         holder.ingredientTextView.setText(item.getIngredientName());
+
         Glide.with(context)
                 .load("https://www.themealdb.com/images/ingredients/" + item.getIngredientName() + "-Small.png")
                 .placeholder(R.drawable.nophotosign)

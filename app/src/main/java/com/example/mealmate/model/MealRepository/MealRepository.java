@@ -138,5 +138,10 @@ public class MealRepository implements MealRepositoryInterface {
         return localDataSource.getIngredientsByMealId(mealId);
     }
 
+    @Override
+    public void deleteFavoriteMeal(FavoriteMeal favoriteMeal) {
+        localDataSource.deleteFavoriteMeal(favoriteMeal);
+    }
+
 
 }

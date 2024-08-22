@@ -2,6 +2,8 @@ package com.example.mealmate.presenter.all_meal_details_fragment_presenter;
 
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+
 import com.example.mealmate.presenter.all_meal_details_fragment_presenter.all_meal_details_fragment_presenter_interface.AllMealDetailsFragment_presenter_Interface;
 import com.example.mealmate.model.MealRepository.MealRepository;
 import com.example.mealmate.model.Step;
@@ -26,6 +28,10 @@ public class AllMealDetailsFragment_presenter implements AllMealDetailsFragment_
     MealRepository mealRepository;
     AppDataBase appDataBase;
 
+    private LiveData<MealDTO> mealDTO;
+    private LiveData<List<MealMeasureIngredient>> mealMeasureIngredient;
+    private LiveData<List<CustomMeal>> customMeals;
+
     public AllMealDetailsFragment_presenter(AppDataBase appDataBase, MealRepository mealRepository, AllMealDetailsFragment_Veiw_Interface view) {
         this.view = view;
         this.mealRepository = mealRepository;
@@ -37,6 +43,29 @@ public class AllMealDetailsFragment_presenter implements AllMealDetailsFragment_
     @Override
     public void loadAllMealDetailsById(String id) {
         mealRepository.makeNetworkCallback(this, "lookupAllMealDitailsById", id);
+
+    }
+
+
+    @Override
+    public void getFavMeals(String id) {
+        mealDTO = mealRepository.getMealById(id);
+        mealDTO.observeForever(meals -> {
+            if (meals != null) {
+                LiveData<List<MealMeasureIngredient>> mealMeasureIngredient = mealRepository.getIngredientsByMealId(id);
+                mealMeasureIngredient.observeForever(mealMeasureIngredients -> {
+                    if (mealMeasureIngredients != null && !mealMeasureIngredients.isEmpty()) {
+                        List<CustomMeal> customMeals = new ArrayList<>();
+                        customMeals.add(convertToCustomMeal(meals, mealMeasureIngredients));
+                        Log.i(TAG, "getFavMeals: "+ customMeals.size()+" Meals found.");
+                        view.showData(customMeals);
+                    }
+                });
+            }
+
+
+        });
+
 
     }
 
@@ -62,7 +91,7 @@ public class AllMealDetailsFragment_presenter implements AllMealDetailsFragment_
                 steps.add(step.trim() + ".");
             }
         }
-        List<Step> stepsList=new ArrayList<>();
+        List<Step> stepsList = new ArrayList<>();
 
         for (int i = 0; i < steps.size(); i++) {
             stepsList.add(new Step("Step " + (i + 1), steps.get(i)));
@@ -110,11 +139,10 @@ public class AllMealDetailsFragment_presenter implements AllMealDetailsFragment_
     }
 
     @Override
-    public void addMealToFAV(CustomMeal meal)
-    {
+    public void addMealToFAV(CustomMeal meal) {
 
-        FavoriteMeal favoriteMeal=new FavoriteMeal(meal.getIdMeal(),FirebaseAuth.getInstance().getCurrentUser().getEmail(),meal.getStrMealThumb());
-        List<MealMeasureIngredient> mealMeasureIngredient=getMealMeasureIngredients(meal);
+        FavoriteMeal favoriteMeal = new FavoriteMeal(meal.getIdMeal(), FirebaseAuth.getInstance().getCurrentUser().getEmail(), meal.getStrMealThumb());
+        List<MealMeasureIngredient> mealMeasureIngredient = getMealMeasureIngredients(meal);
         MealDTO mealDTO = new MealDTO(
                 meal.getStrCategory(),                // String
                 meal.getStrImageSource(),             // String
@@ -130,10 +158,11 @@ public class AllMealDetailsFragment_presenter implements AllMealDetailsFragment_
                 meal.getStrYoutube(),                 // String
                 meal.getStrSource()                   // String
         );
-        mealRepository.insertFavoriteMealWithMeals( favoriteMeal,mealDTO,mealMeasureIngredient);
+        mealRepository.insertFavoriteMealWithMeals(favoriteMeal, mealDTO, mealMeasureIngredient);
 
 
     }
+
 
     @Override
     public void onSuccessResult(Response response) {
@@ -160,6 +189,88 @@ public class AllMealDetailsFragment_presenter implements AllMealDetailsFragment_
         view.showError("Failed to load data: " + errorMsg);
         Log.e(TAG, "Error loading data: " + errorMsg);
 
+    }
+
+
+    public CustomMeal convertToCustomMeal(MealDTO mealDTO, List<MealMeasureIngredient> ingredients) {
+        CustomMeal customMeal = new CustomMeal();
+
+        // Set mealDTO properties
+        customMeal.setIdMeal(mealDTO.getIdMeal());
+        customMeal.setStrMeal(mealDTO.getStrMeal());
+        customMeal.setStrDrinkAlternate(mealDTO.getStrDrinkAlternate());
+        customMeal.setStrCategory(mealDTO.getStrCategory());
+        customMeal.setStrArea(mealDTO.getStrArea());
+        customMeal.setStrInstructions(mealDTO.getStrInstructions());
+        customMeal.setStrMealThumb(mealDTO.getStrMealThumb());
+        customMeal.setStrTags(mealDTO.getStrTags());
+        customMeal.setStrYoutube(mealDTO.getStrYoutube());
+        customMeal.setStrSource(mealDTO.getStrSource());
+        customMeal.setStrImageSource(mealDTO.getStrImageSource());
+        customMeal.setStrCreativeCommonsConfirmed(mealDTO.getStrCreativeCommonsConfirmed());
+        customMeal.setDateModified(mealDTO.getDateModified());
+
+        // Initialize ingredient and measure arrays
+        String[] ingredientsArray = new String[20];
+        String[] measuresArray = new String[20];
+
+        // Populate ingredient and measure arrays
+        for (int i = 0; i < ingredients.size(); i++) {
+            MealMeasureIngredient ingredient = ingredients.get(i);
+            if (i < 20) {
+                ingredientsArray[i] = ingredient.getIngredientName();
+                measuresArray[i] = ingredient.getMeasure();
+            }
+        }
+
+        // Set ingredient and measure properties
+        customMeal.setStrIngredient1(getValue(ingredientsArray, 0));
+        customMeal.setStrIngredient2(getValue(ingredientsArray, 1));
+        customMeal.setStrIngredient3(getValue(ingredientsArray, 2));
+        customMeal.setStrIngredient4(getValue(ingredientsArray, 3));
+        customMeal.setStrIngredient5(getValue(ingredientsArray, 4));
+        customMeal.setStrIngredient6(getValue(ingredientsArray, 5));
+        customMeal.setStrIngredient7(getValue(ingredientsArray, 6));
+        customMeal.setStrIngredient8(getValue(ingredientsArray, 7));
+        customMeal.setStrIngredient9(getValue(ingredientsArray, 8));
+        customMeal.setStrIngredient10(getValue(ingredientsArray, 9));
+        customMeal.setStrIngredient11(getValue(ingredientsArray, 10));
+        customMeal.setStrIngredient12(getValue(ingredientsArray, 11));
+        customMeal.setStrIngredient13(getValue(ingredientsArray, 12));
+        customMeal.setStrIngredient14(getValue(ingredientsArray, 13));
+        customMeal.setStrIngredient15(getValue(ingredientsArray, 14));
+        customMeal.setStrIngredient16(getValue(ingredientsArray, 15));
+        customMeal.setStrIngredient17(getValue(ingredientsArray, 16));
+        customMeal.setStrIngredient18(getValue(ingredientsArray, 17));
+        customMeal.setStrIngredient19(getValue(ingredientsArray, 18));
+        customMeal.setStrIngredient20(getValue(ingredientsArray, 19));
+
+        customMeal.setStrMeasure1(getValue(measuresArray, 0));
+        customMeal.setStrMeasure2(getValue(measuresArray, 1));
+        customMeal.setStrMeasure3(getValue(measuresArray, 2));
+        customMeal.setStrMeasure4(getValue(measuresArray, 3));
+        customMeal.setStrMeasure5(getValue(measuresArray, 4));
+        customMeal.setStrMeasure6(getValue(measuresArray, 5));
+        customMeal.setStrMeasure7(getValue(measuresArray, 6));
+        customMeal.setStrMeasure8(getValue(measuresArray, 7));
+        customMeal.setStrMeasure9(getValue(measuresArray, 8));
+        customMeal.setStrMeasure10(getValue(measuresArray, 9));
+        customMeal.setStrMeasure11(getValue(measuresArray, 10));
+        customMeal.setStrMeasure12(getValue(measuresArray, 11));
+        customMeal.setStrMeasure13(getValue(measuresArray, 12));
+        customMeal.setStrMeasure14(getValue(measuresArray, 13));
+        customMeal.setStrMeasure15(getValue(measuresArray, 14));
+        customMeal.setStrMeasure16(getValue(measuresArray, 15));
+        customMeal.setStrMeasure17(getValue(measuresArray, 16));
+        customMeal.setStrMeasure18(getValue(measuresArray, 17));
+        customMeal.setStrMeasure19(getValue(measuresArray, 18));
+        customMeal.setStrMeasure20(getValue(measuresArray, 19));
+
+        return customMeal;
+    }
+
+    private static String getValue(String[] array, int index) {
+        return (index < array.length) ? array[index] : null;
     }
 }
 
