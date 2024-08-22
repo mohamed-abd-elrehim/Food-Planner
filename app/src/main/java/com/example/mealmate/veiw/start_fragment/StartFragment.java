@@ -1,5 +1,6 @@
 package com.example.mealmate.veiw.start_fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -59,6 +60,7 @@ public class StartFragment extends Fragment {
     private GoogleSignInClient signInClient;
     private static final int RC_SIGN_IN = 9001;
     private final String TAG = "StartFragment";
+    private Button gestMode ;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,6 +86,33 @@ public class StartFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // Initialize the Button using the view from onCreateView
+        gestMode = view.findViewById(R.id.skipButton);
+
+        // Check if gestMode is not null
+        if (gestMode != null) {
+            gestMode.setOnClickListener(v -> {
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Wait! Are you sure?")
+                        .setMessage("You'll miss out on personalized content and saving our delicious recipes.")
+                        .setPositiveButton("I'm Sure", (dialog, which) -> {
+                            Intent intent = new Intent(getContext(), HomeActivity.class);
+                            intent.putExtra("user_type", "guest");
+                            startActivity(intent);
+                            requireActivity().finish();
+                        })
+                        .setNegativeButton("No, Go Back", (dialog, which) -> {
+                            dialog.dismiss();
+                        })
+                        .show();
+            });
+        } else {
+            Log.e("StartFragment", "Button with ID skipButton not found.");
+        }
+
+
+
+
 
         ImageView imageView = view.findViewById(R.id.blurredImageView);
         Glide.with(this)

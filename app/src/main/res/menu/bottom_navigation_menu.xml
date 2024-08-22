@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/nav_home"
+        android:id="@+id/homeFragment"
         android:icon="@drawable/ic_baseline_home_24"
         android:title="@string/home" />
 
 
     <item
-        android:id="@+id/nav_search"
+        android:id="@+id/searchFragment"
         android:icon="@drawable/ic_baseline_search_24"
         android:title="@string/search" />
 
@@ -18,12 +18,12 @@
         android:title="@string/addplanmeal" />
 
     <item
-        android:id="@+id/nav_favoritemeals"
+        android:id="@+id/favoriteMealsFragment"
         android:icon="@drawable/ic_baseline_favorite_24"
         android:title="@string/favoritemeals" />
 
     <item
-        android:id="@+id/nav_palnmeals"
+        android:id="@+id/planOfTheWeekFragment"
         android:icon="@drawable/mealplane"
         android:title="@string/planmeals" />
 

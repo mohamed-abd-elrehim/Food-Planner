@@ -22,15 +22,15 @@ public class MainActivity extends AppCompatActivity {
         // Initialize NavController
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 
-        // Check if the user is logged in
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            // User is logged in, navigate to the home screen
-            navigateToHomeScreen();
-        } else {
-            // User is not logged in, navigate to the login screen
-            navigateToLoginScreen();
-        }
-
+//        // Check if the user is logged in
+//        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+//            // User is logged in, navigate to the home screen
+//            navigateToHomeScreen();
+//        } else {
+//            // User is not logged in, navigate to the login screen
+//            navigateToStartScreen();
+//        }
+//
         // Check if there is a destination fragment passed via the intent
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra("destination_fragment")) {
@@ -38,24 +38,25 @@ public class MainActivity extends AppCompatActivity {
             navigateToFragment(destinationFragment);
         }
     }
-
+//
     private void navigateToFragment(String fragmentName) {
         if ("loginFragment".equals(fragmentName)) {
             navController.navigate(R.id.loginFragment);
-        } else if ("homeFragment".equals(fragmentName)) {
-            navController.navigate(R.id.homeFragment);
+
+        }else if ("startFragment".equals(fragmentName)) {
+            navController.navigate(R.id.startFragment);
+
         }
-        // Add more conditions for other fragments if needed
     }
-
-    private void navigateToHomeScreen() {
-        Intent intent = new Intent(this, HomeActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
-    }
-
-    private void navigateToLoginScreen() {
-        navController.navigate(R.id.loginFragment);
-    }
+//
+//    private void navigateToHomeScreen() {
+//        Intent intent = new Intent(this, HomeActivity.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+//        startActivity(intent);
+//        finish();
+//    }
+//
+//    private void navigateToStartScreen() {
+//        navController.navigate(R.id.loginFragment);
+//    }
 }

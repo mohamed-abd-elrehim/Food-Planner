@@ -1,5 +1,7 @@
 package com.example.mealmate;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -28,6 +30,8 @@ import com.example.mealmate.model.mealDTOs.all_meal_details.MealMeasureIngredien
 import com.example.mealmate.model.network.CustomMealResponse;
 import com.example.mealmate.model.network.RemoteDataSourceImpl;
 import com.example.mealmate.presenter.search_fragment_presenter.Search_Fragment_PresenterImpl;
+import com.example.mealmate.veiw.main_activity.MainActivity;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -124,7 +128,13 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
         presenter.loadAllMealDetailsById(mealID);
 
         addToFavoritesButton.setOnClickListener(view1 -> {
-            onAddToFavoritesClick(customMeal);
+            if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
+                onAddToFavoritesClick(customMeal);
+            }else{
+                showRestrictedAccessDialog();
+            }
+
+
         });
 
     }
@@ -190,5 +200,23 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
             Toast.makeText(getContext(), "Meal is null", Toast.LENGTH_SHORT).show();
             Log.i(TAG, "onAddToFavoritesClick: " + "meal is null");
         }
+    }
+
+
+    // Method to display the restricted access popup
+    private void showRestrictedAccessDialog() {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Sign Up for More Features")
+                .setMessage("Add your food preferences ,plan your meals and more!")
+                .setPositiveButton("Sign Up", (dialog, which) -> {
+                    Intent intent = new Intent(getContext(), MainActivity.class);
+                    intent.putExtra("destination_fragment", "startFragment");;
+                    startActivity(intent);
+                    this.getActivity().finish();
+                })
+                .setNegativeButton("CANCEL", (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .show();
     }
 }
