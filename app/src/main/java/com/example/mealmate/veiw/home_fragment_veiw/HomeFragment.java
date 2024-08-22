@@ -1,5 +1,6 @@
 package com.example.mealmate.veiw.home_fragment_veiw;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +31,9 @@ import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
 import com.example.mealmate.model.network.RemoteDataSourceImpl;
 import com.example.mealmate.related_animation.ZoomOutPageTransformer;
 import com.example.mealmate.veiw.home_fragment_veiw.home_fragment_veiw_interface.HomeFragmentView;
+import com.example.mealmate.veiw.main_activity.MainActivity;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +67,11 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+
+        }
+
+
         viewPager = view.findViewById(R.id.all_Meal_detil_ViewPager);
         categoryRecyclerView = view.findViewById(R.id.viewPagerCategory);
         ingredientRecyclerView2 =view.findViewById(R.id.viewPagerIngredient);
@@ -95,6 +104,8 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         presenter.loadMealsCategory();
         presenter.loadMealsIngredient();
         presenter.loadMealsArea();
+
+
     }
 
     private <T> ListAllFilterAdapter<T> createFilterAdapter(List<T> filterList, Class<T> type) {
@@ -146,4 +157,8 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
     public void showError(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
+
+
+
+
 }

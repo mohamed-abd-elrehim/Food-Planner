@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
@@ -24,6 +25,7 @@ import com.example.mealmate.veiw.main_activity.MainActivity;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -35,6 +37,7 @@ public class HomeActivity extends AppCompatActivity {
     private Intent intent;
     private String extraValue;
     private boolean isDialogShown = false;
+    private CoordinatorLayout coordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,7 @@ public class HomeActivity extends AppCompatActivity {
         View headerView = navigationView.getHeaderView(0);
         TextView name = headerView.findViewById(R.id.profile_name);
         TextView email = headerView.findViewById(R.id.profile_email);
+        coordinatorLayout = findViewById(R.id.snakeBar);
 
 
         // Correctly initialize BottomNavigationView and BottomAppBar
@@ -77,7 +81,9 @@ public class HomeActivity extends AppCompatActivity {
 
         // Handle the extra data
         if ("guest".equals(extraValue)) {
-// Set a listener for item selections in the BottomNavigationView
+            showSignupDialog();
+
+        // Set a listener for item selections in the BottomNavigationView
             bottomNavigationView.setOnItemSelectedListener(item -> {
                 // Check if the user is a guest
                 if ("guest".equals(extraValue)) {
@@ -91,12 +97,19 @@ public class HomeActivity extends AppCompatActivity {
 
                         // Return false to indicate the click was handled and not to proceed with navigation
                         return false;
-                    }
-                }
+                    } else if (item.getItemId() == R.id.searchFragment)
+                    {
+                        Log.i(TAG, "onCreate:searchFragment ");
+                        coordinatorLayout.setVisibility(View.GONE);
 
+                    } else if (item.getItemId() == R.id.homeFragment) {
+                        Log.i(TAG, "onCreate: homeFragment ");
+                        coordinatorLayout.setVisibility(View.VISIBLE);
+                    }
+
+                }
                 // Allow navigation to proceed for other cases
-                return NavigationUI.onNavDestinationSelected(item, navController)
-                        || super.onOptionsItemSelected(item);
+                return NavigationUI.onNavDestinationSelected(item, navController);
             });
 
         } else {
@@ -202,4 +215,24 @@ public class HomeActivity extends AppCompatActivity {
                 })
                 .show();
     }
+
+
+    private void showSignupDialog() {
+        coordinatorLayout.setVisibility(View.VISIBLE);
+        Snackbar snackbar = Snackbar.make(coordinatorLayout, "Sign up to personalize your recipe feed", Snackbar.LENGTH_INDEFINITE)
+                .setAction("GET STARTED", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Handle the action click event
+                        Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+                        intent.putExtra("destination_fragment", "startFragment");
+                        startActivity(intent);
+                    }
+                })
+                .setActionTextColor(getResources().getColor(R.color.colorAccent)); // Use colorAccent here
+
+        snackbar.show();
+    }
+
+
 }
