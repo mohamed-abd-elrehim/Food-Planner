@@ -64,6 +64,7 @@
     <string name="food_type_dinner">Dinner</string>
     <string name="food_type_snack">Snack</string>
     <string name="select_meal_type">Select Meal Type</string>
+    <string name="your_plan_meals">Your Plan Meals</string>
 
     <!-- String array for meal types -->
     <string-array name="meal_types">

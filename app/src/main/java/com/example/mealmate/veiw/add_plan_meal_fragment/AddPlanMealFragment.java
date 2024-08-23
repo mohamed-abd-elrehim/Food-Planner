@@ -1,4 +1,4 @@
-package com.example.mealmate;
+package com.example.mealmate.veiw.add_plan_meal_fragment;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -21,14 +21,15 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.bumptech.glide.Glide;
+import com.example.mealmate.presenter.add_plan_meal_fragment_presenter.AddPlanMealFragmentPresenter;
+import com.example.mealmate.veiw.add_plan_meal_fragment.add_plan_meal_fragment_veiw_interface.AddPlanMealFragmentVeiwInterface;
+import com.example.mealmate.R;
 import com.example.mealmate.model.MealRepository.MealRepository;
 import com.example.mealmate.model.database.AppDataBase;
 import com.example.mealmate.model.database.local_data_source.LocalDataSourceImpl;
 import com.example.mealmate.model.mealDTOs.CustomMeal;
 import com.example.mealmate.model.mealDTOs.meal_plan.MealPlan;
 import com.example.mealmate.model.network.RemoteDataSourceImpl;
-import com.example.mealmate.presenter.all_meal_details_fragment_presenter.AllMealDetailsFragment_presenter;
-import com.example.mealmate.veiw.all_meal_details_fragment.AllMealDetailsFragmentArgs;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.SimpleDateFormat;

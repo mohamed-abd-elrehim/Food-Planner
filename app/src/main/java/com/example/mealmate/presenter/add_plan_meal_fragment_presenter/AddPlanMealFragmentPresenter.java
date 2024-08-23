@@ -1,9 +1,10 @@
-package com.example.mealmate;
+package com.example.mealmate.presenter.add_plan_meal_fragment_presenter;
 
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
+import com.example.mealmate.presenter.add_plan_meal_fragment_presenter.add_plan_meal_fragment_presenter_interface.AddPlanMealFragmentPresenterInterFace;
 import com.example.mealmate.model.MealRepository.MealRepository;
 import com.example.mealmate.model.database.AppDataBase;
 import com.example.mealmate.model.mealDTOs.CustomMeal;
@@ -12,7 +13,7 @@ import com.example.mealmate.model.mealDTOs.all_meal_details.MealMeasureIngredien
 import com.example.mealmate.model.mealDTOs.meal_plan.MealPlan;
 import com.example.mealmate.model.network.CustomMealResponse;
 import com.example.mealmate.model.network.network_Interface.NetworkCallback;
-import com.example.mealmate.veiw.all_meal_details_fragment.all_meal_details_fragment_veiw_interface.AllMealDetailsFragment_Veiw_Interface;
+import com.example.mealmate.veiw.add_plan_meal_fragment.add_plan_meal_fragment_veiw_interface.AddPlanMealFragmentVeiwInterface;
 
 import java.util.ArrayList;
 import java.util.List;

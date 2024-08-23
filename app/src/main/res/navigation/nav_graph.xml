@@ -38,7 +38,11 @@
         android:id="@+id/planOfTheWeekFragment"
         android:name="com.example.mealmate.PlanOfTheWeekFragment"
         android:label="fragment_plan_of_the_week"
-        tools:layout="@layout/fragment_plan_of_the_week" />
+        tools:layout="@layout/fragment_plan_of_the_week" >
+        <action
+            android:id="@+id/action_planOfTheWeekFragment_to_allMealDetailsFragment"
+            app:destination="@id/allMealDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.mealmate.ProfileFragment"
@@ -61,7 +65,7 @@
     </fragment>
     <fragment
         android:id="@+id/addPlanMealFragment"
-        android:name="com.example.mealmate.AddPlanMealFragment"
+        android:name="com.example.mealmate.veiw.add_plan_meal_fragment.AddPlanMealFragment"
         android:label="Add Plan Meal"
         tools:layout="@layout/fragment_add_plan_meal" >
         <action

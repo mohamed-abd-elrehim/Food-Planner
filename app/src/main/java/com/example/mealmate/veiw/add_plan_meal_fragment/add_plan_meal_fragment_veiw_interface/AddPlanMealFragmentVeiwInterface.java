@@ -1,4 +1,4 @@
-package com.example.mealmate;
+package com.example.mealmate.veiw.add_plan_meal_fragment.add_plan_meal_fragment_veiw_interface;
 import com.example.mealmate.model.mealDTOs.CustomMeal;
 import java.util.List;
 

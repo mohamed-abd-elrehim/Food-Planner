@@ -1,10 +1,7 @@
-package com.example.mealmate;
+package com.example.mealmate.presenter.add_plan_meal_fragment_presenter.add_plan_meal_fragment_presenter_interface;
 
 import com.example.mealmate.model.mealDTOs.CustomMeal;
-import com.example.mealmate.model.mealDTOs.all_meal_details.MealMeasureIngredient;
 import com.example.mealmate.model.mealDTOs.meal_plan.MealPlan;
-
-import java.util.List;
 
 public interface AddPlanMealFragmentPresenterInterFace {
 
