@@ -48,9 +48,14 @@ public class PlanMealPagerAdapter extends RecyclerView.Adapter<PlanMealPagerAdap
     @Override
     public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
         MealDTO meal = mealList.get(position);
+        MealPlan mealPlan = mealPlans.get(position);
+
         holder.mealName.setText(meal.getStrMeal());
-        holder.mealCategory.setText("Category: " + meal.getStrCategory());
-        holder.mealArea.setText("Area: " + meal.getStrArea());
+        holder.mealCategory.setText("Day: " + mealPlan.getDayOfWeek());
+
+        String[] result = splitDateTime(mealPlan.getDate());
+
+        holder.mealArea.setText("Time: " + mealPlan.getMealType() + " "+result[1]+ checkTimePeriod(result[1]));
 
         Glide.with(context)
                 .load(meal.getStrMealThumb())
@@ -58,11 +63,22 @@ public class PlanMealPagerAdapter extends RecyclerView.Adapter<PlanMealPagerAdap
                 .into(holder.mealImage);
 
 
-      MealPlan mealPlan = new MealPlan(meal.getIdMeal(), FirebaseAuth.getInstance().getCurrentUser().getEmail(),null,null,null);
+      //MealPlan mealPlan = new MealPlan(meal.getIdMeal(), FirebaseAuth.getInstance().getCurrentUser().getEmail(),null,null,null);
 
       holder.deleteButton.setOnClickListener(V->handelDeletePlans.onDeletePlansClick(mealPlan));
       holder.seeMoreButton.setOnClickListener(V->handelSeeMoreClick.onSeeMoreClick(meal));
 
+    }
+    public String[] splitDateTime(String input) {
+        return input.split(" T: ");
+    }
+    public static String checkTimePeriod(String time) {
+        // Split the time into hours and minutes
+        String[] parts = time.split(":");
+        int hour = Integer.parseInt(parts[0]);
+
+        // Determine AM or PM
+        return (hour < 12) ? " AM" : " PM";
     }
 
     @Override

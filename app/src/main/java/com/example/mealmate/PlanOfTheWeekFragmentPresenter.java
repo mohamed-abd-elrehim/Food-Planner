@@ -46,6 +46,8 @@ public class PlanOfTheWeekFragmentPresenter implements PlanOfWeekFragmentPresent
         allMealPlans = mealRepository.getMealPlans(email);
         allMealPlans.observeForever(planMeals -> {
             if (planMeals != null && !planMeals.isEmpty()) {
+                List<MealPlan> allplanMeals = new ArrayList<>(); // Create a mutable list to accumulate meals
+                allplanMeals.addAll(planMeals);
                 List<MealDTO> allMeals = new ArrayList<>(); // Create a mutable list to accumulate meals
 
                 for (MealPlan mealPlan : planMeals) {
@@ -57,7 +59,7 @@ public class PlanOfTheWeekFragmentPresenter implements PlanOfWeekFragmentPresent
                             // Check if all meals have been added
                             if (allMeals.size() == planMeals.size()) {
                                 Log.i(TAG, "getAllPlanOfWeeksMeals: "+allMeals.size());
-                                view.showData(allMeals);
+                                view.showData(allMeals, allplanMeals);
                             }
                         }
                     });

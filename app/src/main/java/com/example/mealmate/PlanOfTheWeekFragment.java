@@ -37,6 +37,7 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
     private PlanMealPagerAdapter planMealPagerAdapter;
     private PlanOfTheWeekFragmentPresenter presenter;
     private ArrayList<MealDTO> mealDTOS = new ArrayList<>();
+    private ArrayList<MealPlan> mealPlans = new ArrayList<>();
     private static final String TAG = "PlanOfTheWeekFragment";
 
     private NavController navController;
@@ -73,8 +74,10 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
         );
 
         mealDTOS = new ArrayList<>();
+        mealPlans = new ArrayList<>();
+
         // Initialize the adapter
-        planMealPagerAdapter = new PlanMealPagerAdapter(getContext(), mealDTOS, this, this);
+        planMealPagerAdapter = new PlanMealPagerAdapter(getContext(), mealDTOS, mealPlans,this, this);
 
 
         viewPager.setAdapter(planMealPagerAdapter);
@@ -85,7 +88,7 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
     }
 
     @Override
-    public void showData(List<MealDTO> data) {
+    public void showData(List<MealDTO> data, List<MealPlan> planMeals) {
         // Initialize the ProgressBar
         progressBar.setVisibility(View.VISIBLE);
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
@@ -98,7 +101,10 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
         }, 5000);
 
         mealDTOS.clear();
+        mealPlans.clear();
+        mealPlans.addAll(planMeals);
         mealDTOS.addAll(data);
+
         planMealPagerAdapter.notifyDataSetChanged();
         Log.i(TAG, "showData: " + mealDTOS.size() + mealDTOS.get(0).getStrMeal() + mealDTOS.get(0).getIdMeal()
                 + mealDTOS.get(0).getStrMealThumb() + mealDTOS.get(0).getStrArea() + mealDTOS.get(0).getStrCategory());
@@ -110,7 +116,8 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
     public void onSeeMoreClick(MealDTO meal) {
         String id = meal.getIdMeal();
         if (id != null) {
-            PlanOfTheWeekFragmentDirections.ActionPlanOfTheWeekFragmentToAllMealDetailsFragment action = PlanOfTheWeekFragmentDirections.actionPlanOfTheWeekFragmentToAllMealDetailsFragment(id,"planOfTheWeekFragment");
+            PlanOfTheWeekFragmentDirections.ActionPlanOfTheWeekFragmentToAllMealDetailsFragment action =
+                    PlanOfTheWeekFragmentDirections.actionPlanOfTheWeekFragmentToAllMealDetailsFragment(id,"planOfTheWeekFragment");
             NavController navController = Navigation.findNavController(requireView());
             navController.navigate(action);
 
