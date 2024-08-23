@@ -21,7 +21,7 @@
     </fragment>
     <fragment
         android:id="@+id/favoriteMealsFragment"
-        android:name="com.example.mealmate.FavoriteMealsFragment"
+        android:name="com.example.mealmate.veiw.favorite_meals_fragment.FavoriteMealsFragment"
         android:label="fragment_favorite_meals"
         tools:layout="@layout/fragment_favorite_meals" >
         <action
@@ -54,6 +54,24 @@
             app:argType="string" />
         <argument
             android:name="page"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_allMealDetailsFragment_to_addPlanMealFragment"
+            app:destination="@id/addPlanMealFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addPlanMealFragment"
+        android:name="com.example.mealmate.AddPlanMealFragment"
+        android:label="Add Plan Meal"
+        tools:layout="@layout/fragment_add_plan_meal" >
+        <action
+            android:id="@+id/action_addPlanMealFragment_to_allMealDetailsFragment"
+            app:destination="@id/allMealDetailsFragment" />
+        <argument
+            android:name="meal"
+            app:argType="string" />
+        <argument
+            android:name="mealImgURL"
             app:argType="string" />
     </fragment>
 </navigation>

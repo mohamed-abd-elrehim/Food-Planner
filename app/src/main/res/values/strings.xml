@@ -57,4 +57,32 @@
     <string name="delete_from_favorites">Delete</string>
     <string name="back">Back</string>
 
+
+    <!-- Food type strings -->
+    <string name="food_type_breakfast">Breakfast</string>
+    <string name="food_type_lunch">Lunch</string>
+    <string name="food_type_dinner">Dinner</string>
+    <string name="food_type_snack">Snack</string>
+    <string name="select_meal_type">Select Meal Type</string>
+
+    <!-- String array for meal types -->
+    <string-array name="meal_types">
+        <item> Select Meal Type</item>
+        <item>Breakfast</item>
+        <item>Lunch</item>
+        <item>Dinner</item>
+        <item>Snack</item>
+    </string-array>
+
+    <!-- String array for days of the week -->
+    <string-array name="days_of_week">
+        <item>Sunday</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+    </string-array>
+
 </resources>

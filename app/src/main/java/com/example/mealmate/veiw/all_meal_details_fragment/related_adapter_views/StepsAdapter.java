@@ -1,4 +1,4 @@
-package com.example.mealmate;
+package com.example.mealmate.veiw.all_meal_details_fragment.related_adapter_views;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +7,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mealmate.R;
 import com.example.mealmate.model.Step;
 
 import java.util.List;

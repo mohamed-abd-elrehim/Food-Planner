@@ -1,7 +1,6 @@
-package com.example.mealmate;
+package com.example.mealmate.veiw.favorite_meals_fragment;
 
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,19 +18,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.example.mealmate.model.MealCategory;
+import com.example.mealmate.veiw.favorite_meals_fragment.related_adapter_views.FavMealPagerAdapter;
+import com.example.mealmate.presenter.favorite_meals_fragment_presenter.FavoriteMealsFragmentPresenter;
+import com.example.mealmate.veiw.favorite_meals_fragment.favorite_meals_fragment_veiw_interface.FavoriteMealsFragmentVeiwInterface;
+import com.example.mealmate.veiw.favorite_meals_fragment.favorite_meals_fragment_veiw_interface.HandelSeeMoreClick;
+import com.example.mealmate.veiw.favorite_meals_fragment.favorite_meals_fragment_veiw_interface.Handel_Delete_Favorites;
+import com.example.mealmate.R;
 import com.example.mealmate.model.MealRepository.MealRepository;
 import com.example.mealmate.model.database.AppDataBase;
 import com.example.mealmate.model.database.local_data_source.LocalDataSourceImpl;
-import com.example.mealmate.model.mealDTOs.CustomMeal;
 import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
 import com.example.mealmate.model.mealDTOs.favorite_meals.FavoriteMeal;
 import com.example.mealmate.model.network.RemoteDataSourceImpl;
-import com.example.mealmate.presenter.home_fragment_presenter.HomeFragmentPresenterImpl;
 import com.example.mealmate.related_animation.ZoomOutPageTransformer;
-import com.example.mealmate.veiw.home_activity.HomeActivity;
-import com.example.mealmate.veiw.home_fragment_veiw.related_adapter_views.MealOfTheDayPagerAdapter;
-import com.example.mealmate.veiw.search_fragment.SearchFragmentDirections;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;

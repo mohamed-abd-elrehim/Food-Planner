@@ -60,12 +60,6 @@ public class LocalDataSourceImpl implements LocalDataSource {
         });
 
     }
-
-    @Override
-    public LiveData<List<FavoriteMeal>> getFavoriteMeal(String clientEmail) {
-        return favoriteMealDAO.getFavoriteMeal(clientEmail);
-    }
-
     @Override
     public LiveData<MealDTO> getMealById(String mealId) {
         return favoriteMealDAO.getMealById(mealId);
@@ -75,11 +69,35 @@ public class LocalDataSourceImpl implements LocalDataSource {
     public LiveData<List<MealMeasureIngredient>> getIngredientsByMealId(String mealId) {
         return favoriteMealDAO.getIngredientsByMealId(mealId);
     }
-
+    @Override
+    public LiveData<List<FavoriteMeal>> getFavoriteMeal(String clientEmail) {
+        return favoriteMealDAO.getFavoriteMeal(clientEmail);
+    }
     @Override
     public void deleteFavoriteMeal(FavoriteMeal favoriteMeal) {
         executorService.execute(() -> favoriteMealDAO.deleteFavoriteMeal(favoriteMeal));
     }
+
+
+    @Override
+    public void insertMealPlan(MealPlan mealPlan, MealDTO meal, List<MealMeasureIngredient> ingredients) {
+        executorService.execute(() -> mealPlanDAO.insertMealPlan(mealPlan,meal,ingredients));
+    }
+
+    @Override
+    public LiveData<List<MealPlan>> getMealPlans(String clientEmail) {
+        return mealPlanDAO.getMealPlans(clientEmail);
+    }
+
+
+
+    @Override
+    public void deleteMealPlan(MealPlan mealPlan) {
+        executorService.execute(() -> mealPlanDAO.deleteMealPlan(mealPlan));
+
+    }
+
+
 
 //    @Override
 //    public LiveData<List<FavoriteMealWithMeals>> getFavoritesWithMeals(String clientEmail) {

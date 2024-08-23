@@ -2,7 +2,7 @@ package com.example.mealmate.veiw.all_meal_details_fragment.all_meal_details_fra
 import com.example.mealmate.model.mealDTOs.CustomMeal;
 
 public interface HandelAddToPlanClick {
-    void onAddToFavoritesClick(CustomMeal customMeal);
+    void onAddToMealPlanClick(CustomMeal customMeal);
 
 }
 

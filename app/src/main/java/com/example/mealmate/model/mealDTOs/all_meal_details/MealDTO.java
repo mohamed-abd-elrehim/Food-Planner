@@ -4,8 +4,10 @@ import androidx.room.PrimaryKey;
 import androidx.room.ColumnInfo;
 import androidx.room.Relation;
 
+import java.io.Serializable;
+
 @Entity
-public class MealDTO {
+public class MealDTO implements Serializable {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     private int id;

@@ -1,6 +1,8 @@
 package com.example.mealmate.model.mealDTOs;
 
-public class CustomMeal {
+import java.io.Serializable;
+
+public class CustomMeal  {
     public String idMeal;
     public String strMeal;
     public String strDrinkAlternate;

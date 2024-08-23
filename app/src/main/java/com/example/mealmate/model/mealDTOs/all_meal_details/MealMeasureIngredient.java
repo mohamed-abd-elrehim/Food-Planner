@@ -3,8 +3,10 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.ColumnInfo;
 
+import java.io.Serializable;
+
 @Entity
-public class MealMeasureIngredient {
+public class MealMeasureIngredient implements Serializable {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     private int id;

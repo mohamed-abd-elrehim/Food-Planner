@@ -1,12 +1,7 @@
-package com.example.mealmate;
-
-import androidx.lifecycle.LiveData;
+package com.example.mealmate.presenter.favorite_meals_fragment_presenter.favorite_meals_fragment_presenter_interface;
 
 import com.example.mealmate.model.mealDTOs.CustomMeal;
-import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
 import com.example.mealmate.model.mealDTOs.favorite_meals.FavoriteMeal;
-
-import java.util.List;
 
 public interface FavoriteMealsFragmentPresenterInterface {
     void getAllFAVMeals(String email);

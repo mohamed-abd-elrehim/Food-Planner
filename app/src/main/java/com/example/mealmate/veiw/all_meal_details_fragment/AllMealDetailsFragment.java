@@ -7,6 +7,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -22,10 +24,11 @@ import android.widget.Toast;
 import com.example.mealmate.veiw.all_meal_details_fragment.all_meal_details_fragment_veiw_interface.AllMealDetailsFragment_Veiw_Interface;
 import com.example.mealmate.presenter.all_meal_details_fragment_presenter.AllMealDetailsFragment_presenter;
 import com.example.mealmate.veiw.all_meal_details_fragment.all_meal_details_fragment_veiw_interface.HandelAddToFavoritesClick;
+import com.example.mealmate.veiw.all_meal_details_fragment.all_meal_details_fragment_veiw_interface.HandelAddToPlanClick;
 import com.example.mealmate.veiw.all_meal_details_fragment.related_adapter_views.IngredientAdapter;
 import com.example.mealmate.veiw.all_meal_details_fragment.related_adapter_views.MediaPagerAdapter;
 import com.example.mealmate.R;
-import com.example.mealmate.StepsAdapter;
+import com.example.mealmate.veiw.all_meal_details_fragment.related_adapter_views.StepsAdapter;
 import com.example.mealmate.model.MealIngredient;
 import com.example.mealmate.model.MealRepository.MealRepository;
 import com.example.mealmate.model.MediaItem;
@@ -36,13 +39,15 @@ import com.example.mealmate.model.mealDTOs.CustomMeal;
 import com.example.mealmate.model.mealDTOs.all_meal_details.MealMeasureIngredient;
 import com.example.mealmate.model.network.RemoteDataSourceImpl;
 import com.example.mealmate.veiw.main_activity.MainActivity;
+import com.example.mealmate.veiw.search_fragment.search_fragment_veiw_interface.HandelSeeMoreClick;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFragment_Veiw_Interface, HandelAddToFavoritesClick {
+public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFragment_Veiw_Interface, HandelAddToFavoritesClick , HandelAddToPlanClick
+{
 
     private static final String TAG = "AllMealDetailsFragment";
     private ArrayList<MealIngredient> mealIngredients = new ArrayList<>();
@@ -66,6 +71,7 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
     private TextView mealArea;
     private Button addToFavoritesButton;
     private Button backButton;
+    private Button addPlanButton;
 
     CustomMeal customMeal = new CustomMeal();
 
@@ -95,6 +101,8 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
         mealArea = view.findViewById(R.id.all_Meal_detil_meal_area);
         backButton = view.findViewById(R.id.back);
         addToFavoritesButton = view.findViewById(R.id.add_to_Fav_button2);
+        addPlanButton = view.findViewById(R.id.add_to_plan_button3);
+
         // Set up RecyclerView
         stepsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         ingredientRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -168,6 +176,9 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
         });
         backButton.setOnClickListener(view1 -> {
             getActivity().onBackPressed();
+        });
+        addPlanButton.setOnClickListener(view1 -> {
+            onAddToMealPlanClick(customMeal);
         });
 
     }
@@ -250,5 +261,16 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
                     dialog.dismiss();
                 })
                 .show();
+    }
+
+    @Override
+    public void onAddToMealPlanClick(CustomMeal customMeal) {
+        if (customMeal != null) {
+            AllMealDetailsFragmentDirections.ActionAllMealDetailsFragmentToAddPlanMealFragment action = AllMealDetailsFragmentDirections.actionAllMealDetailsFragmentToAddPlanMealFragment(customMeal.idMeal,customMeal.strMealThumb);
+            NavController navController = Navigation.findNavController(requireView());
+            navController.navigate(action);
+        }
+
+
     }
 }

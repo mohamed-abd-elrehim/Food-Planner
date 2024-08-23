@@ -116,7 +116,7 @@ public class MealRepository implements MealRepositoryInterface {
     }
 
     @Override
-    public void insertFavoriteMealWithMeals(FavoriteMeal meal, MealDTO mealDTO ,List<MealMeasureIngredient> ingredients) {
+    public void insertFavoriteMealWithMeals(FavoriteMeal meal, MealDTO mealDTO, List<MealMeasureIngredient> ingredients) {
         localDataSource.insertFavoriteMealWithMeals(meal, mealDTO, ingredients);
     }
 
@@ -126,7 +126,15 @@ public class MealRepository implements MealRepositoryInterface {
     }
 
 
+    @Override
+    public void insertMealPlan(MealPlan mealPlan, MealDTO meal, List<MealMeasureIngredient> ingredients) {
+        localDataSource.insertMealPlan(mealPlan, meal, ingredients);
+    }
 
+    @Override
+    public LiveData<List<MealPlan>> getMealPlans(String clientEmail) {
+        return localDataSource.getMealPlans(clientEmail);
+    }
 
     @Override
     public LiveData<MealDTO> getMealById(String mealId) {
@@ -136,6 +144,11 @@ public class MealRepository implements MealRepositoryInterface {
     @Override
     public LiveData<List<MealMeasureIngredient>> getIngredientsByMealId(String mealId) {
         return localDataSource.getIngredientsByMealId(mealId);
+    }
+
+    @Override
+    public void deleteMealPlan(MealPlan mealPlan) {
+        localDataSource.deleteMealPlan(mealPlan);
     }
 
     @Override

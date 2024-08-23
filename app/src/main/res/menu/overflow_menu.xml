@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/option_breakfast"
+        android:title="@string/food_type_breakfast" />
+    <item
+        android:id="@+id/option_lunch"
+        android:title="@string/food_type_lunch" />
+    <item
+        android:id="@+id/option_dinner"
+        android:title="@string/food_type_dinner" />
+    <item
+        android:id="@+id/option_snack"
+        android:title="@string/food_type_snack" />
+</menu>

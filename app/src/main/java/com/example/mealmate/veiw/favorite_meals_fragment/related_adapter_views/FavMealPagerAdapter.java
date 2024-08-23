@@ -1,4 +1,4 @@
-package com.example.mealmate;
+package com.example.mealmate.veiw.favorite_meals_fragment.related_adapter_views;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.example.mealmate.model.mealDTOs.CustomMeal;
+import com.example.mealmate.R;
 import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
 import com.example.mealmate.model.mealDTOs.favorite_meals.FavoriteMeal;
+import com.example.mealmate.veiw.favorite_meals_fragment.favorite_meals_fragment_veiw_interface.HandelSeeMoreClick;
+import com.example.mealmate.veiw.favorite_meals_fragment.favorite_meals_fragment_veiw_interface.Handel_Delete_Favorites;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
