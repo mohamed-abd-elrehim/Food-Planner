@@ -1,10 +1,14 @@
 package com.example.mealmate.model.mealDTOs.meal_plan;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ColumnInfo;
 
 @Entity(primaryKeys = {"meal_id", "client_email"})
-public class MealPlan {
+public class MealPlan implements Parcelable {
     @NonNull
     @ColumnInfo(name = "meal_id")
     private String mealId;
@@ -21,6 +25,7 @@ public class MealPlan {
     @ColumnInfo(name = "date")
     private String date;
 
+    // Constructor
     public MealPlan(String mealId, String clientEmail, String dayOfWeek, String mealType, String date) {
         this.mealId = mealId;
         this.clientEmail = clientEmail;
@@ -28,8 +33,43 @@ public class MealPlan {
         this.mealType = mealType;
         this.date = date;
     }
-// Getters and setters...
 
+    // Parcelable implementation
+    protected MealPlan(Parcel in) {
+        mealId = in.readString();
+        clientEmail = in.readString();
+        dayOfWeek = in.readString();
+        mealType = in.readString();
+        date = in.readString();
+    }
+
+    public static final Creator<MealPlan> CREATOR = new Creator<MealPlan>() {
+        @Override
+        public MealPlan createFromParcel(Parcel in) {
+            return new MealPlan(in);
+        }
+
+        @Override
+        public MealPlan[] newArray(int size) {
+            return new MealPlan[size];
+        }
+    };
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mealId);
+        dest.writeString(clientEmail);
+        dest.writeString(dayOfWeek);
+        dest.writeString(mealType);
+        dest.writeString(date);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    // Getters and setters...
     public String getMealId() {
         return mealId;
     }

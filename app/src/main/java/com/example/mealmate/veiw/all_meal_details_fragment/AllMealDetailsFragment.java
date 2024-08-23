@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mealmate.model.mealDTOs.meal_plan.MealPlan;
 import com.example.mealmate.veiw.all_meal_details_fragment.all_meal_details_fragment_veiw_interface.AllMealDetailsFragment_Veiw_Interface;
 import com.example.mealmate.presenter.all_meal_details_fragment_presenter.AllMealDetailsFragment_presenter;
 import com.example.mealmate.veiw.all_meal_details_fragment.all_meal_details_fragment_veiw_interface.HandelAddToFavoritesClick;
@@ -69,6 +70,13 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
     private TextView mealName;
     private TextView mealCategory;
     private TextView mealArea;
+
+    private TextView dayNameTitle;
+    private TextView dayName;
+    private TextView mealTimeTitle;
+    private TextView mealTime;
+
+
     private Button addToFavoritesButton;
     private Button backButton;
     private Button addPlanButton;
@@ -102,6 +110,12 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
         backButton = view.findViewById(R.id.back);
         addToFavoritesButton = view.findViewById(R.id.add_to_Fav_button2);
         addPlanButton = view.findViewById(R.id.add_to_plan_button3);
+
+        mealTime = view.findViewById(R.id.all_Meal_detil_meal_dateandtime);
+        mealTimeTitle = view.findViewById(R.id.all_Meal_detil_meal_dateandtime1);
+        dayName = view.findViewById(R.id.all_Meal_detil_meal_day);
+        dayNameTitle = view.findViewById(R.id.all_Meal_detil_meal_day1);
+
 
         // Set up RecyclerView
         stepsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -140,6 +154,7 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
         // Load meal details by ID
         String arguments = AllMealDetailsFragmentArgs.fromBundle(getArguments()).getMeal();
         String fragment = AllMealDetailsFragmentArgs.fromBundle(getArguments()).getPage();
+        MealPlan mealPlan = AllMealDetailsFragmentArgs.fromBundle(getArguments()).getMealPlan();
         // Check if arguments are not null and not empty
         if (arguments != null && !arguments.isEmpty()) {
             // Handle the case where the fragment is "searchFragment"
@@ -149,19 +164,39 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
                 addPlanButton.setVisibility(View.VISIBLE);
                 presenter.loadAllMealDetailsById(arguments);
 
+                mealTime.setVisibility(View.GONE);
+                mealTimeTitle.setVisibility(View.GONE);
+                dayName.setVisibility(View.GONE);
+                dayNameTitle.setVisibility(View.GONE);
+
                 // Handle the case where the fragment is "favoriteFragment"
             } else if (fragment.equals("favoriteFragment")) {
                 backButton.setVisibility(View.VISIBLE);
                 addToFavoritesButton.setVisibility(View.GONE);
                 addPlanButton.setVisibility(View.VISIBLE);
                 presenter.getFavMeals(arguments);
+                mealTime.setVisibility(View.GONE);
+                mealTimeTitle.setVisibility(View.GONE);
+                dayName.setVisibility(View.GONE);
+                dayNameTitle.setVisibility(View.GONE);
 
-
-            } else if (fragment.equals("planOfTheWeekFragment")) {
+            } else if (fragment.equals("planOfTheWeekFragment")&&mealPlan!=null) {
                 backButton.setVisibility(View.VISIBLE);
                 addToFavoritesButton.setVisibility(View.VISIBLE);
                 addPlanButton.setVisibility(View.GONE);
                 presenter.getPlanMeals(arguments);
+
+                mealTime.setVisibility(View.VISIBLE);
+                mealTimeTitle.setVisibility(View.VISIBLE);
+                dayName.setVisibility(View.VISIBLE);
+                dayNameTitle.setVisibility(View.VISIBLE);
+
+                String[] result = splitDateTime(mealPlan.getDate());
+
+                mealTime.setText(mealPlan.getMealType() + " "+result[1]+ checkTimePeriod(result[1]));
+
+
+                dayName.setText(mealPlan.getDayOfWeek()+" "+result[0]);
 
             }
         } else {
@@ -229,6 +264,17 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
 
     }
 
+    public String[] splitDateTime(String input) {
+        return input.split(" T: ");
+    }
+    public static String checkTimePeriod(String time) {
+        // Split the time into hours and minutes
+        String[] parts = time.split(":");
+        int hour = Integer.parseInt(parts[0]);
+
+        // Determine AM or PM
+        return (hour < 12) ? " AM" : " PM";
+    }
 
     @Override
     public void showError(String errorMessage) {

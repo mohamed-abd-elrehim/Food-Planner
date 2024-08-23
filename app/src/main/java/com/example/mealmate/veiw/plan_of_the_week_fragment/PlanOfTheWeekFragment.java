@@ -1,4 +1,4 @@
-package com.example.mealmate;
+package com.example.mealmate.veiw.plan_of_the_week_fragment;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -18,6 +18,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.example.mealmate.veiw.plan_of_the_week_fragment.plan_of_the_week_fragment_interface.Handel_Delete_Plans;
+import com.example.mealmate.veiw.plan_of_the_week_fragment.plan_of_the_week_fragment_interface.PlanHandelSeeMoreClick;
+import com.example.mealmate.veiw.plan_of_the_week_fragment.related_adpter.PlanMealPagerAdapter;
+import com.example.mealmate.presenter.plan_of_the_week_fragment_presenter.PlanOfTheWeekFragmentPresenter;
+import com.example.mealmate.veiw.plan_of_the_week_fragment.plan_of_the_week_fragment_interface.PlanOfWeekFragmentVeiwInterface;
+import com.example.mealmate.R;
 import com.example.mealmate.model.MealRepository.MealRepository;
 import com.example.mealmate.model.database.AppDataBase;
 import com.example.mealmate.model.database.local_data_source.LocalDataSourceImpl;
@@ -25,7 +31,6 @@ import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
 import com.example.mealmate.model.mealDTOs.meal_plan.MealPlan;
 import com.example.mealmate.model.network.RemoteDataSourceImpl;
 import com.example.mealmate.related_animation.ZoomOutPageTransformer;
-import com.example.mealmate.veiw.favorite_meals_fragment.FavoriteMealsFragmentDirections;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -113,11 +118,12 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
     }
 
     @Override
-    public void onSeeMoreClick(MealDTO meal) {
+    public void onSeeMoreClick(MealDTO meal,MealPlan mealPlan) {
         String id = meal.getIdMeal();
-        if (id != null) {
+        if (id != null &&mealPlan!=null) {
             PlanOfTheWeekFragmentDirections.ActionPlanOfTheWeekFragmentToAllMealDetailsFragment action =
                     PlanOfTheWeekFragmentDirections.actionPlanOfTheWeekFragmentToAllMealDetailsFragment(id,"planOfTheWeekFragment");
+            action.setMealPlan(mealPlan);
             NavController navController = Navigation.findNavController(requireView());
             navController.navigate(action);
 

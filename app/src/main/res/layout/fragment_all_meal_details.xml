@@ -38,7 +38,7 @@
                 android:textStyle="bold|italic" />
 
             <TextView
-                android:id="@+id/textView12"
+                android:id="@+id/all_Meal_detil_meal_day1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="36dp"
@@ -58,10 +58,9 @@
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/textView17"
+                android:id="@+id/all_Meal_detil_meal_dateandtime1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="36dp"
                 android:padding="15dp"
                 android:visibility="gone"
                 android:text="@string/time"
