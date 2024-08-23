@@ -29,8 +29,8 @@ public class LocalDataSourceImpl implements LocalDataSource {
     private final MealPlanDAO mealPlanDAO;
     private final ExecutorService executorService;
 
-    private  static LocalDataSourceImpl localDataSource =null;
-    private final String TAG="ProductsLocalDataSource";
+    private static LocalDataSourceImpl localDataSource = null;
+    private final String TAG = "ProductsLocalDataSource";
 
 
     private LocalDataSourceImpl(FavoriteMealDAO favoriteMealDAO, MealDAO mealDAO, MealPlanDAO mealPlanDAO) {
@@ -40,26 +40,23 @@ public class LocalDataSourceImpl implements LocalDataSource {
         this.executorService = Executors.newFixedThreadPool(6); // Adjust the number of threads as needed
     }
 
-    public static LocalDataSourceImpl getInstance(FavoriteMealDAO favoriteMealDAO, MealDAO mealDAO, MealPlanDAO mealPlanDAO){
-        if (localDataSource ==null)
-        {
-            localDataSource = new LocalDataSourceImpl( favoriteMealDAO, mealDAO,mealPlanDAO);
+    public static LocalDataSourceImpl getInstance(FavoriteMealDAO favoriteMealDAO, MealDAO mealDAO, MealPlanDAO mealPlanDAO) {
+        if (localDataSource == null) {
+            localDataSource = new LocalDataSourceImpl(favoriteMealDAO, mealDAO, mealPlanDAO);
         }
         return localDataSource;
     }
 
 
-
-
-
     // Implementation of FavoriteMealDataSource
     @Override
-    public void insertFavoriteMealWithMeals(FavoriteMeal meal, MealDTO mealDTO ,List<MealMeasureIngredient> ingredients) {
+    public void insertFavoriteMealWithMeals(FavoriteMeal meal, MealDTO mealDTO, List<MealMeasureIngredient> ingredients) {
         executorService.execute(() -> {
-            favoriteMealDAO.insertFavoriteMeal(meal,mealDTO, ingredients);
+            favoriteMealDAO.insertFavoriteMeal(meal, mealDTO, ingredients);
         });
 
     }
+
     @Override
     public LiveData<MealDTO> getMealById(String mealId) {
         return favoriteMealDAO.getMealById(mealId);
@@ -69,19 +66,36 @@ public class LocalDataSourceImpl implements LocalDataSource {
     public LiveData<List<MealMeasureIngredient>> getIngredientsByMealId(String mealId) {
         return favoriteMealDAO.getIngredientsByMealId(mealId);
     }
+
     @Override
     public LiveData<List<FavoriteMeal>> getFavoriteMeal(String clientEmail) {
         return favoriteMealDAO.getFavoriteMeal(clientEmail);
     }
+
     @Override
     public void deleteFavoriteMeal(FavoriteMeal favoriteMeal) {
         executorService.execute(() -> favoriteMealDAO.deleteFavoriteMeal(favoriteMeal));
     }
 
+    @Override
+    public void insertAllFavoriteMeals(List<FavoriteMeal> favoriteMeals) {
+        executorService.execute(() -> favoriteMealDAO.insertAllFavoriteMeals(favoriteMeals));
+    }
+
+    @Override
+    public void insertAllMeals(List<MealDTO> meals) {
+        executorService.execute(() -> favoriteMealDAO.insertAllMeals(meals));
+    }
+
+    @Override
+    public void insertAllIngredients(List<MealMeasureIngredient> ingredients) {
+        executorService.execute(() -> favoriteMealDAO.insertAllIngredients(ingredients));
+    }
+
 
     @Override
     public void insertMealPlan(MealPlan mealPlan, MealDTO meal, List<MealMeasureIngredient> ingredients) {
-        executorService.execute(() -> mealPlanDAO.insertMealPlan(mealPlan,meal,ingredients));
+        executorService.execute(() -> mealPlanDAO.insertMealPlan(mealPlan, meal, ingredients));
     }
 
     @Override
@@ -90,13 +104,16 @@ public class LocalDataSourceImpl implements LocalDataSource {
     }
 
 
-
     @Override
     public void deleteMealPlan(MealPlan mealPlan) {
         executorService.execute(() -> mealPlanDAO.deleteMealPlan(mealPlan));
 
     }
 
+    @Override
+    public void insertAllPlanMeals(List<MealPlan> mealPlans) {
+        executorService.execute(() -> mealPlanDAO.insertAllPlanMeals(mealPlans));
+    }
 
 
 //    @Override

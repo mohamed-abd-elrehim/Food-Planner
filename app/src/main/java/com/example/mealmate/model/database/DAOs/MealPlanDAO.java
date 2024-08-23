@@ -70,6 +70,10 @@ public interface MealPlanDAO {
         deleteIngredientsByMealId(mealId);
     }
 
+    // Insert a list of FavoriteMeal entities
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAllPlanMeals(List<MealPlan> mealPlans);
+
 
     //    @Insert(onConflict = OnConflictStrategy.REPLACE)
 //

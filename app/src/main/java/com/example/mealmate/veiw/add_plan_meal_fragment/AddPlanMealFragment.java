@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.mealmate.presenter.add_plan_meal_fragment_presenter.AddPlanMealFragmentPresenter;
 import com.example.mealmate.veiw.add_plan_meal_fragment.add_plan_meal_fragment_veiw_interface.AddPlanMealFragmentVeiwInterface;
 import com.example.mealmate.R;
@@ -220,7 +221,12 @@ public class AddPlanMealFragment extends Fragment implements AddPlanMealFragment
         mealID = AddPlanMealFragmentArgs.fromBundle(getArguments()).getMeal();
         mealImgURL = AddPlanMealFragmentArgs.fromBundle(getArguments()).getMealImgURL();
         if (mealID != null && mealImgURL != null) {
-            Glide.with(this).load(mealImgURL).into(mealPlanImage);
+            Glide.with(this)
+                    .load(mealImgURL)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(mealPlanImage);
+
+            //Glide.with(this).load(mealImgURL).into(mealPlanImage);
         }
 
         // Initialize the presenter

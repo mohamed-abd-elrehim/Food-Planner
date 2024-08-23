@@ -2,10 +2,15 @@ package com.example.mealmate.veiw.home_activity;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Rect;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +25,17 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.mealmate.DataPresenter;
 import com.example.mealmate.R;
+import com.example.mealmate.model.MealRepository.MealRepository;
+import com.example.mealmate.model.database.AppDataBase;
+import com.example.mealmate.model.database.local_data_source.LocalDataSourceImpl;
+import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
+import com.example.mealmate.model.mealDTOs.all_meal_details.MealMeasureIngredient;
+import com.example.mealmate.model.network.RemoteDataSourceImpl;
+import com.example.mealmate.presenter.favorite_meals_fragment_presenter.FavoriteMealsFragmentPresenter;
+import com.example.mealmate.receiver.NetworkChangeReceiver;
+import com.example.mealmate.utils.NetworkUtils;
 import com.example.mealmate.veiw.main_activity.MainActivity;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -31,6 +46,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.List;
+
 public class HomeActivity extends AppCompatActivity {
     private static final String TAG = "HomeActivity";
     private DrawerLayout drawerLayout;
@@ -38,11 +55,31 @@ public class HomeActivity extends AppCompatActivity {
     private String extraValue;
     private boolean isDialogShown = false;
     private CoordinatorLayout coordinatorLayout;
+    private boolean isNetworkAvailable;
+    private NetworkChangeReceiver networkChangeReceiver;
+    NavController navController;
+    BottomNavigationView bottomNavigationView;
+    private boolean isReloaded;
+    DataPresenter dataPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        dataPresenter = new DataPresenter(AppDataBase.getInstance(this)
+                , MealRepository.getInstance(
+                LocalDataSourceImpl.getInstance(
+                        AppDataBase.getInstance(this).getFavoriteMealDAO(),
+                        AppDataBase.getInstance(this).getMealDAO(),
+                        AppDataBase.getInstance(this).getMealPlanDAO()
+                ),
+                RemoteDataSourceImpl.getInstance()));
+    // Initialize NetworkChangeReceiver
+        networkChangeReceiver = new NetworkChangeReceiver(this::handleNetworkChange);
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeReceiver, filter);
+
         // Retrieve the Intent that started this activity
         intent = getIntent();
         // Extract the extra data
@@ -65,54 +102,112 @@ public class HomeActivity extends AppCompatActivity {
 
 
         // Correctly initialize BottomNavigationView and BottomAppBar
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigationView);
+        bottomNavigationView = findViewById(R.id.bottom_navigationView);
         BottomAppBar bottomAppBar = findViewById(R.id.bottomAppBar);
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment2);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment2);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
-        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-//            if (destination.getId() == R.id.mealDetailView) {
-//                bottomAppBar.setVisibility(View.GONE);
-//            } else {
-//                bottomAppBar.setVisibility(View.VISIBLE);
-//            }
+        if (NetworkUtils.isNetworkAvailable(this)) {
+            isReloaded = true;
+        } else {
+            isReloaded = false;
+        }
+        if ("guest".equals(extraValue)) {
+            showSignupDialog();
+        }
+
+        bottomNavigationView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                bottomNavigationView.getWindowVisibleDisplayFrame(r);
+                if (bottomNavigationView.getRootView().getHeight() - (r.bottom - r.top) > 500) { // if more than 100 pixels, its probably a keyboard...
+                    bottomNavigationView.setVisibility(View.GONE);
+                } else {
+                    bottomNavigationView.setVisibility(View.VISIBLE);
+                }
+            }
         });
+
+        bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                if (item.getItemId() == R.id.nav_addplanmeal) {
+                    if (!NetworkUtils.isNetworkAvailable(HomeActivity.this)) {
+                        showNetWorkDialog();
+                        return false;
+                    }
+                    if ("guest".equals(extraValue)) {
+                        coordinatorLayout.setVisibility(View.GONE);
+                        navController.navigate(R.id.searchFragment);
+                        return true;
+                    }
+                    // Navigate to SearchFragment
+                    navController.navigate(R.id.searchFragment);
+                    return true;
+                } else if (item.getItemId() == R.id.homeFragment) {
+                    if (!NetworkUtils.isNetworkAvailable(HomeActivity.this)) {
+                        showNetWorkDialog();
+                        return false;
+                    }
+
+                    if ("guest".equals(extraValue)) {
+                        coordinatorLayout.setVisibility(View.VISIBLE);
+                        navController.navigate(R.id.homeFragment);
+                        return true;
+                    }
+
+                    // Navigate to HomeFragment
+                    navController.navigate(R.id.homeFragment);
+                    return true;
+                } else if (item.getItemId() == R.id.searchFragment) {
+                    if (!NetworkUtils.isNetworkAvailable(HomeActivity.this)) {
+                        showNetWorkDialog();
+                        return false;
+                    }
+                    if ("guest".equals(extraValue)) {
+                        coordinatorLayout.setVisibility(View.GONE);
+                        navController.navigate(R.id.searchFragment);
+                        return true;
+                    }
+                    // Navigate to SearchFragment
+                    navController.navigate(R.id.searchFragment);
+                    return true;
+                } else if (item.getItemId() == R.id.favoriteMealsFragment) {
+
+                    if ("guest".equals(extraValue)) {
+                        showRestrictedAccessDialog();
+                        return false;
+                    }
+                    // Navigate to FavoriteMealsFragment
+                    navController.navigate(R.id.favoriteMealsFragment);
+                    return true;
+                } else if (item.getItemId() == R.id.planOfTheWeekFragment) {
+
+                    if ("guest".equals(extraValue)) {
+                        showRestrictedAccessDialog();
+                        return false;
+                    }
+                    // Navigate to PlanOfTheWeekFragment
+                    navController.navigate(R.id.planOfTheWeekFragment);
+                    return true;
+                }
+                return false;
+            }
+        });
+
 
         // Handle the extra data
         if ("guest".equals(extraValue)) {
             showSignupDialog();
-
-        // Set a listener for item selections in the BottomNavigationView
-            bottomNavigationView.setOnItemSelectedListener(item -> {
-                // Check if the user is a guest
-                if ("guest".equals(extraValue)) {
-                    // Determine which item was clicked
-                    if (item.getItemId() == R.id.nav_addplanmeal ||
-                            item.getItemId() == R.id.favoriteMealsFragment ||
-                            item.getItemId() == R.id.planOfTheWeekFragment) {
-
-                        // Display the restricted access popup
-                        showRestrictedAccessDialog();
-
-                        // Return false to indicate the click was handled and not to proceed with navigation
-                        return false;
-                    } else if (item.getItemId() == R.id.searchFragment)
-                    {
-                        Log.i(TAG, "onCreate:searchFragment ");
-                        coordinatorLayout.setVisibility(View.GONE);
-
-                    } else if (item.getItemId() == R.id.homeFragment) {
-                        Log.i(TAG, "onCreate: homeFragment ");
-                        coordinatorLayout.setVisibility(View.VISIBLE);
-                    }
-
-                }
-                // Allow navigation to proceed for other cases
-                return NavigationUI.onNavDestinationSelected(item, navController);
-            });
+            coordinatorLayout.setVisibility(View.VISIBLE);
+            // Set a listener for item selections in the BottomNavigationView
 
         } else {
+            coordinatorLayout.setVisibility(View.GONE);
+
             // Fetch user data from Firebase
             FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
             Log.i(TAG, "onCreate: " + firebaseAuth.getCurrentUser().getUid());
@@ -147,6 +242,13 @@ public class HomeActivity extends AppCompatActivity {
                     intent.putExtra("destination_fragment", "startFragment");
                     startActivity(intent);
 
+                }else if (id == R.id.nav_beckup) {
+                    dataPresenter.backupData(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                    dataPresenter.backupData2(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+
+                }else if(id == R.id.nav_restore){
+                    dataPresenter.restoreData(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                    dataPresenter.restoreData2(FirebaseAuth.getInstance().getCurrentUser().getEmail());
                 }
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return true;
@@ -170,6 +272,12 @@ public class HomeActivity extends AppCompatActivity {
                     showRestrictedAccessDialog();
                     isDialogShown = true; // Set flag to true to prevent multiple dialog displays
                 }
+                if (!NetworkUtils.isNetworkAvailable(HomeActivity.this) && !isDialogShown) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    showNetWorkDialog();
+                    isDialogShown = true;
+                }
+
             }
 
             @Override
@@ -180,32 +288,36 @@ public class HomeActivity extends AppCompatActivity {
                     showRestrictedAccessDialog();
                     isDialogShown = true; // Set flag to true to prevent multiple dialog displays
                 }
+                if (!NetworkUtils.isNetworkAvailable(HomeActivity.this) && !isDialogShown) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    showNetWorkDialog();
+                    isDialogShown = true;
+                }
             }
         });
 
     }
 
 
-
-        @Override
-        public void onBackPressed() {
-            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                drawerLayout.closeDrawer(GravityCompat.START);
-            } else {
-                super.onBackPressed();
-            }
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
+    }
 
 
-
-        // Method to display the restricted access popup
+    // Method to display the restricted access popup
     private void showRestrictedAccessDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Sign Up for More Features")
                 .setMessage("Add your food preferences ,plan your meals and more!")
                 .setPositiveButton("Sign Up", (dialog, which) -> {
                     Intent intent = new Intent(this, MainActivity.class);
-                    intent.putExtra("destination_fragment", "startFragment");;
+                    intent.putExtra("destination_fragment", "startFragment");
+                    ;
                     startActivity(intent);
                     this.finish();
                 })
@@ -234,5 +346,71 @@ public class HomeActivity extends AppCompatActivity {
         snackbar.show();
     }
 
+    // Method to display the restricted access popup
+    private void showRestrictedNetWorkDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Open Internet Connection for More Features")
+                .setMessage("Add your food preferences ,plan your meals and more!")
+                .setPositiveButton("Ok", (dialog, which) -> {
+                    dialog.dismiss();
+
+                }).show();
+    }
+
+    // Method to display the restricted access popup
+    private void showNetWorkDialog() {
+        new AlertDialog.Builder(HomeActivity.this)
+                .setTitle("No Internet Connection")
+                .setMessage("You need an internet connection to proceed or stay on offline mode.")
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                .setCancelable(false)
+                .show();
+    }
+
+
+    private void handleNetworkChange(boolean isConnected) {
+        if (!isConnected) {
+            if ("guest".equals(extraValue)) {
+                runOnUiThread(() -> {
+                    new Handler().postDelayed(() -> {
+                        new AlertDialog.Builder(HomeActivity.this)
+                                .setTitle("No Internet Connection")
+                                .setMessage("You need an internet connection to proceed. The app will now close.")
+                                .setPositiveButton("OK", (dialog, which) -> finish())
+                                .setCancelable(false)
+                                .show();
+                    }, 100); // Adjust the delay as needed
+                });
+            } else {
+                isDialogShown = false;
+                runOnUiThread(() -> {
+                    navController.navigate(R.id.favoriteMealsFragment);
+                    new Handler().postDelayed(() -> {
+                        new AlertDialog.Builder(HomeActivity.this)
+                                .setTitle("No Internet Connection")
+                                .setMessage("You need an internet connection to proceed or stay on offline mode.")
+                                .setPositiveButton("OK", (dialog, which) -> {
+                                    dialog.dismiss();
+                                    isDialogShown = false;
+                                })
+                                .setCancelable(false)
+                                .show();
+                    }, 100); // Adjust the delay as needed
+                });
+            }
+        } else {
+            if (!isReloaded) {
+                Toast.makeText(this, "Internet Connection Restored", Toast.LENGTH_SHORT).show();
+                isReloaded = true; // Set flag to true to prevent multiple reloads
+                this.recreate(); // Reload the activity
+            }
+        }
+    }
+
 
 }
+
+
+
+
+

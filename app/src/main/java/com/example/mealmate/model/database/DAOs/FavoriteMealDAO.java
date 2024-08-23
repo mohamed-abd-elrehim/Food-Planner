@@ -81,6 +81,19 @@ public interface FavoriteMealDAO {
         deleteIngredientsByMealId(mealId);
     }
 
+    // Insert a list of FavoriteMeal entities
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAllFavoriteMeals(List<FavoriteMeal> favoriteMeals);
+
+    // Insert a list of MealDTO entities
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAllMeals(List<MealDTO> meals);
+
+    // Insert a list of MealMeasureIngredient entities
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAllIngredients(List<MealMeasureIngredient> ingredients);
+
+
 
 //    @Transaction
 //    @Query("SELECT * FROM FavoriteMeal WHERE client_email = :clientEmail")

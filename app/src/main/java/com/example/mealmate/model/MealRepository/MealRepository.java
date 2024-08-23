@@ -152,8 +152,28 @@ public class MealRepository implements MealRepositoryInterface {
     }
 
     @Override
+    public void insertAllPlanMeals(List<MealPlan> mealPlans) {
+        localDataSource.insertAllPlanMeals(mealPlans);
+    }
+
+    @Override
     public void deleteFavoriteMeal(FavoriteMeal favoriteMeal) {
         localDataSource.deleteFavoriteMeal(favoriteMeal);
+    }
+
+    @Override
+    public void insertAllFavoriteMeals(List<FavoriteMeal> favoriteMeals) {
+        localDataSource.insertAllFavoriteMeals(favoriteMeals);
+    }
+
+    @Override
+    public void insertAllMeals(List<MealDTO> meals) {
+        localDataSource.insertAllMeals(meals);
+    }
+
+    @Override
+    public void insertAllIngredients(List<MealMeasureIngredient> ingredients) {
+        localDataSource.insertAllIngredients(ingredients);
     }
 
 

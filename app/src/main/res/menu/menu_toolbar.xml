@@ -2,6 +2,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/nav_restore"
+        android:icon="@drawable/baseline_restore_24"
+        android:title="@string/restore" />
+    <item
+        android:id="@+id/nav_beckup"
+        android:icon="@drawable/baseline_backup_24"
+        android:title="@string/backup" />
+    <item
         android:id="@+id/nav_logout"
         android:title="Log Out"
         android:icon="@drawable/ic_logout" />

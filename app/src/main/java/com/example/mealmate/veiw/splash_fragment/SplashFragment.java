@@ -1,10 +1,13 @@
 package com.example.mealmate.veiw.splash_fragment;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -19,7 +22,10 @@ import android.widget.Button;
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.mealmate.R;
 import com.example.mealmate.presenter.splash_fragment_presenter.Splash_Fragment_Presenter;
+import com.example.mealmate.receiver.NetworkChangeReceiver;
+import com.example.mealmate.utils.NetworkUtils;
 import com.example.mealmate.veiw.home_activity.HomeActivity;
+import com.example.mealmate.veiw.main_activity.MainActivity;
 import com.example.mealmate.veiw.splash_fragment.splash_fragment_interface.Splash_Fragment_Interface;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -49,6 +55,8 @@ public class SplashFragment extends Fragment implements Splash_Fragment_Interfac
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
         navController = Navigation.findNavController(view);
         lottieAnimationView = view.findViewById(R.id.lottie_animation_view);
         // Example: Start animation programmatically
@@ -62,9 +70,17 @@ public class SplashFragment extends Fragment implements Splash_Fragment_Interfac
             if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                 // User is logged in, navigate to the home screen
                 navigateToHomeScreen();
-            } else {
+            }  else if(NetworkUtils.isNetworkAvailable(requireContext())) {
                 // User is not logged in, navigate to the login screen
                 navigateToStartScreen();
+            }else if (!NetworkUtils.isNetworkAvailable(requireContext())&&FirebaseAuth.getInstance().getCurrentUser()==null) {
+                new AlertDialog.Builder(getContext())
+                        .setTitle("No Internet Connection")
+                        .setMessage("You need an internet connection to proceed. The app will now close.")
+                        .setPositiveButton("OK", (dialog, which) -> this.getActivity().finish())
+                        .setCancelable(false)
+                        .show();
+
             }
         }, DELAY_MILLIS);
     }
@@ -85,4 +101,6 @@ public class SplashFragment extends Fragment implements Splash_Fragment_Interfac
     public void navigateToStartFragment() {
 
     }
+    // Handle network changes
+
 }

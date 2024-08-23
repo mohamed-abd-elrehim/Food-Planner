@@ -119,7 +119,7 @@ public class HomeFragmentPresenterImpl implements HomeFragmentPresenterInterface
 
     @Override
     public void onFailureResult(String errorMsg) {
-        view.showError("Failed to load data: " + errorMsg);
+        //view.showError("Failed to load data: " + errorMsg);
         Log.e(TAG, "Error loading data: " + errorMsg);
     }
 }

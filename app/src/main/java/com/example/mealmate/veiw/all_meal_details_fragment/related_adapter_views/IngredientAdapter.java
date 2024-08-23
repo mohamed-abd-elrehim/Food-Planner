@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.mealmate.R;
 import com.example.mealmate.model.mealDTOs.all_meal_details.MealMeasureIngredient;
 
@@ -45,10 +46,13 @@ private  static final String TAG = "IngredientAdapter";
 
         Glide.with(context)
                 .load("https://www.themealdb.com/images/ingredients/" + item.getIngredientName() + "-Small.png")
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .placeholder(R.drawable.nophotosign)
                 .error(R.drawable.errorloadingimag)
                 .centerCrop()
                 .into(holder.mealImageView);
+
+
     }
 
     @Override

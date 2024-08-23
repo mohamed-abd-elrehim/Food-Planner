@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.mealmate.R;
 import com.example.mealmate.model.MediaItem;
 
@@ -79,6 +80,7 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             Glide.with(context)
                     .load(mediaItem.getUrl())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imageView);
 
         }

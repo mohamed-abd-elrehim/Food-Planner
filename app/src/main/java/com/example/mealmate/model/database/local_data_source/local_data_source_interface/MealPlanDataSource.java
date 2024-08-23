@@ -17,6 +17,7 @@ public interface MealPlanDataSource {
     LiveData<MealDTO> getMealById(String mealId);
     LiveData<List<MealMeasureIngredient>> getIngredientsByMealId(String mealId);
     void deleteMealPlan (MealPlan mealPlan);
+    void insertAllPlanMeals(List<MealPlan> mealPlans);
 
 
 }

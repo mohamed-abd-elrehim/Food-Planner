@@ -67,6 +67,8 @@
     <string name="your_plan_meals">Your Plan Meals</string>
     <string name="day">Day</string>
     <string name="time">Time</string>
+    <string name="backup">Backup</string>
+    <string name="restore">Restore</string>
 
     <!-- String array for meal types -->
     <string-array name="meal_types">

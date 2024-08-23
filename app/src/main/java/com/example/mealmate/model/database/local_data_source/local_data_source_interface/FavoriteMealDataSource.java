@@ -25,4 +25,11 @@ public interface FavoriteMealDataSource {
 
      void deleteFavoriteMeal(FavoriteMeal favoriteMeal);
 
+    void insertAllFavoriteMeals(List<FavoriteMeal> favoriteMeals);
+
+
+    void insertAllMeals(List<MealDTO> meals);
+
+
+    void insertAllIngredients(List<MealMeasureIngredient> ingredients);
 }
