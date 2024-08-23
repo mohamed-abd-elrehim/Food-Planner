@@ -146,17 +146,23 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
             if (fragment.equals("searchFragment")) {
                 backButton.setVisibility(View.GONE);
                 addToFavoritesButton.setVisibility(View.VISIBLE);
+                addPlanButton.setVisibility(View.VISIBLE);
                 presenter.loadAllMealDetailsById(arguments);
 
                 // Handle the case where the fragment is "favoriteFragment"
             } else if (fragment.equals("favoriteFragment")) {
                 backButton.setVisibility(View.VISIBLE);
                 addToFavoritesButton.setVisibility(View.GONE);
+                addPlanButton.setVisibility(View.VISIBLE);
                 presenter.getFavMeals(arguments);
 
 
-            } else if (fragment.equals("planFragment")) {
-                Toast.makeText(getContext(), "mealID is null", Toast.LENGTH_SHORT).show();
+            } else if (fragment.equals("planOfTheWeekFragment")) {
+                backButton.setVisibility(View.VISIBLE);
+                addToFavoritesButton.setVisibility(View.VISIBLE);
+                addPlanButton.setVisibility(View.GONE);
+                presenter.getPlanMeals(arguments);
+
             }
         } else {
             // Handle the case where arguments are null or empty

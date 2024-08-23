@@ -70,6 +70,28 @@ public class AllMealDetailsFragment_presenter implements AllMealDetailsFragment_
     }
 
     @Override
+    public void getPlanMeals(String id) {
+        mealDTO = mealRepository.getMealById(id);
+        mealDTO.observeForever(meals -> {
+            if (meals != null) {
+                LiveData<List<MealMeasureIngredient>> mealMeasureIngredient = mealRepository.getIngredientsByMealId(id);
+                mealMeasureIngredient.observeForever(mealMeasureIngredients -> {
+                    if (mealMeasureIngredients != null && !mealMeasureIngredients.isEmpty()) {
+                        List<CustomMeal> customMeals = new ArrayList<>();
+                        customMeals.add(convertToCustomMeal(meals, mealMeasureIngredients));
+                        Log.i(TAG, "getFavMeals: "+ customMeals.size()+" Meals found.");
+                        view.showData(customMeals);
+                    }
+                });
+            }
+
+
+        });
+
+
+    }
+
+    @Override
     public List<Step> processInstructions(String instructions) {
         if (instructions == null || instructions.trim().isEmpty()) {
             Log.e(TAG, "processInstructions: No instructions provided");

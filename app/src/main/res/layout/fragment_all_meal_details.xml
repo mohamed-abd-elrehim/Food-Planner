@@ -38,7 +38,46 @@
                 android:textStyle="bold|italic" />
 
             <TextView
-                android:id="@+id/textView14"
+                android:id="@+id/textView12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36dp"
+                android:padding="15dp"
+                android:text="@string/day"
+                android:textSize="25dp"
+                android:visibility="gone"
+                android:textStyle="bold|italic" />
+
+            <TextView
+                android:id="@+id/all_Meal_detil_meal_day"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:visibility="gone"
+                android:text="TextView"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36dp"
+                android:padding="15dp"
+                android:visibility="gone"
+                android:text="@string/time"
+                android:textSize="25dp"
+                android:textStyle="bold|italic" />
+
+            <TextView
+                android:id="@+id/all_Meal_detil_meal_dateandtime"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:text="TextView"
+                android:textSize="20sp" />
+            <TextView
+                android:id="@+id/textView19"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="36dp"

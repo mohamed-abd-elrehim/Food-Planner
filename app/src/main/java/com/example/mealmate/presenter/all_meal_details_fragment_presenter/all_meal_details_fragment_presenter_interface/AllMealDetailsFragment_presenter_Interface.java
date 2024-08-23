@@ -16,6 +16,7 @@ public interface AllMealDetailsFragment_presenter_Interface {
 
      void getFavMeals(String id);
 
+    void getPlanMeals(String id);
 
     //void addMealToPlan(CustomMeal customMeal);
     //void loadAllMealDetailsByName(String name);
