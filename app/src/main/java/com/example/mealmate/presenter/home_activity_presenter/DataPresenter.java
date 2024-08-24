@@ -1,10 +1,8 @@
-package com.example.mealmate;
+package com.example.mealmate.presenter.home_activity_presenter;
 
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
-
-import android.util.Log;
 
 import com.example.mealmate.model.MealRepository.MealRepository;
 import com.example.mealmate.model.database.AppDataBase;
@@ -12,10 +10,10 @@ import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
 import com.example.mealmate.model.mealDTOs.all_meal_details.MealMeasureIngredient;
 import com.example.mealmate.model.mealDTOs.favorite_meals.FavoriteMeal;
 import com.example.mealmate.model.mealDTOs.meal_plan.MealPlan;
+import com.example.mealmate.presenter.home_activity_presenter.home_activity_presenter_interface.DataRepository;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import java.lang.reflect.Type;

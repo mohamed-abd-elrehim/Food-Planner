@@ -25,15 +25,12 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.mealmate.DataPresenter;
+import com.example.mealmate.presenter.home_activity_presenter.DataPresenter;
 import com.example.mealmate.R;
 import com.example.mealmate.model.MealRepository.MealRepository;
 import com.example.mealmate.model.database.AppDataBase;
 import com.example.mealmate.model.database.local_data_source.LocalDataSourceImpl;
-import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
-import com.example.mealmate.model.mealDTOs.all_meal_details.MealMeasureIngredient;
 import com.example.mealmate.model.network.RemoteDataSourceImpl;
-import com.example.mealmate.presenter.favorite_meals_fragment_presenter.FavoriteMealsFragmentPresenter;
 import com.example.mealmate.receiver.NetworkChangeReceiver;
 import com.example.mealmate.utils.NetworkUtils;
 import com.example.mealmate.veiw.main_activity.MainActivity;
@@ -45,8 +42,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
     private static final String TAG = "HomeActivity";

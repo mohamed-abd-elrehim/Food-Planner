@@ -95,7 +95,7 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
     @Override
     public void showData(List<MealDTO> data, List<MealPlan> planMeals) {
         // Initialize the ProgressBar
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             if (data == null || data.isEmpty()) {
                 progressBar.setVisibility(View.GONE);
@@ -154,11 +154,11 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
                 .setTitle("No Data Found")
                 .setMessage("Add your meals to Plan first.")
                 .setPositiveButton("OK", (dialog, which) -> {
-                    navController.navigate(R.id.action_favoriteMealsFragment_to_searchFragment);
+                    navController.navigate(R.id.action_planOfTheWeekFragment_to_searchFragment);
 
                 })
                 .setNegativeButton("Back To Home", (dialog, which) -> {
-                    navController.navigate(R.id.action_favoriteMealsFragment_to_homeFragment);
+                    navController.navigate(R.id.action_planOfTheWeekFragment_to_homeFragment);
                 })
                 .show();
 

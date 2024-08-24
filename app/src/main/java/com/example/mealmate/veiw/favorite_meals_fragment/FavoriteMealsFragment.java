@@ -88,28 +88,6 @@ public class FavoriteMealsFragment extends Fragment implements FavoriteMealsFrag
 
     @Override
     public void showData(List<MealDTO> data) {
-        // Initialize the ProgressBar
-
-// Show the ProgressBar
-        progressBar.setVisibility(View.VISIBLE);
-
-// Delay execution by 5 seconds (5000 milliseconds)
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            // Check if data is null or empty
-            if (data == null || data.isEmpty()) {
-                // Stop the loading indicator
-                progressBar.setVisibility(View.GONE);
-
-                // Show the error message after 5 seconds delay
-                showError();
-            } else {
-                // Stop the loading indicator if data is valid
-                progressBar.setVisibility(View.GONE);
-
-            }
-        }, 5000); // 5-second delay to simulate loading
-
-
         mealDTOS.clear();
         mealDTOS.addAll(data);
         favMealPagerAdapter.notifyDataSetChanged();

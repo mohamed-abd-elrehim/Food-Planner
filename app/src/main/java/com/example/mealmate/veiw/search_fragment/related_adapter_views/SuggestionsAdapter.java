@@ -25,6 +25,7 @@ public class SuggestionsAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vie
     private static final int VIEW_TYPE_SUGGESTION = 0;
     private static final int VIEW_TYPE_HEADER = 1;
 
+
     private List<Object> items;
     private Context context;
     private OnMealClickListener<T> onMealClickListener;
@@ -50,6 +51,7 @@ public class SuggestionsAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vie
 
     private String getHeaderForItem(T item) {
         if (item instanceof MealDTO) {
+            Log.i(TAG, "getHeaderForItem: ");
             return "Meals";
         } else if (item instanceof MealCategory) {
             return "Categories";

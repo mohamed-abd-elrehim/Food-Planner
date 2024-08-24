@@ -53,6 +53,7 @@ public class FavoriteMealsFragmentPresenter implements FavoriteMealsFragmentPres
                             if (allMeals.size() == favoriteMeals.size()) {
                                 Log.i(TAG, "getAllFAVMeals: "+allMeals.size());
                                 view.showData(allMeals);
+                                Log.i(TAG, "getAllFAVMeals: "+allMeals.get(0).getIdMeal());
                             }
                         }
                     });

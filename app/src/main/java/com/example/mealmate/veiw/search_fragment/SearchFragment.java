@@ -85,6 +85,27 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
 
         suggestionsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         suggestionsAdapter = new SuggestionsAdapter<>(getContext(), new ArrayList<>(), item -> {
+            if (item instanceof MealDTO) {
+                SearchFragmentDirections.ActionSearchFragmentToAllMealDetailsFragment action = SearchFragmentDirections.actionSearchFragmentToAllMealDetailsFragment(((MealDTO) item).getIdMeal(), "searchFragment");
+                NavController navController = Navigation.findNavController(requireView());
+                navController.navigate(action);
+
+            } else if (item instanceof MealCategory) {
+                presenter.loadFilteredCategoriess(((MealCategory) item).getStrCategory());
+                searchView.clearFocus();
+                searchView.setQuery("", false);
+
+
+
+            } else if (item instanceof MealIngredient) {
+                presenter.loadFilteredIngredient(((MealIngredient) item).getStrIngredient());
+                searchView.clearFocus();
+                searchView.setQuery("", false);
+            }
+
+
+
+
             // Handle item click
         });
         suggestionsRecyclerView.setAdapter(suggestionsAdapter);
@@ -100,11 +121,15 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
                 // Handle query submission
                 return false;
             }
-
             @Override
             public boolean onQueryTextChange(String newText) {
+                // Handle empty query
+                if (newText == null || newText.isEmpty()) {
+                    suggestionsRecyclerView.setVisibility(View.GONE);
+                    fallbackMessage.setVisibility(View.GONE);
+                    return true;
+                }
 
-                // Handle query text change
                 updateSuggestions(newText);
                 return true;
             }
@@ -159,7 +184,7 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
 
     private void updateSuggestions(String query) {
         List<Object> suggestions = new ArrayList<>();
-
+        presenter.loadFilteredByName(query);
         if (query != null && !query.isEmpty()) {
             presenter.loadFilteredByName(query);
             addFilteredSuggestions(suggestions, query, mealsSearchList);
@@ -183,6 +208,7 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
 
     private <T> void addFilteredSuggestions(List<Object> suggestions, String query, ArrayList<T> list) {
         for (T item : list) {
+
             String itemName = getItemName(item);
             if (itemName.toLowerCase().contains(query.toLowerCase())) {
                 suggestions.add(item);
@@ -192,7 +218,6 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
 
     private <T> String getItemName(T item) {
         if (item instanceof MealDTO) {
-
             return ((MealDTO) item).getStrMeal();
         } else if (item instanceof MealCategory) {
             return ((MealCategory) item).getStrCategory();
@@ -250,6 +275,8 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
 
             mealsList.clear();
             mealsList.addAll((List<MealDTO>) data);
+            mealsSearchList.clear();
+            mealsSearchList.addAll((List<MealDTO>) data);
             Log.i(TAG, "showData: " + mealsList.size());
             allMealPagerAdapter.notifyDataSetChanged();
 
