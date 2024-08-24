@@ -280,7 +280,7 @@ public class DataPresenter implements DataRepository {
         }
 
         // Restore Meal Plans
-        db.collection("palnMeals").document(currentUserEmail).collection("backup").document("favoriteMeals")
+        db.collection("palnMeals").document(currentUserEmail).collection("backup").document("planMeals")
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
