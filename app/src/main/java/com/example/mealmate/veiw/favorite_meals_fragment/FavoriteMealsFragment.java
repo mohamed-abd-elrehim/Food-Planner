@@ -101,13 +101,13 @@ public class FavoriteMealsFragment extends Fragment implements FavoriteMealsFrag
     @Override
     public void showError() {
         new AlertDialog.Builder(getContext())
-                .setTitle("No Data Found")
-                .setMessage("Add your meals to favorites first.")
-                .setPositiveButton("OK", (dialog, which) -> {
+                .setTitle(R.string.no_data_found)
+                .setMessage(R.string.add_your_meals_to_favorites_first)
+                .setPositiveButton(R.string.ok, (dialog, which) -> {
                     navController.navigate(R.id.action_favoriteMealsFragment_to_searchFragment);
 
                 })
-                .setNegativeButton("Back To Home", (dialog, which) -> {
+                .setNegativeButton(R.string.back_to_home, (dialog, which) -> {
                     navController.navigate(R.id.action_favoriteMealsFragment_to_homeFragment);
                 })
                 .show();
@@ -129,12 +129,12 @@ public class FavoriteMealsFragment extends Fragment implements FavoriteMealsFrag
     @Override
     public void onDeleteFavoritesClick(FavoriteMeal favoriteMeal) {
         new AlertDialog.Builder(getContext())
-                .setTitle("Wait!Are You Sure")
-                .setMessage("Delete your meals from favorites.")
-                .setPositiveButton("YES", (dialog, which) -> {
+                .setTitle(R.string.wait_are_you_sure)
+                .setMessage(R.string.delete_your_meals_from_favorites)
+                .setPositiveButton(R.string.yes, (dialog, which) -> {
                     presenter.deleteFavoriteMeal(favoriteMeal);
                 })
-        .setNegativeButton("CANCEL", (dialog, which) -> {
+        .setNegativeButton(R.string.cancel, (dialog, which) -> {
                     dialog.dismiss();
                 })
                 .show();

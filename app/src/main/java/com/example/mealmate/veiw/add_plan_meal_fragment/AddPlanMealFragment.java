@@ -250,7 +250,7 @@ public class AddPlanMealFragment extends Fragment implements AddPlanMealFragment
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 mealType = parent.getItemAtPosition(position).toString();
                 // Show or hide TimePicker based on selected meal type
-                if (mealType.equals("Select Meal Type")) {
+                if (mealType.equals(R.string.select_meal_type1)) {
                     mealPlanTimePicker.setVisibility(View.GONE);
                     mealPlanTimeVeiw.setVisibility(View.GONE);
                 } else {
@@ -281,7 +281,7 @@ public class AddPlanMealFragment extends Fragment implements AddPlanMealFragment
 
         // Set onClickListener for Add Button
         mealPlanAddButton.setOnClickListener(v -> {
-            if (mealType != null && !mealType.equals("Select Meal Type")
+            if (mealType != null && !mealType.equals(getString(R.string.select_meal_type1))
                     && formattedDate != null && !formattedDate.isEmpty()
                     && formattedTime != null && !formattedTime.isEmpty()
                     && dayName != null && !dayName.isEmpty()) {
@@ -297,9 +297,9 @@ public class AddPlanMealFragment extends Fragment implements AddPlanMealFragment
             } else {
                 // If inputs are invalid, show an alert dialog
                 new AlertDialog.Builder(getContext())
-                        .setTitle("Incomplete Data")
-                        .setMessage("Please enter all required data before proceeding.")
-                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                        .setTitle(R.string.incomplete_data)
+                        .setMessage(R.string.please_enter_all_required_data_before_proceeding)
+                        .setPositiveButton(R.string.ok, (dialog, which) -> dialog.dismiss())
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .show();
             }
@@ -318,7 +318,7 @@ public class AddPlanMealFragment extends Fragment implements AddPlanMealFragment
                     mealType,
                     formattedDate + " T: " + formattedTime
             );
-            Log.i(TAG, "showData: "+mealPlan);
+            Log.i(TAG, getString(R.string.showdata)+mealPlan);
 
         }
     }

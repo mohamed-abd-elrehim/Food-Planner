@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
         if (!isConnected && FirebaseAuth.getInstance().getCurrentUser() == null) {
             runOnUiThread(() -> {
                     new AlertDialog.Builder(MainActivity.this)
-                            .setTitle("No Internet Connection")
-                            .setMessage("You need an internet connection to proceed. The app will now close.")
+                            .setTitle(R.string.no_internet_connection)
+                            .setMessage(R.string.you_need_an_internet_connection_to_proceed_or_stay_on_offline_mode)
                             .setPositiveButton("OK", (dialog, which) -> finish())
                             .setCancelable(false)
                             .show();

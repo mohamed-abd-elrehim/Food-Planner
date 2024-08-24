@@ -231,7 +231,7 @@ public class HomeActivity extends AppCompatActivity {
                 int id = item.getItemId();
                 if (id == R.id.nav_logout) {
                     firebaseAuth.signOut();
-                    Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.logged_out, Toast.LENGTH_SHORT).show();
                     finish();
                     Intent intent = new Intent(this, MainActivity.class);
                     intent.putExtra("destination_fragment", "startFragment");
@@ -307,16 +307,16 @@ public class HomeActivity extends AppCompatActivity {
     // Method to display the restricted access popup
     private void showRestrictedAccessDialog() {
         new AlertDialog.Builder(this)
-                .setTitle("Sign Up for More Features")
-                .setMessage("Add your food preferences ,plan your meals and more!")
-                .setPositiveButton("Sign Up", (dialog, which) -> {
+                .setTitle(R.string.sign_up_for_more_features)
+                .setMessage(R.string.add_your_food_preferences_plan_your_meals_and_more)
+                .setPositiveButton(R.string.sign_up, (dialog, which) -> {
                     Intent intent = new Intent(this, MainActivity.class);
                     intent.putExtra("destination_fragment", "startFragment");
                     ;
                     startActivity(intent);
                     this.finish();
                 })
-                .setNegativeButton("CANCEL", (dialog, which) -> {
+                .setNegativeButton(R.string.cancel, (dialog, which) -> {
                     dialog.dismiss();
                     isDialogShown = false; // Reset the flag when the dialog is dismissed
                 })
@@ -326,8 +326,8 @@ public class HomeActivity extends AppCompatActivity {
 
     private void showSignupDialog() {
         coordinatorLayout.setVisibility(View.VISIBLE);
-        Snackbar snackbar = Snackbar.make(coordinatorLayout, "Sign up to personalize your recipe feed", Snackbar.LENGTH_INDEFINITE)
-                .setAction("GET STARTED", new View.OnClickListener() {
+        Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.sign_up_to_personalize_your_recipe_feed, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.get_started, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         // Handle the action click event
@@ -344,9 +344,9 @@ public class HomeActivity extends AppCompatActivity {
     // Method to display the restricted access popup
     private void showRestrictedNetWorkDialog() {
         new AlertDialog.Builder(this)
-                .setTitle("Open Internet Connection for More Features")
-                .setMessage("Add your food preferences ,plan your meals and more!")
-                .setPositiveButton("Ok", (dialog, which) -> {
+                .setTitle(R.string.open_internet_connection_for_more_features)
+                .setMessage(R.string.add_your_food_preferences_plan_your_meals_and_more)
+                .setPositiveButton(R.string.ok, (dialog, which) -> {
                     dialog.dismiss();
 
                 }).show();
@@ -355,9 +355,9 @@ public class HomeActivity extends AppCompatActivity {
     // Method to display the restricted access popup
     private void showNetWorkDialog() {
         new AlertDialog.Builder(HomeActivity.this)
-                .setTitle("No Internet Connection")
-                .setMessage("You need an internet connection to proceed or stay on offline mode.")
-                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                .setTitle(R.string.no_internet_connection)
+                .setMessage(R.string.you_need_an_internet_connection_to_proceed_or_stay_on_offline_mode)
+                .setPositiveButton(R.string.ok, (dialog, which) -> dialog.dismiss())
                 .setCancelable(false)
                 .show();
     }
@@ -369,9 +369,9 @@ public class HomeActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     new Handler().postDelayed(() -> {
                         new AlertDialog.Builder(HomeActivity.this)
-                                .setTitle("No Internet Connection")
-                                .setMessage("You need an internet connection to proceed. The app will now close.")
-                                .setPositiveButton("OK", (dialog, which) -> finish())
+                                .setTitle(R.string.no_internet_connection)
+                                .setMessage(R.string.you_need_an_internet_connection_to_proceed_or_stay_on_offline_mode)
+                                .setPositiveButton(R.string.ok, (dialog, which) -> finish())
                                 .setCancelable(false)
                                 .show();
                     }, 100); // Adjust the delay as needed
@@ -382,9 +382,9 @@ public class HomeActivity extends AppCompatActivity {
                     navController.navigate(R.id.favoriteMealsFragment);
                     new Handler().postDelayed(() -> {
                         new AlertDialog.Builder(HomeActivity.this)
-                                .setTitle("No Internet Connection")
-                                .setMessage("You need an internet connection to proceed or stay on offline mode.")
-                                .setPositiveButton("OK", (dialog, which) -> {
+                            .setTitle(R.string.no_internet_connection)
+                            .setMessage(R.string.you_need_an_internet_connection_to_proceed_or_stay_on_offline_mode)
+                                .setPositiveButton(R.string.ok, (dialog, which) -> {
                                     dialog.dismiss();
                                     isDialogShown = false;
                                 })
@@ -395,7 +395,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         } else {
             if (!isReloaded) {
-                Toast.makeText(this, "Internet Connection Restored", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.internet_connection_restored, Toast.LENGTH_SHORT).show();
                 isReloaded = true; // Set flag to true to prevent multiple reloads
                 this.recreate(); // Reload the activity
             }

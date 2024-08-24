@@ -114,12 +114,12 @@ public class LoginFragment extends Fragment {
                             if (user != null) {
                                 saveUserDetails(user);
                             }
-                            Toast.makeText(getContext(), "Login Successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), R.string.login_successfully, Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getContext(), HomeActivity.class));
                             requireActivity().finish(); // Finish the current activity if needed
                         })
                         .addOnFailureListener(e -> {
-                            Toast.makeText(getContext(), "Login Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.login_failed) + e.getMessage(), Toast.LENGTH_SHORT).show();
                         });
             }
         });
@@ -130,12 +130,12 @@ public class LoginFragment extends Fragment {
 
     private boolean validateInputs(String email, String password) {
         if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(getContext(), "Please enter a valid email", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.please_enter_a_valid_email, Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (password.isEmpty() || !isValidPassword(password)) {
-            Toast.makeText(getContext(), "Please enter a valid password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.please_enter_a_valid_password, Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -177,7 +177,7 @@ public class LoginFragment extends Fragment {
                 }
             } catch (ApiException e) {
                 // Google Sign-In failed
-                Toast.makeText(getContext(), "Google Sign-In failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), getString(R.string.google_sign_in_failed) + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -211,12 +211,12 @@ public class LoginFragment extends Fragment {
                         if (user != null) {
                             saveUserDetails(user);
                         }
-                        Toast.makeText(getContext(), "Sign-In successful", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.sign_in_successful, Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getContext(), HomeActivity.class));
                         requireActivity().finish(); // Finish the current activity if needed
                     } else {
                         // Sign-in failed
-                        Toast.makeText(getContext(), "Sign-In failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), getString(R.string.sign_in_failed) + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }

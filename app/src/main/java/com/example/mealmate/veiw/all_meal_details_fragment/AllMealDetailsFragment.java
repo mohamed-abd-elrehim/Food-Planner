@@ -202,7 +202,7 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
         } else {
             // Handle the case where arguments are null or empty
             // e.g., show an error message, default view, etc.
-            Toast.makeText(getContext(), "Arguments are null or empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.arguments_are_null_or_empty, Toast.LENGTH_SHORT).show();
         }
 
 
@@ -288,10 +288,10 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
     public void onAddToFavoritesClick(CustomMeal customMeal) {
         if (customMeal != null) {
             presenter.addMealToFAV(customMeal);
-            Toast.makeText(getContext(), "Meal added to favorites", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.meal_added_to_favorites, Toast.LENGTH_SHORT).show();
             Log.i(TAG, "onAddToFavoritesClick: " + customMeal.getStrMeal());
         } else {
-            Toast.makeText(getContext(), "Meal is null", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.meal_is_null, Toast.LENGTH_SHORT).show();
             Log.i(TAG, "onAddToFavoritesClick: " + "meal is null");
         }
     }

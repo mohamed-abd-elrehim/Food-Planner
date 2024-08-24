@@ -93,15 +93,15 @@ public class StartFragment extends Fragment {
         if (gestMode != null) {
             gestMode.setOnClickListener(v -> {
                 new AlertDialog.Builder(getContext())
-                        .setTitle("Wait! Are you sure?")
-                        .setMessage("You'll miss out on personalized content and saving our delicious recipes.")
-                        .setPositiveButton("I'm Sure", (dialog, which) -> {
+                        .setTitle(R.string.wait_are_you_sure)
+                        .setMessage(R.string.you_ll_miss_out_on_personalized_content_and_saving_our_delicious_recipes)
+                        .setPositiveButton(R.string.i_m_sure, (dialog, which) -> {
                             Intent intent = new Intent(getContext(), HomeActivity.class);
                             intent.putExtra("user_type", "guest");
                             startActivity(intent);
                             requireActivity().finish();
                         })
-                        .setNegativeButton("No, Go Back", (dialog, which) -> {
+                        .setNegativeButton(R.string.no_go_back, (dialog, which) -> {
                             dialog.dismiss();
                         })
                         .show();
@@ -195,7 +195,7 @@ public class StartFragment extends Fragment {
                 }
             } catch (ApiException e) {
                 // Google Sign-In failed
-                Toast.makeText(getContext(), "Google Sign-In failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), R.string.google_sign_in_failed + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -232,7 +232,7 @@ public class StartFragment extends Fragment {
                         requireActivity().finish(); // Finish the current activity if needed
                     } else {
                         // Sign-in failed
-                        Toast.makeText(getContext(), "Sign-In failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(),  R.string.sign_in_failed + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }

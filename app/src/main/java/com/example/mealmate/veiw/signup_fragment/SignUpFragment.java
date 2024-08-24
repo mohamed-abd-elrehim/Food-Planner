@@ -107,14 +107,14 @@ public class SignUpFragment extends Fragment {
                                         }
                                     });
 
-                                    Toast.makeText(getContext(), "Sign Up Successfully", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), R.string.sign_in_successful, Toast.LENGTH_SHORT).show();
                                     // Use a safe way to get the NavController
                                     // Use the correct NavController
                                     NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
 
                                     navController.navigate(R.id.action_signUpFragment_to_loginFragment);
                                 } else {
-                                    Toast.makeText(getContext(), "Sign Up Failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), getString(R.string.sign_up_failed) + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -127,17 +127,17 @@ public class SignUpFragment extends Fragment {
 
     private boolean validateInputs(String email, String password, String confirmPassword) {
         if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(getContext(), "Please enter a valid email", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.please_enter_a_valid_email, Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (password.isEmpty() || !isValidPassword(password)) {
-            Toast.makeText(getContext(), "Please enter a valid password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.please_enter_a_valid_password, Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (!password.equals(confirmPassword)) {
-            Toast.makeText(getContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.passwords_do_not_match, Toast.LENGTH_SHORT).show();
             return false;
         }
 
