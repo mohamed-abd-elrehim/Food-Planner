@@ -94,6 +94,13 @@ public interface FavoriteMealDAO {
     void insertAllIngredients(List<MealMeasureIngredient> ingredients);
 
 
+        // This query retrieves all favorite meals for a specific user based on their email address.
+        // The method is synchronous, meaning it runs on the current thread and returns a List<FavoriteMeal>.
+        @Query("SELECT * FROM favoritemeal WHERE client_email = :email")
+        List<FavoriteMeal> getFavoriteMealsForUserSync(String email);
+
+
+
 
 //    @Transaction
 //    @Query("SELECT * FROM FavoriteMeal WHERE client_email = :clientEmail")

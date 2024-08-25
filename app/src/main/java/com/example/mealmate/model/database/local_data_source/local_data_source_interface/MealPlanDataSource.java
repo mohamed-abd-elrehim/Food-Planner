@@ -6,6 +6,7 @@ import androidx.room.Query;
 
 import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
 import com.example.mealmate.model.mealDTOs.all_meal_details.MealMeasureIngredient;
+import com.example.mealmate.model.mealDTOs.favorite_meals.FavoriteMeal;
 import com.example.mealmate.model.mealDTOs.meal_plan.MealPlan;
 import com.example.mealmate.model.mealDTOs.meal_plan.MealPlanWithMeals;
 
@@ -18,6 +19,7 @@ public interface MealPlanDataSource {
     LiveData<List<MealMeasureIngredient>> getIngredientsByMealId(String mealId);
     void deleteMealPlan (MealPlan mealPlan);
     void insertAllPlanMeals(List<MealPlan> mealPlans);
+    List<MealPlan> getPlanMealsForUserSync(String email);
 
 
 }

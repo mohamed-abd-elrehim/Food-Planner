@@ -18,18 +18,13 @@ public interface FavoriteMealDataSource {
 //    void deleteFavoriteMeal(FavoriteMeal favoriteMeal);
 
     void insertFavoriteMealWithMeals(FavoriteMeal meal, MealDTO mealDTO,List<MealMeasureIngredient> mealDTOS);
-
     LiveData<List<FavoriteMeal>> getFavoriteMeal(String clientEmail);
     LiveData<MealDTO> getMealById(String mealId);
     LiveData<List<MealMeasureIngredient>> getIngredientsByMealId(String mealId);
-
-     void deleteFavoriteMeal(FavoriteMeal favoriteMeal);
-
+    void deleteFavoriteMeal(FavoriteMeal favoriteMeal);
     void insertAllFavoriteMeals(List<FavoriteMeal> favoriteMeals);
-
-
     void insertAllMeals(List<MealDTO> meals);
-
-
     void insertAllIngredients(List<MealMeasureIngredient> ingredients);
+    List<FavoriteMeal> getFavoriteMealsForUserSync(String email);
+
 }

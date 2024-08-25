@@ -1,10 +1,101 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".veiw.start_activity.StartActivity">
+    tools:context=".veiw.main_activity.MainActivity">
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/backgroundsonesplashscreen" />
+
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/backgroundsthreesplashscreen" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/backgroundstwosplashscreen" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.5"
+        android:scaleType="fitXY"
+        android:src="@drawable/backgroundsfoursplashscreen"
+        app:layout_constraintBottom_toBottomOf="@id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_animation_view"
+        android:layout_width="224dp"
+        android:layout_height="224dp"
+        android:layout_centerInParent="true"
+        app:civ_border_color="@android:color/holo_orange_light"
+        app:civ_border_width="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/animation" />
+
+    <!--
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/logo_image"
+        android:layout_width="224dp"
+        android:layout_height="224dp"
+        android:src="@drawable/logo"
+        app:civ_border_color="@android:color/holo_orange_light"
+        app:civ_border_width="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.32" />
+
+
+    <Button
+        android:id="@+id/startBTU"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:backgroundTint="@color/colorBUTtransparent"
+        android:paddingLeft="100dp"
+        android:paddingRight="100dp"
+        android:text="@string/start"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="@+id/lottie_animation_view"
+        app:layout_constraintStart_toStartOf="@+id/lottie_animation_view"
+        app:layout_constraintTop_toBottomOf="@+id/lottie_animation_view" />
+    -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

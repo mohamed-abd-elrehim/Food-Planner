@@ -139,7 +139,6 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
 
         // Initialize the presenter
         presenter = new AllMealDetailsFragment_presenter(
-                AppDataBase.getInstance(getContext()),
                 MealRepository.getInstance(
                         LocalDataSourceImpl.getInstance(
                                 AppDataBase.getInstance(getContext()).getFavoriteMealDAO(),

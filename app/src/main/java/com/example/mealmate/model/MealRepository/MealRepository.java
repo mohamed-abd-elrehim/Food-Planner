@@ -15,6 +15,7 @@ import com.example.mealmate.model.mealDTOs.meal_plan.MealPlanWithMeals;
 import com.example.mealmate.model.network.network_Interface.NetworkCallback;
 import com.example.mealmate.model.network.RemoteDataSourceImpl;
 
+import java.util.Collections;
 import java.util.List;
 
 public class MealRepository implements MealRepositoryInterface {
@@ -157,6 +158,11 @@ public class MealRepository implements MealRepositoryInterface {
     }
 
     @Override
+    public List<MealPlan> getPlanMealsForUserSync(String email) {
+        return localDataSource.getPlanMealsForUserSync(email);
+    }
+
+    @Override
     public void deleteFavoriteMeal(FavoriteMeal favoriteMeal) {
         localDataSource.deleteFavoriteMeal(favoriteMeal);
     }
@@ -174,6 +180,11 @@ public class MealRepository implements MealRepositoryInterface {
     @Override
     public void insertAllIngredients(List<MealMeasureIngredient> ingredients) {
         localDataSource.insertAllIngredients(ingredients);
+    }
+
+    @Override
+    public List<FavoriteMeal> getFavoriteMealsForUserSync(String email) {
+        return localDataSource.getFavoriteMealsForUserSync(email);
     }
 
 

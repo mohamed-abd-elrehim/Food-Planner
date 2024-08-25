@@ -26,16 +26,14 @@ public class AllMealDetailsFragment_presenter implements AllMealDetailsFragment_
     private AllMealDetailsFragment_Veiw_Interface view;
     public static final String TAG = "AllMealDetailsFragment_presenter";
     MealRepository mealRepository;
-    AppDataBase appDataBase;
 
     private LiveData<MealDTO> mealDTO;
     private LiveData<List<MealMeasureIngredient>> mealMeasureIngredient;
     private LiveData<List<CustomMeal>> customMeals;
 
-    public AllMealDetailsFragment_presenter(AppDataBase appDataBase, MealRepository mealRepository, AllMealDetailsFragment_Veiw_Interface view) {
+    public AllMealDetailsFragment_presenter(MealRepository mealRepository, AllMealDetailsFragment_Veiw_Interface view) {
         this.view = view;
         this.mealRepository = mealRepository;
-        this.appDataBase = appDataBase;
         this.mealRepository.updateBaseUrl("https://www.themealdb.com/api/json/v1/1/");
     }
 

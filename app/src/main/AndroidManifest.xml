@@ -34,16 +34,16 @@
             android:name=".veiw.home_activity.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".veiw.start_activity.StartActivity"
-            android:exported="false" />
-        <activity
             android:name=".veiw.main_activity.MainActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".veiw.start_activity.StartActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
         <receiver

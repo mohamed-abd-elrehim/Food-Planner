@@ -17,6 +17,7 @@ import com.example.mealmate.model.mealDTOs.favorite_meals.FavoriteMealWithMeals;
 import com.example.mealmate.model.mealDTOs.meal_plan.MealPlan;
 import com.example.mealmate.model.mealDTOs.meal_plan.MealPlanWithMeals;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -92,6 +93,11 @@ public class LocalDataSourceImpl implements LocalDataSource {
         executorService.execute(() -> favoriteMealDAO.insertAllIngredients(ingredients));
     }
 
+    @Override
+    public List<FavoriteMeal> getFavoriteMealsForUserSync(String email) {
+        return favoriteMealDAO.getFavoriteMealsForUserSync(email);
+    }
+
 
     @Override
     public void insertMealPlan(MealPlan mealPlan, MealDTO meal, List<MealMeasureIngredient> ingredients) {
@@ -113,6 +119,11 @@ public class LocalDataSourceImpl implements LocalDataSource {
     @Override
     public void insertAllPlanMeals(List<MealPlan> mealPlans) {
         executorService.execute(() -> mealPlanDAO.insertAllPlanMeals(mealPlans));
+    }
+
+    @Override
+    public List<MealPlan> getPlanMealsForUserSync(String email) {
+        return mealPlanDAO.getPlanMealsForUserSync(email);
     }
 
 

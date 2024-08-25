@@ -63,7 +63,7 @@ public interface MealPlanDAO {
     void deleteIngredientsByMealId(String mealId);
 
     @Transaction
-    default void deleteMealPlan (MealPlan mealPlan) {
+    default void deleteMealPlan(MealPlan mealPlan) {
         String mealId = mealPlan.getMealId();
         deleteMeal(mealPlan);
         deleteMealById(mealId);
@@ -74,6 +74,11 @@ public interface MealPlanDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAllPlanMeals(List<MealPlan> mealPlans);
 
+
+    // This query retrieves all favorite meals for a specific user based on their email address.
+    // The method is synchronous, meaning it runs on the current thread and returns a List<FavoriteMeal>.
+    @Query("SELECT * FROM mealplan WHERE client_email = :email")
+    List<MealPlan> getPlanMealsForUserSync(String email);
 
     //    @Insert(onConflict = OnConflictStrategy.REPLACE)
 //

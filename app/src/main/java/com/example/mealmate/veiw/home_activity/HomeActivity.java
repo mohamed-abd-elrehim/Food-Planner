@@ -238,12 +238,11 @@ public class HomeActivity extends AppCompatActivity {
                     startActivity(intent);
 
                 }else if (id == R.id.nav_beckup) {
-                    dataPresenter.backupData(FirebaseAuth.getInstance().getCurrentUser().getEmail());
-                    dataPresenter.backupData2(FirebaseAuth.getInstance().getCurrentUser().getEmail());
-
+                    dataPresenter.backupData();
+                    Toast.makeText(this, R.string.backup_success, Toast.LENGTH_SHORT).show();
                 }else if(id == R.id.nav_restore){
-                    dataPresenter.restoreData(FirebaseAuth.getInstance().getCurrentUser().getEmail());
-                    dataPresenter.restoreData2(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                    dataPresenter.restoreData();
+                    Toast.makeText(this, R.string.restore_success, Toast.LENGTH_SHORT).show();
                 }
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return true;

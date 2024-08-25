@@ -109,6 +109,9 @@
     <string name="you_ll_miss_out_on_personalized_content_and_saving_our_delicious_recipes">You\'ll miss out on personalized content and saving our delicious recipes.</string>
     <string name="i_m_sure">I\'m Sure</string>
     <string name="no_go_back">No, Go Back</string>
+    <string name="backup_success">Backup Success</string>
+    <string name="restore_success">Restore Success</string>
+    <string name="you_need_an_internet_connection_to_proceed_the_app_will_now_close">You need an internet connection to proceed. The app will now close.</string>
 
     <!-- String array for meal types -->
     <string-array name="meal_types">

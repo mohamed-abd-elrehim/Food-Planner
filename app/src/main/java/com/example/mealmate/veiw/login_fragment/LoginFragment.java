@@ -103,17 +103,20 @@ public class LoginFragment extends Fragment {
         login.setOnClickListener(v -> {
             String email = loginEmail.getText().toString().trim().toLowerCase();
             String password = loginPassword.getText().toString().trim();
-
+            Log.i(TAG, "onViewCreated: "+email+" "+password);
             if (validateInputs(email, password)) {
+                Log.i(TAG, "onViewCreated:  trying to login");
                 // Proceed with login if validation passes
                 firebaseAuth.signInWithEmailAndPassword(email, password)
                         .addOnSuccessListener(authResult -> {
-
+                            Log.i(TAG, "onViewCreated: fribaseAuth");
 
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             if (user != null) {
+                                Log.i(TAG, "onViewCreated: user ");
                                 saveUserDetails(user);
                             }
+
                             Toast.makeText(getContext(), R.string.login_successfully, Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getContext(), HomeActivity.class));
                             requireActivity().finish(); // Finish the current activity if needed
