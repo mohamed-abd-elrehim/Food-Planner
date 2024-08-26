@@ -1,9 +1,6 @@
 package com.example.mealmate.presenter.start_fragment_presenter;
 
-import com.example.mealmate.model.authentication.authentication_interface.Authentication_Interface;
 import com.example.mealmate.presenter.start_fragment_presenter.start_fragment_presenter_interface.Start_Fragment_Presenter_Interface;
-import com.example.mealmate.veiw.start_fragment.start_fragment_interface.Start_Fragment_Interface;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 public class Start_Fragment_Presenter implements Start_Fragment_Presenter_Interface {
 }

@@ -1,83 +1,80 @@
 package com.example.mealmate.veiw.login_fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.text.InputType;
 import android.util.Log;
 import android.util.Patterns;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.mealmate.R;
+import com.example.mealmate.presenter.login_fragment_presenter.LoginFragmentPresenter;
 import com.example.mealmate.veiw.home_activity.HomeActivity;
+import com.example.mealmate.veiw.login_fragment.login_fragment_view_Interface.LoginFragmentViewInterface;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
-public class LoginFragment extends Fragment {
+public class LoginFragment extends Fragment implements LoginFragmentViewInterface {
+    private static final String TAG = "LoginFragment";
+    private static final int RC_SIGN_IN = 9001;
+
     private FirebaseAuth firebaseAuth;
     private GoogleSignInClient googleSignInClient;
     private EditText loginEmail;
     private EditText loginPassword;
     private Button login;
-    private Button sign_in_with_google;
+    private Button signInWithGoogle;
     private ImageView togglePasswordVisibility;
-    private final String TAG = "LoginFragment";
+    private ProgressBar progressBar;
     private boolean isPasswordVisible = false;
-    private static final int RC_SIGN_IN = 9001;
-
+    private LoginFragmentPresenter presenter;
     private static final Pattern PASSWORD_PATTERN = Pattern.compile(
             "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$"
     );
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Configure Google Sign In
+        // Configure Google Sign-In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.client_id))  // Replace with your OAuth 2.0 Client ID
+                .requestIdToken(getString(R.string.client_id))
                 .requestEmail()
                 .build();
-
         googleSignInClient = GoogleSignIn.getClient(requireContext(), gso);
-        firebaseAuth = FirebaseAuth.getInstance();
+
+        presenter = new LoginFragmentPresenter(this);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_login, container, false);
     }
@@ -96,49 +93,111 @@ public class LoginFragment extends Fragment {
         loginPassword = view.findViewById(R.id.password_input_login);
         login = view.findViewById(R.id.login_button);
         togglePasswordVisibility = view.findViewById(R.id.toggle_password_visibility);
-        sign_in_with_google = view.findViewById(R.id.continuewithgoogle);
+        signInWithGoogle = view.findViewById(R.id.continuewithgoogle);
+        progressBar = view.findViewById(R.id.progressBarLogin);
 
-        sign_in_with_google.setOnClickListener(v -> signInWithGoogle());
+        signInWithGoogle.setOnClickListener(v -> signInWithGoogle());
 
         login.setOnClickListener(v -> {
             String email = loginEmail.getText().toString().trim().toLowerCase();
             String password = loginPassword.getText().toString().trim();
-            Log.i(TAG, "onViewCreated: "+email+" "+password);
             if (validateInputs(email, password)) {
-                Log.i(TAG, "onViewCreated:  trying to login");
-                // Proceed with login if validation passes
-                firebaseAuth.signInWithEmailAndPassword(email, password)
-                        .addOnSuccessListener(authResult -> {
-                            Log.i(TAG, "onViewCreated: fribaseAuth");
-
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
-                            if (user != null) {
-                                Log.i(TAG, "onViewCreated: user ");
-                                saveUserDetails(user);
-                            }
-
-                            Toast.makeText(getContext(), R.string.login_successfully, Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getContext(), HomeActivity.class));
-                            requireActivity().finish(); // Finish the current activity if needed
-                        })
-                        .addOnFailureListener(e -> {
-                            Toast.makeText(getContext(), getString(R.string.login_failed) + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        });
+                showLoading();
+                presenter.loginWithEmailAndPassword(email, password);
             }
         });
 
         togglePasswordVisibility.setOnClickListener(v -> togglePasswordVisibility());
     }
 
+    private void togglePasswordVisibility() {
+        if (isPasswordVisible) {
+            loginPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            togglePasswordVisibility.setImageResource(R.drawable.visiblepass);
+        } else {
+            loginPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            togglePasswordVisibility.setImageResource(R.drawable.hidepass);
+        }
+        isPasswordVisible = !isPasswordVisible;
+        loginPassword.setSelection(loginPassword.getText().length());
+    }
+
+    private void signInWithGoogle() {
+        Intent signInIntent = googleSignInClient.getSignInIntent();
+        googleSignInLauncher.launch(signInIntent);
+    }
+
+    private final ActivityResultLauncher<Intent> googleSignInLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                    try {
+                        GoogleSignInAccount account = task.getResult(ApiException.class);
+                        if (account != null) {
+                            showLoading();
+                            presenter.loginWithGoogle(account);
+                        }
+                    } catch (ApiException e) {
+                        Toast.makeText(getContext(), getString(R.string.google_sign_in_failed) + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+
+    @Override
+    public void showLoading() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideLoading() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onLoginSuccess(String message) {
+        hideLoading();
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+        startHomeActivity();
+    }
+
+    @Override
+    public void onLoginFailure(String message) {
+        hideLoading();
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onUserDataSaveFailure(String errorMessage) {
+        Log.w(TAG, "Error saving user data: " + errorMessage);
+        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void saveUserDetails(FirebaseUser user) {
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("user_id", user.getUid());
+        editor.putString("user_name", user.getDisplayName());
+        editor.putString("user_email", user.getEmail());
+        editor.putString("user_photo_url", user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : null);
+        editor.apply();
+    }
+
+    private void startHomeActivity() {
+        Intent intent = new Intent(getActivity(), HomeActivity.class);
+        startActivity(intent);
+        getActivity().finish();
+    }
 
     private boolean validateInputs(String email, String password) {
         if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(getContext(), R.string.please_enter_a_valid_email, Toast.LENGTH_SHORT).show();
+            onLoginFailure(getString(R.string.please_enter_a_valid_email));
             return false;
         }
 
         if (password.isEmpty() || !isValidPassword(password)) {
-            Toast.makeText(getContext(), R.string.please_enter_a_valid_password, Toast.LENGTH_SHORT).show();
+            onLoginFailure(getString(R.string.please_enter_a_valid_password));
             return false;
         }
 
@@ -147,90 +206,5 @@ public class LoginFragment extends Fragment {
 
     private boolean isValidPassword(String password) {
         return PASSWORD_PATTERN.matcher(password).matches();
-    }
-
-    private void togglePasswordVisibility() {
-        if (isPasswordVisible) {
-            loginPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-            togglePasswordVisibility.setImageResource(R.drawable.visiblepass);  // Set the icon for hidden password
-        } else {
-            loginPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-            togglePasswordVisibility.setImageResource(R.drawable.hidepass);  // Set the icon for visible password
-        }
-        isPasswordVisible = !isPasswordVisible;
-        loginPassword.setSelection(loginPassword.getText().length());  // Move cursor to the end
-    }
-
-    private void signInWithGoogle() {
-        Intent signInIntent = googleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                if (account != null) {
-                    // Google Sign-In was successful, now authenticate with Firebase
-                    firebaseAuthWithGoogle(account);
-                }
-            } catch (ApiException e) {
-                // Google Sign-In failed
-                Toast.makeText(getContext(), getString(R.string.google_sign_in_failed) + e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(requireActivity(), task -> {
-                    if (task.isSuccessful()) {
-
-                        String name = firebaseAuth.getCurrentUser().getDisplayName();
-                        Map<String, Object> userMap = new HashMap<>();
-                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-                        userMap.put("name", name);
-                        String id = firebaseAuth.getCurrentUser().getUid();
-                        db.collection("users").document(id).set(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d(TAG, "DocumentSnapshot added with ID: " + id);
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error adding document", e);
-                            }
-                        });
-
-
-                        // Sign-in successful
-                        FirebaseUser user = firebaseAuth.getCurrentUser();
-                        if (user != null) {
-                            saveUserDetails(user);
-                        }
-                        Toast.makeText(getContext(), R.string.sign_in_successful, Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getContext(), HomeActivity.class));
-                        requireActivity().finish(); // Finish the current activity if needed
-                    } else {
-                        // Sign-in failed
-                        Toast.makeText(getContext(), getString(R.string.sign_in_failed) + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
-    }
-
-    private void saveUserDetails(FirebaseUser user) {
-        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("user_id", user.getUid());
-        editor.putString("user_name", user.getDisplayName());
-        editor.putString("user_email", user.getEmail());
-        editor.putString("user_photo_url", user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : null);
-        editor.apply();
     }
 }

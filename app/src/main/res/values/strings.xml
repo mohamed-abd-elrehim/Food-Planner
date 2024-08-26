@@ -112,6 +112,8 @@
     <string name="backup_success">Backup Success</string>
     <string name="restore_success">Restore Success</string>
     <string name="you_need_an_internet_connection_to_proceed_the_app_will_now_close">You need an internet connection to proceed. The app will now close.</string>
+    <string name="user_data_saved_successfully">User Data Saved Successfully</string>
+    <string name="user_data_save_failed">User Data Saved Failed</string>
 
     <!-- String array for meal types -->
     <string-array name="meal_types">
