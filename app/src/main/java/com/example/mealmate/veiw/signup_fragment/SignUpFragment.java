@@ -83,7 +83,7 @@ public class SignUpFragment extends Fragment implements SignUpFragmentViewInterf
 
     @Override
     public void hideLoading() {
-        // Hide the loading spinner or progress indicator
+                // Hide the loading spinner or progress indicator
     }
 
     @Override

@@ -190,12 +190,10 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
                 dayName.setVisibility(View.VISIBLE);
                 dayNameTitle.setVisibility(View.VISIBLE);
 
-                String[] result = splitDateTime(mealPlan.getDate());
-
-                mealTime.setText(mealPlan.getMealType() + " "+result[1]+ checkTimePeriod(result[1]));
+                mealTime.setText(mealPlan.getMealType());
 
 
-                dayName.setText(mealPlan.getDayOfWeek()+" "+result[0]);
+                dayName.setText(mealPlan.getDayOfWeek());
 
             }
         } else {
@@ -263,17 +261,6 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
 
     }
 
-    public String[] splitDateTime(String input) {
-        return input.split(" T: ");
-    }
-    public static String checkTimePeriod(String time) {
-        // Split the time into hours and minutes
-        String[] parts = time.split(":");
-        int hour = Integer.parseInt(parts[0]);
-
-        // Determine AM or PM
-        return (hour < 12) ? " AM" : " PM";
-    }
 
     @Override
     public void showError(String errorMessage) {

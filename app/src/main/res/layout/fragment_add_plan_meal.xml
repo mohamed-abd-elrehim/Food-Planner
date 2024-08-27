@@ -4,10 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".veiw.add_plan_meal_fragment.AddPlanMealFragment">
-    <!-- Background Image -->
+    android:layout_height="match_parent">
 
+    <!-- Background Image -->
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/mealPlanImage"
         android:layout_width="match_parent"
@@ -22,8 +21,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/RoundedShapeAppearance"
         app:strokeColor="@color/black"
-        app:strokeWidth="2dp"/>
-
+        app:strokeWidth="2dp" />
 
     <!-- CardView with Scrollable Content -->
     <androidx.cardview.widget.CardView
@@ -38,7 +36,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mealPlanImage">
+        app:layout_constraintTop_toBottomOf="@id/mealPlanImage">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -52,7 +50,7 @@
 
                 <!-- Date selection -->
                 <TextView
-                    android:id="@+id/mealPlanDateVeiw"
+                    android:id="@+id/mealPlanDateView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -62,18 +60,146 @@
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
-                <!-- Time selection -->
-                <CalendarView
-                    android:id="@+id/mealPlanCalendar"
+
+                <!-- Week selection -->
+                <!-- res/layout/activity_week_picker.xml -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageButton
+                            android:id="@+id/prevWeekButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/previous_week"
+                            android:src="@drawable/ic_arrow_left" />
+
+                        <TextView
+                            android:id="@+id/weekRangeTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:text="Select Week"
+                            android:textSize="18sp" />
+
+                        <ImageButton
+                            android:id="@+id/nextWeekButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/nextweek"
+                            android:src="@drawable/ic_arrow_right" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Day buttons -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="16dp" />
+                    android:background="@android:color/transparent"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:weightSum="7">
 
+                    <Button
+                        android:id="@+id/btnMonday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="2dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/day_button_background"
+                        android:padding="0dp"
+                        android:text="M"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <Button
+                        android:id="@+id/btnTuesday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="2dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/day_button_background"
+                        android:padding="0dp"
+                        android:text="T"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <Button
+                        android:id="@+id/btnWednesday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="2dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/day_button_background"
+                        android:padding="0dp"
+                        android:text="W"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <Button
+                        android:id="@+id/btnThursday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="2dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/day_button_background"
+                        android:padding="0dp"
+                        android:text="T"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <Button
+                        android:id="@+id/btnFriday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="2dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/day_button_background"
+                        android:padding="0dp"
+                        android:text="F"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <Button
+                        android:id="@+id/btnSaturday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="2dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/day_button_background"
+                        android:padding="0dp"
+                        android:text="S"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <Button
+                        android:id="@+id/btnSunday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/day_button_background"
+                        android:padding="0dp"
+                        android:text="S"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
 
                 <!-- Meal type selection -->
                 <TextView
-                    android:id="@+id/mealPlanMealTypeVeiw"
+                    android:id="@+id/mealPlanMealTypeView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -94,24 +220,8 @@
                     android:layout_marginBottom="16dp"
                     android:background="@drawable/spinner_background"
                     android:padding="16dp" />
-                <TextView
-                    android:id="@+id/mealPlanTimeVeiw"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="8dp"
-                    android:text="Select Time"
-                    android:textAppearance="?attr/textAppearanceSubtitle1"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
 
-                <TimePicker
-                    android:id="@+id/mealPlanTimePicker"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="16dp"
-                    android:timePickerMode="spinner" />
+                <!-- Time selection -->
 
                 <!-- Submit Button -->
                 <Button
@@ -123,9 +233,9 @@
                     android:layout_marginBottom="16dp"
                     android:backgroundTint="@color/startScreenBackgroundColor"
                     android:text="@string/add_to_plan"
-                    app:icon="@drawable/mealplane"
                     android:textColor="@android:color/white"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:icon="@drawable/mealplane" />
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>

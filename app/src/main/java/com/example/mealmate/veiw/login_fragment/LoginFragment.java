@@ -136,7 +136,9 @@ public class LoginFragment extends Fragment implements LoginFragmentViewInterfac
                         GoogleSignInAccount account = task.getResult(ApiException.class);
                         if (account != null) {
                             showLoading();
+
                             presenter.loginWithGoogle(account);
+
                         }
                     } catch (ApiException e) {
                         Toast.makeText(getContext(), getString(R.string.google_sign_in_failed) + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -147,10 +149,13 @@ public class LoginFragment extends Fragment implements LoginFragmentViewInterfac
     @Override
     public void showLoading() {
         progressBar.setVisibility(View.VISIBLE);
+        progressBar.setIndeterminate(true);
+        progressBar.setProgress(100, true);
     }
 
     @Override
-    public void hideLoading() {
+    public void hideLoading()
+    {
         progressBar.setVisibility(View.GONE);
     }
 

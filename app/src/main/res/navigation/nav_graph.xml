@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.mealmate.veiw.home_fragment_veiw.HomeFragment"
-        android:label="fragment_home"
+        android:label="Fragment Home"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/searchFragment"
