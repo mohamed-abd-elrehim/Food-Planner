@@ -59,6 +59,8 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
     private TextView fallbackMessage;
     private Search_Fragment_PresenterImpl presenter;
     private static final String TAG = "SearchFragment";
+    private String filterName;
+    private String filterType;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,6 +84,8 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
         searchView = view.findViewById(R.id.searchView);
         suggestionsRecyclerView = view.findViewById(R.id.suggestionsRecyclerView);
         fallbackMessage = view.findViewById(R.id.fallbackMessage);
+
+
 
         suggestionsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         suggestionsAdapter = new SuggestionsAdapter<>(getContext(), new ArrayList<>(), item -> {
@@ -166,6 +170,21 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
         presenter.loadAllCategoriess();
         presenter.loadAllIngredient();
         presenter.loadAllArea();
+
+        SearchFragmentArgs args = SearchFragmentArgs.fromBundle(getArguments());
+        filterName = args.getFilterName();
+        filterType = args.getFilterType();
+        if (filterName != null && filterType != null) {
+            if (filterType.equals("category"))
+                presenter.loadFilteredCategoriess(filterName);
+            else if (filterType.equals("ingredient"))
+                presenter.loadFilteredIngredient(filterName);
+            else if (filterType.equals("area"))
+                presenter.loadFilteredArea(filterName);
+        }
+
+
+
 
         // Set up filter button actions
         filterCategory.setOnClickListener(v -> {

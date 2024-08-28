@@ -116,6 +116,7 @@
     <string name="user_data_save_failed">User Data Saved Failed</string>
     <string name="previous_week">Previous Week</string>
     <string name="nextweek">Next Week</string>
+    <string name="added_to_your_plans">Added To Your Plans</string>
 
     <!-- String array for meal types -->
     <string-array name="meal_types">

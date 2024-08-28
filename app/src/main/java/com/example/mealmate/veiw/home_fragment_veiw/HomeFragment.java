@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -48,13 +50,14 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
     private ListAllFilterAdapter<MealCategory> filterAdapterCategory;
     private ListAllFilterAdapter<MealIngredient> filterAdapterIngredient;
     private ListAllFilterAdapter<MealArea> filterAdapterArea;
+    private NavController navController;
 
     private MealOfTheDayPagerAdapter mealOfTheDayPagerAdapter;
     private HomeFragmentPresenterImpl presenter;
     private ArrayList<MealCategory> categoryFilterList = new ArrayList<>();
     private ArrayList<MealIngredient> ingredientFilterList = new ArrayList<>();
     private ArrayList<MealArea> areaFilterList = new ArrayList<>();
-
+    private List<MealDTO> meals = new ArrayList<>();
     private static final String TAG = "HomeFragment";
 
     @Nullable
@@ -72,6 +75,10 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         categoryRecyclerView = view.findViewById(R.id.viewPagerCategory);
         ingredientRecyclerView2 =view.findViewById(R.id.viewPagerIngredient);
         areaRecyclerView3=view.findViewById(R.id.viewPagerArea);
+        navController = Navigation.findNavController(requireView());
+        meals=new ArrayList<>();
+
+
 
         presenter = new HomeFragmentPresenterImpl(AppDataBase.getInstance(getContext())
                 , MealRepository.getInstance(
@@ -101,7 +108,14 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         presenter.loadMealsIngredient();
         presenter.loadMealsArea();
 
-
+        mealOfTheDayPagerAdapter = new MealOfTheDayPagerAdapter(getContext(), meals, meal -> {
+           HomeFragmentDirections.ActionHomeFragmentToAllMealDetailsFragment action =
+                   HomeFragmentDirections.actionHomeFragmentToAllMealDetailsFragment(meal.getIdMeal(),"homeFragment");
+            navController.navigate(action);
+            Toast.makeText(getContext(), meal.getStrMeal(), Toast.LENGTH_SHORT).show();
+        });
+        viewPager.setAdapter(mealOfTheDayPagerAdapter);
+        viewPager.setPageTransformer(new ZoomOutPageTransformer());
     }
 
     private <T> ListAllFilterAdapter<T> createFilterAdapter(List<T> filterList, Class<T> type) {
@@ -110,11 +124,23 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
                 filterList,
                 meal -> {
                     if (type.equals(MealCategory.class)) {
+                        HomeFragmentDirections.ActionHomeFragmentToSearchFragment action = HomeFragmentDirections.actionHomeFragmentToSearchFragment();
+                        action.setFilterName(((MealCategory) meal).getStrCategory());
+                        action.setFilterType("category");
+                        navController.navigate(action);
                         Log.i(TAG, "createFilterAdapter: "+ ((MealCategory) meal).getStrCategory());
                         Toast.makeText(getContext(), ((MealCategory) meal).getStrCategory(), Toast.LENGTH_SHORT).show();
                     } else if (type.equals(MealIngredient.class)) {
+                        HomeFragmentDirections.ActionHomeFragmentToSearchFragment action = HomeFragmentDirections.actionHomeFragmentToSearchFragment();
+                        action.setFilterName(((MealIngredient) meal).getStrIngredient());
+                        action.setFilterType("ingredient");
+                        navController.navigate(action);
                         Toast.makeText(getContext(), ((MealIngredient) meal).getStrIngredient(), Toast.LENGTH_SHORT).show();
                     }else if (type.equals(MealArea.class)) {
+                        HomeFragmentDirections.ActionHomeFragmentToSearchFragment action = HomeFragmentDirections.actionHomeFragmentToSearchFragment();
+                        action.setFilterName(((MealArea) meal).getStrArea());
+                        action.setFilterType("area");
+                        navController.navigate(action);
                         Toast.makeText(getContext(), ((MealArea) meal).getStrArea(), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -133,12 +159,10 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         if (data == null || data.isEmpty()) return;
 
         if (data.get(0) instanceof MealDTO) {
-            List<MealDTO> meals = (List<MealDTO>) data;
-            if (mealOfTheDayPagerAdapter == null) {
-                mealOfTheDayPagerAdapter = new MealOfTheDayPagerAdapter(getContext(), meals);
-                viewPager.setAdapter(mealOfTheDayPagerAdapter);
-                viewPager.setPageTransformer(new ZoomOutPageTransformer());
-            }
+            meals.clear();
+            meals.addAll((List<MealDTO>) data);
+            mealOfTheDayPagerAdapter.notifyDataSetChanged();
+
         } else if (data.get(0) instanceof MealCategory) {
             Log.i(TAG, "showData: "+((List<MealCategory>) data).size());
             filterAdapterCategory.updateFilterList((List<MealCategory>) data);

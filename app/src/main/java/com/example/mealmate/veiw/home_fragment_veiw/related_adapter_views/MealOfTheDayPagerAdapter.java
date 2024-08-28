@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.mealmate.R;
+import com.example.mealmate.model.MealCategory;
 import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
 
 import java.util.List;
@@ -18,10 +19,12 @@ import java.util.List;
 public class MealOfTheDayPagerAdapter extends RecyclerView.Adapter<MealOfTheDayPagerAdapter.MealViewHolder> {
     private List<MealDTO> mealList;
     private Context context;
+    private  onMealClickListener onMealClickListener;
 
-    public MealOfTheDayPagerAdapter(Context context, List<MealDTO> mealList) {
+    public MealOfTheDayPagerAdapter(Context context, List<MealDTO> mealList,onMealClickListener onMealClickListener) {
         this.context = context;
         this.mealList = mealList;
+        this.onMealClickListener=onMealClickListener;
     }
 
     @NonNull
@@ -39,6 +42,15 @@ public class MealOfTheDayPagerAdapter extends RecyclerView.Adapter<MealOfTheDayP
                 .load(meal.getStrMealThumb())
                 .centerCrop()
                 .into(holder.mealImage);
+
+        holder.itemView.setOnClickListener(v -> {
+            if (onMealClickListener != null) {
+                onMealClickListener.onMealClick(meal);
+            }
+
+        });
+
+
     }
 
     @Override
@@ -55,5 +67,9 @@ public class MealOfTheDayPagerAdapter extends RecyclerView.Adapter<MealOfTheDayP
             mealImage = itemView.findViewById(R.id.mealImage);
             mealName = itemView.findViewById(R.id.mealName);
         }
+    }
+
+    public interface onMealClickListener {
+        void onMealClick(MealDTO meal);
     }
 }

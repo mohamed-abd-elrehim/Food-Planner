@@ -157,7 +157,7 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
         // Check if arguments are not null and not empty
         if (arguments != null && !arguments.isEmpty()) {
             // Handle the case where the fragment is "searchFragment"
-            if (fragment.equals("searchFragment")) {
+            if (fragment.equals("searchFragment")||fragment.equals("homeFragment")) {
                 backButton.setVisibility(View.GONE);
                 addToFavoritesButton.setVisibility(View.VISIBLE);
                 addPlanButton.setVisibility(View.VISIBLE);

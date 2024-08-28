@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,6 +63,7 @@ public class AddPlanMealFragment extends Fragment implements AddPlanMealFragment
 
     private String mealID = null;
     private String mealImgURL = null;
+    private NavController navController;
 
 
     private static final String TAG = "AddPlanMealFragment";
@@ -199,6 +202,8 @@ public class AddPlanMealFragment extends Fragment implements AddPlanMealFragment
                         selectedWeekRange
                 );
                 presenter.addMealToPaln(mealPlan, customMeal);
+                Toast.makeText(getContext(), R.string.added_to_your_plans, Toast.LENGTH_SHORT).show();
+                navController.navigate(R.id.action_addPlanMealFragment_to_planOfTheWeekFragment2);
             } else {
                 // If inputs are invalid, show an alert dialog
                 new AlertDialog.Builder(getContext())
@@ -219,6 +224,8 @@ public class AddPlanMealFragment extends Fragment implements AddPlanMealFragment
         mealPlanDateVeiw = view.findViewById(R.id.mealPlanDateView);
         mealPlanAddButton = view.findViewById(R.id.mealPlanAddButton);
         mealTypeSpinner = view.findViewById(R.id.mealTypeSpinner);
+        navController = Navigation.findNavController(view);
+
         butMonday = view.findViewById(R.id.btnMonday);
         butTuesday = view.findViewById(R.id.btnTuesday);
         butWednesday = view.findViewById(R.id.btnWednesday);
