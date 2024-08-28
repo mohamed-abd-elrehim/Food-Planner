@@ -39,10 +39,10 @@ public class LoginFragmentPresenter implements LoginFragmentPresenterInterface {
                         FirebaseUser user = firebaseAuth.getCurrentUser();
                         if (user != null) {
                             view.saveUserDetails(user);
-                            view.onLoginSuccess(String.valueOf(R.string.login_successfully));
+                            view.onLoginSuccess("Login Successfully");
                         }
                     })
-                    .addOnFailureListener(e -> view.onLoginFailure(String.valueOf(R.string.login_failed)));
+                    .addOnFailureListener(e -> view.onLoginFailure("Login Failed: " + e.getMessage()));
         }
     }
 

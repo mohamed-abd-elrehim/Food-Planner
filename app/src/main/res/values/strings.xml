@@ -117,6 +117,9 @@
     <string name="previous_week">Previous Week</string>
     <string name="nextweek">Next Week</string>
     <string name="added_to_your_plans">Added To Your Plans</string>
+    <string name="logout_confirmation">Logout Confirmation</string>
+    <string name="are_you_sure_you_want_to_log_out">Are you sure you want to log out?</string>
+    <string name="no">NO</string>
 
     <!-- String array for meal types -->
     <string-array name="meal_types">

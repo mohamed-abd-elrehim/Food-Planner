@@ -85,7 +85,7 @@ public class AddPlanMealFragment extends Fragment implements AddPlanMealFragment
     private ImageButton prevWeekButton;
     private ImageButton nextWeekButton;
 
-    private String selectedWeekRange = null;
+    private String selectedWeekRange = "Select Meal Type";
     private String selectedDay = null;
     private String selectedMealType = null;
 
@@ -153,6 +153,7 @@ public class AddPlanMealFragment extends Fragment implements AddPlanMealFragment
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+                selectedMealType="Select Meal Type";
             }
         });
 
@@ -193,7 +194,7 @@ public class AddPlanMealFragment extends Fragment implements AddPlanMealFragment
         mealPlanAddButton.setOnClickListener(v -> {
 
             // Create MealPlan if valid inputs
-            if (customMeal != null) {
+            if (customMeal != null&& selectedDay != null && !selectedMealType.equals("Select Meal Type") && selectedWeekRange != null) {
                 mealPlan = new MealPlan(
                         mealID,
                         FirebaseAuth.getInstance().getCurrentUser().getEmail(),

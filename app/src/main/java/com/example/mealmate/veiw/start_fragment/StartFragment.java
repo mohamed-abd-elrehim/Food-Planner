@@ -62,10 +62,29 @@ public class StartFragment extends Fragment {
     private final String TAG = "StartFragment";
     private Button gestMode ;
 
+    // Access UI elements in the custom layout
+    TextView title ;
+    TextView message;
+    Button goButton ;
+    Button cancelButton ;
+    AlertDialog dialog;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Create an instance of AlertDialog.Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        // Inflate the custom layout
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.custom_alert_dialog, null);
+        // Set the custom layout to the dialog
+        builder.setView(dialogView);
+        // Create and show the dialog
+        dialog = builder.create();
 
+        title = dialogView.findViewById(R.id.custom_title);
+        message = dialogView.findViewById(R.id.custom_message);
+        goButton = dialogView.findViewById(R.id.button_go);
+        cancelButton = dialogView.findViewById(R.id.button_cancel);
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.client_id))  // Ensure client_id matches OAuth 2.0 client ID
@@ -91,20 +110,24 @@ public class StartFragment extends Fragment {
 
         // Check if gestMode is not null
         if (gestMode != null) {
+
             gestMode.setOnClickListener(v -> {
-                new AlertDialog.Builder(getContext())
-                        .setTitle(R.string.wait_are_you_sure)
-                        .setMessage(R.string.you_ll_miss_out_on_personalized_content_and_saving_our_delicious_recipes)
-                        .setPositiveButton(R.string.i_m_sure, (dialog, which) -> {
-                            Intent intent = new Intent(getContext(), HomeActivity.class);
-                            intent.putExtra("user_type", "guest");
-                            startActivity(intent);
-                            requireActivity().finish();
-                        })
-                        .setNegativeButton(R.string.no_go_back, (dialog, which) -> {
-                            dialog.dismiss();
-                        })
-                        .show();
+                title.setText(R.string.wait_are_you_sure);
+                message.setText(R.string.you_ll_miss_out_on_personalized_content_and_saving_our_delicious_recipes);
+                goButton.setText(R.string.i_m_sure);
+                cancelButton.setText(R.string.no_go_back);
+
+                goButton.setOnClickListener(vi -> {
+                    Intent intent = new Intent(getContext(), HomeActivity.class);
+                    intent.putExtra("user_type", "guest");
+                    startActivity(intent);
+                    requireActivity().finish();
+                });
+                cancelButton.setOnClickListener(vi -> {
+                    dialog.dismiss();
+                });
+                dialog.show();
+
             });
         } else {
             Log.e("StartFragment", "Button with ID skipButton not found.");

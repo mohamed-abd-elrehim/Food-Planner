@@ -8,9 +8,11 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,10 +59,29 @@ public class HomeActivity extends AppCompatActivity {
     private boolean isReloaded;
     DataPresenter dataPresenter;
 
+    // Access UI elements in the custom layout
+    TextView title;
+    TextView message;
+    Button goButton;
+    Button cancelButton;
+    AlertDialog dialog;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+
+        // Create an instance of AlertDialog.Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Inflate the custom layout
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.custom_alert_dialog, null);
+        // Set the custom layout to the dialog
+        builder.setView(dialogView);
+        // Create and show the dialog
+        dialog = builder.create();
 
         dataPresenter = new DataPresenter(AppDataBase.getInstance(this)
                 , MealRepository.getInstance(
@@ -70,7 +91,7 @@ public class HomeActivity extends AppCompatActivity {
                         AppDataBase.getInstance(this).getMealPlanDAO()
                 ),
                 RemoteDataSourceImpl.getInstance()));
-    // Initialize NetworkChangeReceiver
+        // Initialize NetworkChangeReceiver
         networkChangeReceiver = new NetworkChangeReceiver(this::handleNetworkChange);
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(networkChangeReceiver, filter);
@@ -99,7 +120,10 @@ public class HomeActivity extends AppCompatActivity {
         // Correctly initialize BottomNavigationView and BottomAppBar
         bottomNavigationView = findViewById(R.id.bottom_navigationView);
         BottomAppBar bottomAppBar = findViewById(R.id.bottomAppBar);
-
+        title = dialogView.findViewById(R.id.custom_title);
+        message = dialogView.findViewById(R.id.custom_message);
+        goButton = dialogView.findViewById(R.id.button_go);
+        cancelButton = dialogView.findViewById(R.id.button_cancel);
         navController = Navigation.findNavController(this, R.id.nav_host_fragment2);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
@@ -200,7 +224,9 @@ public class HomeActivity extends AppCompatActivity {
             coordinatorLayout.setVisibility(View.VISIBLE);
             // Set a listener for item selections in the BottomNavigationView
 
-        } else {
+        }
+
+        else {
             coordinatorLayout.setVisibility(View.GONE);
 
             // Fetch user data from Firebase
@@ -230,17 +256,31 @@ public class HomeActivity extends AppCompatActivity {
             navigationView.setNavigationItemSelectedListener(item -> {
                 int id = item.getItemId();
                 if (id == R.id.nav_logout) {
-                    firebaseAuth.signOut();
-                    Toast.makeText(this, R.string.logged_out, Toast.LENGTH_SHORT).show();
-                    finish();
-                    Intent intent = new Intent(this, MainActivity.class);
-                    intent.putExtra("destination_fragment", "startFragment");
-                    startActivity(intent);
 
-                }else if (id == R.id.nav_beckup) {
+                    title.setText(R.string.logout_confirmation);
+                    message.setText(R.string.are_you_sure_you_want_to_log_out);
+                    goButton.setText(R.string.yes);
+                    cancelButton.setText(R.string.no);
+
+                    goButton.setOnClickListener(v -> {
+                        firebaseAuth.signOut();
+                        Toast.makeText(this, R.string.logged_out, Toast.LENGTH_SHORT).show();
+                        finish();
+                        Intent intent = new Intent(this, MainActivity.class);
+                        intent.putExtra("destination_fragment", "startFragment");
+                        startActivity(intent);
+                    });
+                    cancelButton.setOnClickListener(v -> {
+                        dialog.dismiss();
+                    });
+                    dialog.show();
+
+
+
+                } else if (id == R.id.nav_beckup) {
                     dataPresenter.backupData();
                     Toast.makeText(this, R.string.backup_success, Toast.LENGTH_SHORT).show();
-                }else if(id == R.id.nav_restore){
+                } else if (id == R.id.nav_restore) {
                     dataPresenter.restoreData();
                     Toast.makeText(this, R.string.restore_success, Toast.LENGTH_SHORT).show();
                 }
@@ -305,21 +345,23 @@ public class HomeActivity extends AppCompatActivity {
 
     // Method to display the restricted access popup
     private void showRestrictedAccessDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.sign_up_for_more_features)
-                .setMessage(R.string.add_your_food_preferences_plan_your_meals_and_more)
-                .setPositiveButton(R.string.sign_up, (dialog, which) -> {
-                    Intent intent = new Intent(this, MainActivity.class);
-                    intent.putExtra("destination_fragment", "startFragment");
-                    ;
-                    startActivity(intent);
-                    this.finish();
-                })
-                .setNegativeButton(R.string.cancel, (dialog, which) -> {
-                    dialog.dismiss();
-                    isDialogShown = false; // Reset the flag when the dialog is dismissed
-                })
-                .show();
+
+        title.setText(R.string.sign_up_for_more_features);
+        message.setText(R.string.add_your_food_preferences_plan_your_meals_and_more);
+        goButton.setText(R.string.sign_up);
+        cancelButton.setText(R.string.cancel);
+
+        goButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("destination_fragment", "startFragment");
+            startActivity(intent);
+            this.finish();
+        });
+        cancelButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            isDialogShown = false;
+        });
+        dialog.show();
     }
 
 
@@ -342,23 +384,31 @@ public class HomeActivity extends AppCompatActivity {
 
     // Method to display the restricted access popup
     private void showRestrictedNetWorkDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.open_internet_connection_for_more_features)
-                .setMessage(R.string.add_your_food_preferences_plan_your_meals_and_more)
-                .setPositiveButton(R.string.ok, (dialog, which) -> {
-                    dialog.dismiss();
+        title.setText(R.string.open_internet_connection_for_more_features);
+        message.setText(R.string.add_your_food_preferences_plan_your_meals_and_more);
+        goButton.setText(R.string.ok);
+        cancelButton.setVisibility(View.GONE);
 
-                }).show();
+        goButton.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+        dialog.show();
+
     }
 
     // Method to display the restricted access popup
     private void showNetWorkDialog() {
-        new AlertDialog.Builder(HomeActivity.this)
-                .setTitle(R.string.no_internet_connection)
-                .setMessage(R.string.you_need_an_internet_connection_to_proceed_or_stay_on_offline_mode)
-                .setPositiveButton(R.string.ok, (dialog, which) -> dialog.dismiss())
-                .setCancelable(false)
-                .show();
+
+        title.setText(R.string.no_internet_connection);
+        message.setText(R.string.you_need_an_internet_connection_to_proceed_or_stay_on_offline_mode);
+        goButton.setText(R.string.ok);
+        cancelButton.setVisibility(View.GONE);
+
+        goButton.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+        dialog.show();
+
     }
 
 
@@ -367,12 +417,19 @@ public class HomeActivity extends AppCompatActivity {
             if ("guest".equals(extraValue)) {
                 runOnUiThread(() -> {
                     new Handler().postDelayed(() -> {
-                        new AlertDialog.Builder(HomeActivity.this)
-                                .setTitle(R.string.no_internet_connection)
-                                .setMessage(R.string.you_need_an_internet_connection_to_proceed_or_stay_on_offline_mode)
-                                .setPositiveButton(R.string.ok, (dialog, which) -> finish())
-                                .setCancelable(false)
-                                .show();
+
+                        title.setText(R.string.no_internet_connection);
+                        message.setText(R.string.you_need_an_internet_connection_to_proceed_or_stay_on_offline_mode);
+                        goButton.setText(R.string.ok);
+                        cancelButton.setVisibility(View.GONE);
+
+                        goButton.setOnClickListener(v -> {
+                            finish();
+                        });
+                        dialog.show();
+
+
+
                     }, 100); // Adjust the delay as needed
                 });
             } else {
@@ -380,15 +437,20 @@ public class HomeActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     navController.navigate(R.id.favoriteMealsFragment);
                     new Handler().postDelayed(() -> {
-                        new AlertDialog.Builder(HomeActivity.this)
-                            .setTitle(R.string.no_internet_connection)
-                            .setMessage(R.string.you_need_an_internet_connection_to_proceed_or_stay_on_offline_mode)
-                                .setPositiveButton(R.string.ok, (dialog, which) -> {
-                                    dialog.dismiss();
-                                    isDialogShown = false;
-                                })
-                                .setCancelable(false)
-                                .show();
+
+
+                        title.setText(R.string.no_internet_connection);
+                        message.setText(R.string.you_need_an_internet_connection_to_proceed_or_stay_on_offline_mode);
+                        goButton.setText(R.string.ok);
+                        cancelButton.setVisibility(View.GONE);
+
+                        goButton.setOnClickListener(v -> {
+                            dialog.dismiss();
+                            isDialogShown = false;
+                        });
+                        dialog.show();
+
+
                     }, 100); // Adjust the delay as needed
                 });
             }

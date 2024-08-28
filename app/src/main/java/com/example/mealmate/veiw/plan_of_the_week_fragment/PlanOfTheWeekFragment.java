@@ -78,6 +78,12 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
     private ProgressBar progressBar;
 
     private Button butAll, butMonday, butTuesday, butWednesday, butThursday, butFriday, butSaturday, butSunday;
+    // Access UI elements in the custom layout
+    TextView title ;
+    TextView message;
+    Button goButton ;
+    Button cancelButton ;
+    AlertDialog dialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,6 +100,16 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // Create an instance of AlertDialog.Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        // Inflate the custom layout
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.custom_alert_dialog, null);
+        // Set the custom layout to the dialog
+        builder.setView(dialogView);
+        // Create and show the dialog
+        dialog = builder.create();
+
         viewPager = view.findViewById(R.id.favorite_Meal_ViewPager);
         progressBar = view.findViewById(R.id.progressBar);
         navController = Navigation.findNavController(view);
@@ -331,35 +347,41 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
 
     @Override
     public void onDeletePlansClick(MealPlan mealPlan) {
-        new AlertDialog.Builder(getContext())
-                .setTitle(R.string.wait_are_you_sure)
-                .setMessage(R.string.delete_your_meals_from_plans)
-                .setPositiveButton(R.string.yes, (dialog, which) -> {
-                    presenter.deletePlanMeal(mealPlan);
-                    refreshFragment();
-                })
-                .setNegativeButton(R.string.cancel, (dialog, which) -> {
-                    dialog.dismiss();
-                })
-                .show();
+
+        title.setText(R.string.wait_are_you_sure);
+        message.setText(R.string.delete_your_meals_from_plans);
+        goButton.setText(R.string.yes);
+        cancelButton.setText(R.string.cancel);
+
+        goButton.setOnClickListener(v -> {
+            presenter.deletePlanMeal(mealPlan);
+            refreshFragment();
+        });
+        cancelButton.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+        dialog.show();
+
+      
 
     }
 
 
     @Override
     public void showError() {
-        new AlertDialog.Builder(getContext())
-                .setTitle(R.string.no_data_found)
-                .setMessage(R.string.add_your_meals_to_plan_first)
-                .setPositiveButton(R.string.ok, (dialog, which) -> {
-                    navController.navigate(R.id.action_planOfTheWeekFragment_to_searchFragment);
 
-                })
-                .setNegativeButton(R.string.back_to_home, (dialog, which) -> {
-                    navController.navigate(R.id.action_planOfTheWeekFragment_to_homeFragment);
-                })
-                .show();
+        title.setText(R.string.no_data_found);
+        message.setText(R.string.add_your_meals_to_plan_first);
+        goButton.setText(R.string.ok);
+        cancelButton.setText(R.string.back_to_home);
+        goButton.setOnClickListener(v -> {
+            navController.navigate(R.id.action_planOfTheWeekFragment_to_searchFragment);
 
+        });
+        cancelButton.setOnClickListener(v -> {
+            navController.navigate(R.id.action_planOfTheWeekFragment_to_homeFragment);
+        });
+        dialog.show();
     }
 
     public void getWeekRange(ArrayList<MealPlan> mealPlans) {

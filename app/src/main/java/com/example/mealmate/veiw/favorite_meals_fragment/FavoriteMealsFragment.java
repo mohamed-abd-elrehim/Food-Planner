@@ -16,7 +16,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.mealmate.veiw.favorite_meals_fragment.related_adapter_views.FavMealPagerAdapter;
 import com.example.mealmate.presenter.favorite_meals_fragment_presenter.FavoriteMealsFragmentPresenter;
@@ -45,6 +47,13 @@ public class FavoriteMealsFragment extends Fragment implements FavoriteMealsFrag
     private NavController navController;
     ProgressBar progressBar ;
 
+    // Access UI elements in the custom layout
+    TextView title ;
+    TextView message;
+    Button goButton ;
+    Button cancelButton ;
+    AlertDialog dialog;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,6 +70,21 @@ public class FavoriteMealsFragment extends Fragment implements FavoriteMealsFrag
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // Create an instance of AlertDialog.Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        // Inflate the custom layout
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.custom_alert_dialog, null);
+        // Set the custom layout to the dialog
+        builder.setView(dialogView);
+        // Create and show the dialog
+        dialog = builder.create();
+
+        title = dialogView.findViewById(R.id.custom_title);
+        message = dialogView.findViewById(R.id.custom_message);
+        goButton = dialogView.findViewById(R.id.button_go);
+        cancelButton = dialogView.findViewById(R.id.button_cancel);
+
         viewPager = view.findViewById(R.id.favorite_Meal_ViewPager);
         progressBar = view.findViewById(R.id.progressBar);
         navController = Navigation.findNavController(view);
@@ -100,17 +124,20 @@ public class FavoriteMealsFragment extends Fragment implements FavoriteMealsFrag
 
     @Override
     public void showError() {
-        new AlertDialog.Builder(getContext())
-                .setTitle(R.string.no_data_found)
-                .setMessage(R.string.add_your_meals_to_favorites_first)
-                .setPositiveButton(R.string.ok, (dialog, which) -> {
-                    navController.navigate(R.id.action_favoriteMealsFragment_to_searchFragment);
 
-                })
-                .setNegativeButton(R.string.back_to_home, (dialog, which) -> {
-                    navController.navigate(R.id.action_favoriteMealsFragment_to_homeFragment);
-                })
-                .show();
+        title.setText(R.string.no_data_found);
+        message.setText(R.string.add_your_meals_to_favorites_first);
+        goButton.setText(R.string.ok);
+        cancelButton.setText(R.string.back_to_home);
+
+        goButton.setOnClickListener(v -> {
+            navController.navigate(R.id.action_favoriteMealsFragment_to_searchFragment);
+
+        });
+        cancelButton.setOnClickListener(v -> {
+            navController.navigate(R.id.action_favoriteMealsFragment_to_homeFragment);
+        });
+        dialog.show();
 
     }
 
@@ -128,18 +155,20 @@ public class FavoriteMealsFragment extends Fragment implements FavoriteMealsFrag
 
     @Override
     public void onDeleteFavoritesClick(FavoriteMeal favoriteMeal) {
-        new AlertDialog.Builder(getContext())
-                .setTitle(R.string.wait_are_you_sure)
-                .setMessage(R.string.delete_your_meals_from_favorites)
-                .setPositiveButton(R.string.yes, (dialog, which) -> {
-                    presenter.deleteFavoriteMeal(favoriteMeal);
-                    refreshFragment();
 
-                })
-        .setNegativeButton(R.string.cancel, (dialog, which) -> {
-                    dialog.dismiss();
-                })
-                .show();
+        title.setText(R.string.wait_are_you_sure);
+        message.setText(R.string.delete_your_meals_from_favorites);
+        goButton.setText(R.string.yes);
+        cancelButton.setText(R.string.cancel);
+
+        goButton.setOnClickListener(v -> {
+            presenter.deleteFavoriteMeal(favoriteMeal);
+            refreshFragment();
+         });
+        cancelButton.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+        dialog.show();
 
     }
     public void refreshFragment() {
