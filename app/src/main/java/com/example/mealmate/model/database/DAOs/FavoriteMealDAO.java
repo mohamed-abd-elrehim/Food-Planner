@@ -17,18 +17,6 @@ import java.util.List;
 
 @Dao
 public interface FavoriteMealDAO {
-    //
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    void insertFavoriteMeal(FavoriteMeal favoriteMeal);
-//
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    void insertMeal(MealDTO meal);
-//
-//    @Delete
-//    void deleteFavoriteMeal(FavoriteMeal favoriteMeal);
-//    @Delete
-//    void deleteMeal(MealDTO meal);
-
     @Transaction
     default void insertFavoriteMeal(FavoriteMeal favoriteMeal, MealDTO meal, List<MealMeasureIngredient> ingredients) {
         // Insert the favorite meal first
@@ -66,11 +54,11 @@ public interface FavoriteMealDAO {
     void deleteFavorite(FavoriteMeal favoriteMeal);
 
     // Delete a meal by its ID
-    @Query("DELETE FROM MealDTO WHERE meal_id = :mealId")
+    @Query("DELETE FROM MealDTO WHERE meal_id = :mealId AND meal_type = 'mealfavorite'")
     void deleteMealById(String mealId);
 
     // Delete all ingredients associated with a specific meal ID
-    @Query("DELETE FROM MealMeasureIngredient WHERE meal_id = :mealId")
+    @Query("DELETE FROM MealMeasureIngredient WHERE meal_id = :mealId AND meal_type = 'mealfavorite'")
     void deleteIngredientsByMealId(String mealId);
 
     @Transaction
@@ -94,19 +82,10 @@ public interface FavoriteMealDAO {
     void insertAllIngredients(List<MealMeasureIngredient> ingredients);
 
 
-        // This query retrieves all favorite meals for a specific user based on their email address.
-        // The method is synchronous, meaning it runs on the current thread and returns a List<FavoriteMeal>.
-        @Query("SELECT * FROM favoritemeal WHERE client_email = :email")
-        List<FavoriteMeal> getFavoriteMealsForUserSync(String email);
+    // This query retrieves all favorite meals for a specific user based on their email address.
+    // The method is synchronous, meaning it runs on the current thread and returns a List<FavoriteMeal>.
+    @Query("SELECT * FROM favoritemeal WHERE client_email = :email")
+    List<FavoriteMeal> getFavoriteMealsForUserSync(String email);
 
 
-
-
-//    @Transaction
-//    @Query("SELECT * FROM FavoriteMeal WHERE client_email = :clientEmail")
-//    LiveData<List<FavoriteMealWithMeals>> getFavoritesWithMeals(String clientEmail);
-//
-//
-//    @Query("SELECT * FROM MealDTO WHERE meal_id = :mealId")
-//    LiveData<List<MealDTO>> getMealsByMealId(String mealId);
 }

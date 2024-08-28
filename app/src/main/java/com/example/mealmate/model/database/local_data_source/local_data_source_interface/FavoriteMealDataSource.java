@@ -27,4 +27,5 @@ public interface FavoriteMealDataSource {
     void insertAllIngredients(List<MealMeasureIngredient> ingredients);
     List<FavoriteMeal> getFavoriteMealsForUserSync(String email);
 
+    void deleteFavorite(FavoriteMeal favoriteMeal);
 }

@@ -52,20 +52,20 @@ public interface MealPlanDAO {
 
     // Delete a specific favorite meal
     @Delete
-    void deleteMeal(MealPlan mealPlan);
+    void deletePlanMeal(MealPlan mealPlan);
 
     // Delete a meal by its ID
-    @Query("DELETE FROM MealDTO WHERE meal_id = :mealId")
+    @Query("DELETE FROM MealDTO WHERE meal_id = :mealId AND meal_type = 'mealplan'")
     void deleteMealById(String mealId);
 
     // Delete all ingredients associated with a specific meal ID
-    @Query("DELETE FROM MealMeasureIngredient WHERE meal_id = :mealId")
+    @Query("DELETE FROM MealMeasureIngredient WHERE meal_id = :mealId AND meal_type = 'mealplan'")
     void deleteIngredientsByMealId(String mealId);
 
     @Transaction
     default void deleteMealPlan(MealPlan mealPlan) {
         String mealId = mealPlan.getMealId();
-        deleteMeal(mealPlan);
+        deletePlanMeal(mealPlan);
         deleteMealById(mealId);
         deleteIngredientsByMealId(mealId);
     }
@@ -80,30 +80,6 @@ public interface MealPlanDAO {
     @Query("SELECT * FROM mealplan WHERE client_email = :email")
     List<MealPlan> getPlanMealsForUserSync(String email);
 
-    //    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//
-//
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    void insertMeal(MealDTO meal);
-//
-//    @Delete
-//    void deleteMealPlan(MealPlan mealPlan);
-//    @Delete
-//    void deleteMeal(MealDTO meal);
-//
-//    @Transaction
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    void insertPlanWithMeal(MealDTO meal, List<MealDTO> mealDTOS);
-//
-//
-//    @Transaction
-//    @Query("SELECT * FROM MealPlan WHERE client_email = :clientEmail")
-//    LiveData<List<MealPlanWithMeals>> getMealPlansWithMeals(String clientEmail);
-//
-//    @Query("SELECT * FROM MealPlan WHERE meal_id = :mealId AND client_email = :clientEmail")
-//    LiveData<MealPlan> getMealPlan(String mealId, String clientEmail);
-//
-//    @Query("SELECT * FROM MealDTO WHERE meal_id = :mealId")
-//    LiveData<List<MealDTO>> getMealsByMealId(String mealId);
+
 
 }

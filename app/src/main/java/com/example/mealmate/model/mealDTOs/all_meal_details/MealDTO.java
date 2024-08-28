@@ -1,4 +1,5 @@
 package com.example.mealmate.model.mealDTOs.all_meal_details;
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.ColumnInfo;
@@ -8,9 +9,11 @@ import java.io.Serializable;
 
 @Entity
 public class MealDTO implements Serializable {
+
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     private int id;
+
 
     public String getIdMeal() {
         return idMeal;
@@ -20,6 +23,8 @@ public class MealDTO implements Serializable {
         this.idMeal = idMeal;
     }
 
+    @ColumnInfo(name = "meal_Type")
+    public String strType;
 
     @ColumnInfo(name = "meal_category")
     public String strCategory;
@@ -29,7 +34,6 @@ public class MealDTO implements Serializable {
     public String strCreativeCommonsConfirmed;
     @ColumnInfo(name = "date_modified")
     public String dateModified;
-
     @ColumnInfo(name = "meal_id")
     private String idMeal;
 
@@ -57,12 +61,14 @@ public class MealDTO implements Serializable {
     @ColumnInfo(name = "str_source")
     private String strSource;
 
-    public MealDTO(String strCategory, String strImageSource, String strCreativeCommonsConfirmed,
+    public MealDTO(String strType,String strCategory, String strImageSource, String strCreativeCommonsConfirmed,
                    String dateModified, String idMeal, String strMeal, String strDrinkAlternate,
                    String strArea, String strInstructions, String strMealThumb, String strTags,
                    String strYoutube, String strSource) {
 
         this.strCategory = strCategory;
+        this.strType = strType;
+
         this.strImageSource = strImageSource;
         this.strCreativeCommonsConfirmed = strCreativeCommonsConfirmed;
         this.dateModified = dateModified;
@@ -77,6 +83,14 @@ public class MealDTO implements Serializable {
         this.strSource = strSource;
     }
 // Getters and setters...
+
+    public String getStrType() {
+        return strType;
+    }
+
+    public void setStrType(String strType) {
+        this.strType = strType;
+    }
 
     public String getStrCategory() {
         return strCategory;

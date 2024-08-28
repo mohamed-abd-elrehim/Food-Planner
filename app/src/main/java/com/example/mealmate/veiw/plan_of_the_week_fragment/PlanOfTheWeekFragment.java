@@ -132,8 +132,6 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
 
         // Initialize the adapter
         planMealPagerAdapter = new PlanMealPagerAdapter(getContext(), filterMealDTOs, filterMealPlans, this, this);
-
-
         viewPager.setAdapter(planMealPagerAdapter);
         viewPager.setPageTransformer(new ZoomOutPageTransformer());
 
@@ -291,15 +289,6 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
     @Override
     public void showData(List<MealDTO> data, List<MealPlan> planMeals) {
         // Initialize the ProgressBar
-        //progressBar.setVisibility(View.VISIBLE);
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            if (data == null || data.isEmpty()) {
-                progressBar.setVisibility(View.GONE);
-                showError();
-            } else {
-                progressBar.setVisibility(View.GONE);
-            }
-        }, 5000);
 
         mealDTOS.clear();
         mealPlans.clear();
@@ -347,6 +336,7 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
                 .setMessage(R.string.delete_your_meals_from_plans)
                 .setPositiveButton(R.string.yes, (dialog, which) -> {
                     presenter.deletePlanMeal(mealPlan);
+                    refreshFragment();
                 })
                 .setNegativeButton(R.string.cancel, (dialog, which) -> {
                     dialog.dismiss();
@@ -392,6 +382,10 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
         }
     }
 
+    public void refreshFragment() {
+        navController.navigate(R.id.planOfTheWeekFragment);
+
+    }
 
 
 }

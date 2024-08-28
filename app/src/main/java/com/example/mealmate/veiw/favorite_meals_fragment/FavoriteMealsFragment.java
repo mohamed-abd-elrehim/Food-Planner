@@ -133,6 +133,8 @@ public class FavoriteMealsFragment extends Fragment implements FavoriteMealsFrag
                 .setMessage(R.string.delete_your_meals_from_favorites)
                 .setPositiveButton(R.string.yes, (dialog, which) -> {
                     presenter.deleteFavoriteMeal(favoriteMeal);
+                    refreshFragment();
+
                 })
         .setNegativeButton(R.string.cancel, (dialog, which) -> {
                     dialog.dismiss();
@@ -140,5 +142,11 @@ public class FavoriteMealsFragment extends Fragment implements FavoriteMealsFrag
                 .show();
 
     }
+    public void refreshFragment() {
+        navController.navigate(R.id.favoriteMealsFragment);
+
+    }
+
+
 
 }

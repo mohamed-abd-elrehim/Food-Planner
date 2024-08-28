@@ -151,7 +151,7 @@ public class AllMealDetailsFragment_presenter implements AllMealDetailsFragment_
         // Iterate through the arrays and add non-null values to the list
         for (int i = 0; i < ingredients.length; i++) {
             if (ingredients[i] != null && !ingredients[i].isEmpty() && measures[i] != null && !measures[i].isEmpty()) {
-                ingredientsList.add(new MealMeasureIngredient(meal.getIdMeal(), ingredients[i], measures[i]));
+                ingredientsList.add(new MealMeasureIngredient("mealfavorite",meal.getIdMeal(), ingredients[i], measures[i]));
             }
         }
 
@@ -164,6 +164,7 @@ public class AllMealDetailsFragment_presenter implements AllMealDetailsFragment_
         FavoriteMeal favoriteMeal = new FavoriteMeal(meal.getIdMeal(), FirebaseAuth.getInstance().getCurrentUser().getEmail(), meal.getStrMealThumb());
         List<MealMeasureIngredient> mealMeasureIngredient = getMealMeasureIngredients(meal);
         MealDTO mealDTO = new MealDTO(
+                "mealfavorite",
                 meal.getStrCategory(),                // String
                 meal.getStrImageSource(),             // String
                 meal.getStrCreativeCommonsConfirmed(),// String

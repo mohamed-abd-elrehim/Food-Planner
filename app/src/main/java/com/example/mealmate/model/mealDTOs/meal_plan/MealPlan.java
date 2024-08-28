@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ColumnInfo;
+import androidx.room.PrimaryKey;
 
 @Entity(primaryKeys = {"meal_id", "client_email"})
 public class MealPlan implements Parcelable {

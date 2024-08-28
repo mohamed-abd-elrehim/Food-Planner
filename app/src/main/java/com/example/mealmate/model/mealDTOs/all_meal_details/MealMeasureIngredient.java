@@ -1,4 +1,5 @@
 package com.example.mealmate.model.mealDTOs.all_meal_details;
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.ColumnInfo;
@@ -7,9 +8,12 @@ import java.io.Serializable;
 
 @Entity
 public class MealMeasureIngredient implements Serializable {
+
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     private int id;
+    @ColumnInfo(name = "meal_Type")
+    public String strType;
 
     @ColumnInfo(name = "meal_id")
     private String mealId;
@@ -21,13 +25,23 @@ public class MealMeasureIngredient implements Serializable {
     private String measure;
 
 
-    public MealMeasureIngredient(String mealId, String ingredientName, String measure) {
+    public MealMeasureIngredient(String strType, String mealId, String ingredientName, String measure) {
         this.mealId = mealId;
         this.ingredientName = ingredientName;
         this.measure = measure;
+        this.strType = strType;
+
     }
 // Getters and setters...
 
+
+    public String getStrType() {
+        return strType;
+    }
+
+    public void setStrType(String strType) {
+        this.strType = strType;
+    }
 
     public int getId() {
         return id;

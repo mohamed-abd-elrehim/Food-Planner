@@ -45,6 +45,7 @@ public class AddPlanMealFragmentPresenter implements AddPlanMealFragmentPresente
     public void addMealToPaln(MealPlan mealPlan, CustomMeal meal) {
         List<MealMeasureIngredient> mealMeasureIngredient = getMealMeasureIngredients(meal);
         MealDTO mealDTO = new MealDTO(
+                "mealplan",
                 meal.getStrCategory(),                // String
                 meal.getStrImageSource(),             // String
                 meal.getStrCreativeCommonsConfirmed(),// String
@@ -125,7 +126,7 @@ public class AddPlanMealFragmentPresenter implements AddPlanMealFragmentPresente
         // Iterate through the arrays and add non-null values to the list
         for (int i = 0; i < ingredients.length; i++) {
             if (ingredients[i] != null && !ingredients[i].isEmpty() && measures[i] != null && !measures[i].isEmpty()) {
-                ingredientsList.add(new MealMeasureIngredient(meal.getIdMeal(), ingredients[i], measures[i]));
+                ingredientsList.add(new MealMeasureIngredient("mealplan",meal.getIdMeal(), ingredients[i], measures[i]));
             }
         }
 

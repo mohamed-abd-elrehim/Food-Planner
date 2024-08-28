@@ -98,6 +98,11 @@ public class LocalDataSourceImpl implements LocalDataSource {
         return favoriteMealDAO.getFavoriteMealsForUserSync(email);
     }
 
+    @Override
+    public void deleteFavorite(FavoriteMeal favoriteMeal) {
+        executorService.execute(() -> favoriteMealDAO.deleteFavorite(favoriteMeal));
+    }
+
 
     @Override
     public void insertMealPlan(MealPlan mealPlan, MealDTO meal, List<MealMeasureIngredient> ingredients) {
@@ -124,6 +129,12 @@ public class LocalDataSourceImpl implements LocalDataSource {
     @Override
     public List<MealPlan> getPlanMealsForUserSync(String email) {
         return mealPlanDAO.getPlanMealsForUserSync(email);
+    }
+
+    @Override
+    public void deletePlanMeal(MealPlan mealPlan) {
+        executorService.execute(() -> mealPlanDAO.deletePlanMeal(mealPlan));
+
     }
 
 

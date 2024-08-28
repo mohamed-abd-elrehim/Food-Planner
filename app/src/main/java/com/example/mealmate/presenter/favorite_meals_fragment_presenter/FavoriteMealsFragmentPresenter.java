@@ -15,6 +15,7 @@ import com.example.mealmate.veiw.favorite_meals_fragment.favorite_meals_fragment
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class FavoriteMealsFragmentPresenter implements FavoriteMealsFragmentPresenterInterface {
     private FavoriteMealsFragmentVeiwInterface view;
@@ -26,6 +27,8 @@ public class FavoriteMealsFragmentPresenter implements FavoriteMealsFragmentPres
     private LiveData<List<FavoriteMeal>> favoriteMeal;
     private LiveData<MealDTO> mealDTO;
     private LiveData<List<MealMeasureIngredient>> mealMeasureIngredient;
+    private List<FavoriteMeal> favorites=new ArrayList<>();
+    private boolean isDataProcessed = false;
 
 
     public FavoriteMealsFragmentPresenter(AppDataBase appDataBase, MealRepository mealRepository, FavoriteMealsFragmentVeiwInterface view) {
@@ -35,41 +38,70 @@ public class FavoriteMealsFragmentPresenter implements FavoriteMealsFragmentPres
         this.mealRepository.updateBaseUrl("https://www.themealdb.com/api/json/v1/1/");
     }
 
-
     @Override
     public void getAllFAVMeals(String email) {
+        // Avoid processing if already done
+        if (isDataProcessed) return;
+        isDataProcessed = true; // Mark data as being processed
+
+        Log.i(TAG, "Fetching favorite meals for email: " + email);
+
         favoriteMeal = mealRepository.getFavoriteMeal(email);
         favoriteMeal.observeForever(favoriteMeals -> {
-            if (favoriteMeals != null && !favoriteMeals.isEmpty()) {
-                List<MealDTO> allMeals = new ArrayList<>(); // Create a mutable list to accumulate meals
+            // Ensure we process data only if it hasn't been processed yet
+            if (isDataProcessed) {
+                if (favoriteMeals != null && !favoriteMeals.isEmpty()) {
+                    Log.i(TAG, "Favorite meals found: " + favoriteMeals.size());
 
-                for (FavoriteMeal favoriteMeal : favoriteMeals) {
-                    mealDTO = mealRepository.getMealById(favoriteMeal.getMealId());
-                    mealDTO.observeForever(meal -> {
-                        if (meal != null) {
-                            allMeals.add(meal); // Add each meal to the list
+                    List<MealDTO> allMeals = new ArrayList<>();
+                    List<FavoriteMeal> favorites = new ArrayList<>(favoriteMeals);
+                    AtomicInteger processedCount = new AtomicInteger(0);
 
-                            // Check if all meals have been added
-                            if (allMeals.size() == favoriteMeals.size()) {
-                                Log.i(TAG, "getAllFAVMeals: "+allMeals.size());
-                                view.showData(allMeals);
-                                Log.i(TAG, "getAllFAVMeals: "+allMeals.get(0).getIdMeal());
-                            }
-                        }
-                    });
+                    for (FavoriteMeal favoriteMeal : favorites) {
+                        observeMeal(favoriteMeal.getMealId(), allMeals, favorites.size(), processedCount);
+                    }
+                } else {
+                    Log.i(TAG, "No favorite meals found or favoriteMeals is null");
+                    view.showError();
+                    isDataProcessed = false; // Reset flag if no meals found
                 }
             } else {
-                view.showError();
+                Log.i(TAG, "Data was already processed");
             }
         });
     }
 
+    private void observeMeal(String mealId, List<MealDTO> allMeals, int totalMeals, AtomicInteger processedCount) {
+        Log.i(TAG, "Fetching meal with ID: " + mealId);
+
+        mealDTO = mealRepository.getMealById(mealId);
+        mealDTO.observeForever(meal -> {
+            if (meal != null) {
+                allMeals.add(meal);
+                Log.i(TAG, "Meal added: " + meal.getIdMeal());
+            }
+
+            // Check if all meals are processed
+            if (processedCount.incrementAndGet() == totalMeals) {
+                if (!allMeals.isEmpty()) {
+                    Log.i(TAG, "All favorite meals processed: " + allMeals.size());
+                    view.showData(allMeals);
+                    Log.i(TAG, "First meal ID: " + allMeals.get(0).getIdMeal());
+                } else {
+                    Log.i(TAG, "No meals found after processing favorites");
+                    view.showError();
+                }
+                isDataProcessed = false; // Reset flag after processing
+            }
+        });
+    }
 
     @Override
     public void deleteFavoriteMeal(FavoriteMeal favoriteMeal) {
-
+        //mealRepository.deleteFavorite( favoriteMeal);
         mealRepository.deleteFavoriteMeal( favoriteMeal);
         Log.i(TAG, "deleteProductFromFAV: ");
+
 
     }
 
