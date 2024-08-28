@@ -1,5 +1,7 @@
 package com.example.mealmate.veiw.plan_of_the_week_fragment.related_adpter;
+
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,24 +19,37 @@ import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
 import com.example.mealmate.model.mealDTOs.meal_plan.MealPlan;
 import com.example.mealmate.veiw.plan_of_the_week_fragment.plan_of_the_week_fragment_interface.Handel_Delete_Plans;
 import com.example.mealmate.veiw.plan_of_the_week_fragment.plan_of_the_week_fragment_interface.PlanHandelSeeMoreClick;
+import com.example.mealmate.veiw.search_fragment.search_fragment_veiw_interface.HandelSeeMoreClick;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class PlanMealPagerAdapter extends RecyclerView.Adapter<PlanMealPagerAdapter.MealViewHolder> {
+
+    private static final String TAG = "PlanMealPagerAdapter";
+    private final Context context;
+    private final Handel_Delete_Plans handleDeletePlans;
+    private final PlanHandelSeeMoreClick handleSeeMoreClick;
+
     private List<MealDTO> mealList;
-    private Context context;
-    private Handel_Delete_Plans handelDeletePlans;
-    private PlanHandelSeeMoreClick handelSeeMoreClick;
-    List<MealPlan> mealPlans;
+    private List<MealPlan> mealPlans;
 
 
-    public PlanMealPagerAdapter(Context context, List<MealDTO> mealList,List<MealPlan> mealPlans, Handel_Delete_Plans handelDeletePlans, PlanHandelSeeMoreClick handelSeeMoreClick) {
 
+    public PlanMealPagerAdapter(Context context, List<MealDTO> mealList, List<MealPlan> mealPlans,
+                                Handel_Delete_Plans handleDeletePlans, PlanHandelSeeMoreClick handleSeeMoreClick) {
         this.context = context;
         this.mealList = mealList;
-        this.handelDeletePlans = handelDeletePlans;
-        this.handelSeeMoreClick = handelSeeMoreClick;
         this.mealPlans = mealPlans;
+        this.handleDeletePlans = handleDeletePlans;
+        this.handleSeeMoreClick = handleSeeMoreClick;
+
+
+
+
+
     }
 
     @NonNull
@@ -46,12 +61,13 @@ public class PlanMealPagerAdapter extends RecyclerView.Adapter<PlanMealPagerAdap
 
     @Override
     public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
+
+
         MealDTO meal = mealList.get(position);
         MealPlan mealPlan = mealPlans.get(position);
 
         holder.mealName.setText(meal.getStrMeal());
         holder.mealCategory.setText("Day: " + mealPlan.getDayOfWeek());
-
         holder.mealArea.setText("Time: " + mealPlan.getMealType());
 
         Glide.with(context)
@@ -59,12 +75,8 @@ public class PlanMealPagerAdapter extends RecyclerView.Adapter<PlanMealPagerAdap
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.mealImage);
 
-
-      //MealPlan mealPlan = new MealPlan(meal.getIdMeal(), FirebaseAuth.getInstance().getCurrentUser().getEmail(),null,null,null);
-
-      holder.deleteButton.setOnClickListener(V->handelDeletePlans.onDeletePlansClick(mealPlan));
-      holder.seeMoreButton.setOnClickListener(V->handelSeeMoreClick.onSeeMoreClick(meal,mealPlan));
-
+        holder.deleteButton.setOnClickListener(v -> handleDeletePlans.onDeletePlansClick(mealPlan));
+        holder.seeMoreButton.setOnClickListener(v -> handleSeeMoreClick.onSeeMoreClick(meal, mealPlan));
     }
 
     @Override
@@ -75,10 +87,8 @@ public class PlanMealPagerAdapter extends RecyclerView.Adapter<PlanMealPagerAdap
     public static class MealViewHolder extends RecyclerView.ViewHolder {
         ImageView mealImage;
         TextView mealName;
-
         TextView mealCategory;
         TextView mealArea;
-
         Button deleteButton;
         Button seeMoreButton;
 
@@ -90,12 +100,8 @@ public class PlanMealPagerAdapter extends RecyclerView.Adapter<PlanMealPagerAdap
             mealArea = itemView.findViewById(R.id.meal_area);
             deleteButton = itemView.findViewById(R.id.deletebutton);
             seeMoreButton = itemView.findViewById(R.id.seeMorebutton);
-
         }
     }
 
-    public void updateMealList(List<MealDTO> newMealList) {
-        this.mealList = newMealList;
-        notifyDataSetChanged();
-    }
+
 }
