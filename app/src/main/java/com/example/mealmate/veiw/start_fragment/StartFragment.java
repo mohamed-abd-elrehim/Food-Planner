@@ -162,8 +162,8 @@ public class StartFragment extends Fragment {
     private void applyClickableText() {
         String fullText = getString(R.string.alreadyhaveanaccountloginin);
         SpannableString spannableString = new SpannableString(fullText);
-        int start = fullText.indexOf("Login In");
-        int end = start + "Login In".length();
+        int start = fullText.indexOf("Login");
+        int end = start + "Login".length();
 
         // Apply custom underline
         spannableString.setSpan(new CustomUnderlineSpan(Color.RED, 3f), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

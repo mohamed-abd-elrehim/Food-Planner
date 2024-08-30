@@ -43,6 +43,7 @@ public class SignUpFragment extends Fragment implements SignUpFragmentViewInterf
         return inflater.inflate(R.layout.fragment_sign_up, container, false);
     }
 
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

@@ -89,6 +89,12 @@ public class AddPlanMealFragment extends Fragment implements AddPlanMealFragment
     private String selectedDay = null;
     private String selectedMealType = null;
 
+    // Access UI elements in the custom layout
+    TextView title ;
+    TextView message;
+    Button goButton ;
+    Button cancelButton ;
+    AlertDialog dialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,6 +111,20 @@ public class AddPlanMealFragment extends Fragment implements AddPlanMealFragment
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // Create an instance of AlertDialog.Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        // Inflate the custom layout
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.custom_alert_dialog, null);
+        // Set the custom layout to the dialog
+        builder.setView(dialogView);
+        // Create and show the dialog
+        dialog = builder.create();
+
+        title = dialogView.findViewById(R.id.custom_title);
+        message = dialogView.findViewById(R.id.custom_message);
+        goButton = dialogView.findViewById(R.id.button_go);
+        cancelButton = dialogView.findViewById(R.id.button_cancel);
 
         // Initialize UI components
         initializeUIComponents(view);
@@ -128,11 +148,9 @@ public class AddPlanMealFragment extends Fragment implements AddPlanMealFragment
 
         // Initialize the presenter
         presenter = new AddPlanMealFragmentPresenter(
-                AppDataBase.getInstance(getContext()),
                 MealRepository.getInstance(
                         LocalDataSourceImpl.getInstance(
                                 AppDataBase.getInstance(getContext()).getFavoriteMealDAO(),
-                                AppDataBase.getInstance(getContext()).getMealDAO(),
                                 AppDataBase.getInstance(getContext()).getMealPlanDAO()
                         ),
                         RemoteDataSourceImpl.getInstance()
@@ -169,7 +187,7 @@ public class AddPlanMealFragment extends Fragment implements AddPlanMealFragment
         today.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 
         // Display the current week range
-        updateWeekRange();
+        presenter.updateWeekRange(currentWeek, dateFormat);
 
         prevWeekButton.setOnClickListener(v -> {
             // Move to the previous week only if it's not before the current week
@@ -180,14 +198,14 @@ public class AddPlanMealFragment extends Fragment implements AddPlanMealFragment
                 Log.i(TAG, "prevWeekButton: 2");
             } else {
                 Log.i(TAG, "prevWeekButton: 3");
-                updateWeekRange();
+                presenter.updateWeekRange(currentWeek, dateFormat);
             }
         });
 
         nextWeekButton.setOnClickListener(v -> {
             // Move to the next week
             currentWeek.add(Calendar.WEEK_OF_YEAR, 1);
-            updateWeekRange();
+            presenter.updateWeekRange(currentWeek, dateFormat);
         });
 
         // Set onClickListener for Add Button
@@ -206,13 +224,16 @@ public class AddPlanMealFragment extends Fragment implements AddPlanMealFragment
                 Toast.makeText(getContext(), R.string.added_to_your_plans, Toast.LENGTH_SHORT).show();
                 navController.navigate(R.id.action_addPlanMealFragment_to_planOfTheWeekFragment2);
             } else {
-                // If inputs are invalid, show an alert dialog
-                new AlertDialog.Builder(getContext())
-                        .setTitle(R.string.incomplete_data)
-                        .setMessage(R.string.please_enter_all_required_data_before_proceeding)
-                        .setPositiveButton(R.string.ok, (dialog, which) -> dialog.dismiss())
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+
+                title.setText(R.string.incomplete_data);
+                message.setText(R.string.please_enter_all_required_data_before_proceeding);
+                goButton.setText(R.string.ok);
+                cancelButton.setVisibility(View.GONE);
+
+                goButton.setOnClickListener(vi -> {
+                    dialog.dismiss();
+                });
+                dialog.show();
             }
 
 
@@ -262,13 +283,14 @@ public class AddPlanMealFragment extends Fragment implements AddPlanMealFragment
 
 
     // Method to set available days; should be called when you determine the availability
-    private void setAvailableDays(List<String> days) {
+    public void setAvailableDays(List<String> days) {
         lsitAvailableDays.clear();
         lsitAvailableDays.addAll(days);
         Log.i(TAG, "setAvailableDays: " + lsitAvailableDays.toString());
     }
 
-    private void updateDayButtons() {
+
+    public void updateDayButtons() {
         Log.i(TAG, "updateDayButtons: " + lsitAvailableDays.toString());
         // Create a map to associate day names with their corresponding buttons
         Map<String, Button> dayButtonMap = new HashMap<>();
@@ -295,6 +317,13 @@ public class AddPlanMealFragment extends Fragment implements AddPlanMealFragment
         }
     }
 
+    @Override
+    public void updateWeekRangeText(String weekRange) {
+        weekRangeTextView.setText(weekRange);
+        selectedWeekRange = weekRange;
+
+    }
+
     private void selectDay(String day, Button button) {
         resetButtonBackgrounds();
         button.setBackgroundResource(R.drawable.day_button_backgroundv2);
@@ -310,46 +339,5 @@ public class AddPlanMealFragment extends Fragment implements AddPlanMealFragment
         butSaturday.setBackgroundResource(R.drawable.day_button_background);
         butSunday.setBackgroundResource(R.drawable.day_button_background);
     }
-    private void updateWeekRange() {
-        // Start of the week
-        Calendar startOfWeek = (Calendar) currentWeek.clone();
-        startOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        // End of the week
-        Calendar endOfWeek = (Calendar) startOfWeek.clone();
-        endOfWeek.add(Calendar.DAY_OF_WEEK, 6);
-        String weekRange = dateFormat.format(startOfWeek.getTime()) + " - " + dateFormat.format(endOfWeek.getTime());
-        weekRangeTextView.setText(weekRange);
 
-        selectedWeekRange = weekRange;
-
-        // List to store available days from the current day to Sunday
-        List<String> availableDays = new ArrayList<>();
-        // Date format for the day name (e.g., Monday, Tuesday)
-        SimpleDateFormat dayNameFormat = new SimpleDateFormat("EEEE", Locale.getDefault());
-
-        // Get the current day in the week
-        Calendar currentDay = Calendar.getInstance();
-        currentDay.set(Calendar.HOUR_OF_DAY, 0);
-        currentDay.set(Calendar.MINUTE, 0);
-        currentDay.set(Calendar.SECOND, 0);
-        currentDay.set(Calendar.MILLISECOND, 0);
-
-        // If the current day is before the start of the week, set it to start of the week
-        if (currentDay.before(startOfWeek)) {
-            currentDay = (Calendar) startOfWeek.clone();
-        }
-
-        // Iterate from the current day to the end of the week
-        while (!currentDay.after(endOfWeek)) {
-            String dayName = dayNameFormat.format(currentDay.getTime());
-            Log.i(TAG, "updateWeekRange: " + dayName);
-            availableDays.add(dayName);
-            currentDay.add(Calendar.DAY_OF_MONTH, 1);
-        }
-
-        Log.i(TAG, "updateWeekRange: " + availableDays.toString());
-        setAvailableDays(availableDays);
-        updateDayButtons();
-
-    }
 }

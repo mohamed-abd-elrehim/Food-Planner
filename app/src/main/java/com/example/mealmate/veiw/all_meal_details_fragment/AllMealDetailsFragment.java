@@ -85,6 +85,12 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
 
     private AllMealDetailsFragment_presenter presenter;
 
+    // Access UI elements in the custom layout
+    TextView title ;
+    TextView message;
+    Button goButton ;
+    Button cancelButton ;
+    AlertDialog dialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,6 +106,21 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // Create an instance of AlertDialog.Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        // Inflate the custom layout
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.custom_alert_dialog, null);
+        // Set the custom layout to the dialog
+        builder.setView(dialogView);
+        // Create and show the dialog
+        dialog = builder.create();
+
+        title = dialogView.findViewById(R.id.custom_title);
+        message = dialogView.findViewById(R.id.custom_message);
+        goButton = dialogView.findViewById(R.id.button_go);
+        cancelButton = dialogView.findViewById(R.id.button_cancel);
+
 
         stepsRecyclerView = view.findViewById(R.id.all_Meal_detil_mealDirections_recyclerView3);
         all_Meal_detil_ViewPager = view.findViewById(R.id.all_Meal_detil_ViewPager);
@@ -142,7 +163,6 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
                 MealRepository.getInstance(
                         LocalDataSourceImpl.getInstance(
                                 AppDataBase.getInstance(getContext()).getFavoriteMealDAO(),
-                                AppDataBase.getInstance(getContext()).getMealDAO(),
                                 AppDataBase.getInstance(getContext()).getMealPlanDAO()
                         ),
                         RemoteDataSourceImpl.getInstance()
@@ -285,20 +305,27 @@ public class AllMealDetailsFragment extends Fragment implements AllMealDetailsFr
 
     // Method to display the restricted access popup
     private void showRestrictedAccessDialog() {
-        new AlertDialog.Builder(getContext())
-                .setTitle("Sign Up for More Features")
-                .setMessage("Add your food preferences ,plan your meals and more!")
-                .setPositiveButton("Sign Up", (dialog, which) -> {
-                    Intent intent = new Intent(getContext(), MainActivity.class);
-                    intent.putExtra("destination_fragment", "startFragment");
-                    ;
-                    startActivity(intent);
-                    this.getActivity().finish();
-                })
-                .setNegativeButton("CANCEL", (dialog, which) -> {
-                    dialog.dismiss();
-                })
-                .show();
+
+        title.setText(R.string.sign_up_for_more_features);
+        message.setText(R.string.add_your_food_preferences_plan_your_meals_and_more);
+        goButton.setText(R.string.sign_up);
+        cancelButton.setText(R.string.cancel);
+
+        goButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), MainActivity.class);
+            intent.putExtra("destination_fragment", "startFragment");
+            ;
+            startActivity(intent);
+            this.getActivity().finish();
+
+        });
+        cancelButton.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+        dialog.show();
+
+
+
     }
 
     @Override

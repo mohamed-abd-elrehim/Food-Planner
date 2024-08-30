@@ -15,8 +15,11 @@ import com.example.mealmate.model.network.CustomMealResponse;
 import com.example.mealmate.model.network.network_Interface.NetworkCallback;
 import com.example.mealmate.veiw.add_plan_meal_fragment.add_plan_meal_fragment_veiw_interface.AddPlanMealFragmentVeiwInterface;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Response;
 
@@ -25,17 +28,15 @@ public class AddPlanMealFragmentPresenter implements AddPlanMealFragmentPresente
     private AddPlanMealFragmentVeiwInterface view;
     public static final String TAG = "AllMealDetailsFragment_presenter";
     MealRepository mealRepository;
-    AppDataBase appDataBase;
 
 
     private LiveData<MealDTO> mealDTO;
     private LiveData<List<MealMeasureIngredient>> mealMeasureIngredient;
     private LiveData<List<CustomMeal>> customMeals;
 
-    public AddPlanMealFragmentPresenter(AppDataBase appDataBase, MealRepository mealRepository, AddPlanMealFragmentVeiwInterface view) {
+    public AddPlanMealFragmentPresenter( MealRepository mealRepository, AddPlanMealFragmentVeiwInterface view) {
         this.view = view;
         this.mealRepository = mealRepository;
-        this.appDataBase = appDataBase;
         this.mealRepository.updateBaseUrl("https://www.themealdb.com/api/json/v1/1/");
     }
 
@@ -133,5 +134,46 @@ public class AddPlanMealFragmentPresenter implements AddPlanMealFragmentPresente
         return ingredientsList;
     }
 
+    public void updateWeekRange(Calendar currentWeek, SimpleDateFormat dateFormat) {
+        // Start of the week
+        Calendar startOfWeek = (Calendar) currentWeek.clone();
+        startOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        // End of the week
+        Calendar endOfWeek = (Calendar) startOfWeek.clone();
+        endOfWeek.add(Calendar.DAY_OF_WEEK, 6);
+        String weekRange = dateFormat.format(startOfWeek.getTime()) + " - " + dateFormat.format(endOfWeek.getTime());
+         view.updateWeekRangeText(weekRange);
+
+        // List to store available days from the current day to Sunday
+        List<String> availableDays = new ArrayList<>();
+        // Date format for the day name (e.g., Monday, Tuesday)
+        SimpleDateFormat dayNameFormat = new SimpleDateFormat("EEEE", Locale.getDefault());
+
+        // Get the current day in the week
+        Calendar currentDay = Calendar.getInstance();
+        currentDay.set(Calendar.HOUR_OF_DAY, 0);
+        currentDay.set(Calendar.MINUTE, 0);
+        currentDay.set(Calendar.SECOND, 0);
+        currentDay.set(Calendar.MILLISECOND, 0);
+
+        // If the current day is before the start of the week, set it to start of the week
+        if (currentDay.before(startOfWeek)) {
+            currentDay = (Calendar) startOfWeek.clone();
+        }
+
+        // Iterate from the current day to the end of the week
+        while (!currentDay.after(endOfWeek)) {
+            String dayName = dayNameFormat.format(currentDay.getTime());
+            Log.i(TAG, "updateWeekRange: " + dayName);
+            availableDays.add(dayName);
+            currentDay.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+        Log.i(TAG, "updateWeekRange: " + availableDays.toString());
+
+        view.setAvailableDays(availableDays);
+        view.updateDayButtons();
+
+    }
 
 }

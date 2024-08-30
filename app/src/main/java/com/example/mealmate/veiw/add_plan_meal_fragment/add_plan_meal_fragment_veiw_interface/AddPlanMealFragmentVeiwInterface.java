@@ -5,4 +5,8 @@ import java.util.List;
 public interface AddPlanMealFragmentVeiwInterface {
     void showData(List<CustomMeal> data);
     void showError(String errorMessage);
+    void updateDayButtons();
+    void updateWeekRangeText(String weekRange);
+    void setAvailableDays(List<String> days);
+
 }

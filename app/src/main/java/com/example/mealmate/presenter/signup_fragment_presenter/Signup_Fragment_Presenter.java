@@ -31,7 +31,7 @@ public class Signup_Fragment_Presenter implements Signup_Presenter_Interface {
                         if (task.isSuccessful()) {
                             saveUserData(name);
                         } else {
-                            view.onSignupFailure(R.string.sign_up_failed + task.getException().getMessage());
+                            view.onSignupFailure("Sign Up Failed" + task.getException().getMessage());
                             view.hideLoading();
                         }
                     });
@@ -45,26 +45,26 @@ public class Signup_Fragment_Presenter implements Signup_Presenter_Interface {
 
         db.collection("users").document(id).set(user)
                 .addOnSuccessListener(aVoid -> {
-                    view.onSignUpSuccess(String.valueOf(R.string.sign_in_successful));
+                    view.onSignUpSuccess("Sign-In successful");
                     view.hideLoading();
                 })
                 .addOnFailureListener(e -> {
-                    view.onSignupFailure(String.valueOf(R.string.sign_up_failed) + e.getMessage());
+                    view.onSignupFailure("Sign Up Failed" + e.getMessage());
                     view.hideLoading();
                 });
     }
 
     private boolean validateInputs(String email, String password, String confirmPassword) {
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            view.onSignupFailure(String.valueOf(R.string.please_enter_a_valid_email));
+            view.onSignupFailure("Please enter a valid email");
             return false;
         }
         if (password.isEmpty() || !isValidPassword(password)) {
-            view.onSignupFailure(String.valueOf(R.string.please_enter_a_valid_password));
+            view.onSignupFailure("Please enter a valid password");
             return false;
         }
         if (!password.equals(confirmPassword)) {
-            view.onSignupFailure(String.valueOf(R.string.passwords_do_not_match));
+            view.onSignupFailure("Passwords do not match");
             return false;
         }
         return true;

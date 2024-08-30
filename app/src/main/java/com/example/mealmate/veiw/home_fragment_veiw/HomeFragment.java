@@ -80,11 +80,10 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
 
 
 
-        presenter = new HomeFragmentPresenterImpl(AppDataBase.getInstance(getContext())
-                , MealRepository.getInstance(
+        presenter = new HomeFragmentPresenterImpl(
+                 MealRepository.getInstance(
                 LocalDataSourceImpl.getInstance(
                         AppDataBase.getInstance(getContext()).getFavoriteMealDAO(),
-                        AppDataBase.getInstance(getContext()).getMealDAO(),
                         AppDataBase.getInstance(getContext()).getMealPlanDAO()
                 ),
                 RemoteDataSourceImpl.getInstance()),

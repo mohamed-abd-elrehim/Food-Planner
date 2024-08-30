@@ -5,8 +5,8 @@
     <string name="start">Start</string>
     <string name="signupwithemail">Sign Up With Email</string>
     <string name="continuewithgoogle">Continue with Google</string>
-    <string name="alreadyhaveanaccountloginin">Already Have An Account? Login In</string>
-    <string name="loginin"> Login In</string>
+    <string name="alreadyhaveanaccountloginin">Already Have An Account? Login</string>
+    <string name="loginin"> Login</string>
     <string name="signup"> Sign Up</string>
     <string name="orusesocialsignup">or use social signup</string>
     <string name="name_hint">Name</string>

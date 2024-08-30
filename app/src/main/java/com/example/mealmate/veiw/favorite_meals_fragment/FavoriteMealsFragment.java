@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.mealmate.utils.NetworkUtils;
 import com.example.mealmate.veiw.favorite_meals_fragment.related_adapter_views.FavMealPagerAdapter;
 import com.example.mealmate.presenter.favorite_meals_fragment_presenter.FavoriteMealsFragmentPresenter;
 import com.example.mealmate.veiw.favorite_meals_fragment.favorite_meals_fragment_veiw_interface.FavoriteMealsFragmentVeiwInterface;
@@ -88,11 +89,10 @@ public class FavoriteMealsFragment extends Fragment implements FavoriteMealsFrag
         viewPager = view.findViewById(R.id.favorite_Meal_ViewPager);
         progressBar = view.findViewById(R.id.progressBar);
         navController = Navigation.findNavController(view);
-        presenter = new FavoriteMealsFragmentPresenter(AppDataBase.getInstance(getContext())
-                , MealRepository.getInstance(
+        presenter = new FavoriteMealsFragmentPresenter(
+                MealRepository.getInstance(
                 LocalDataSourceImpl.getInstance(
                         AppDataBase.getInstance(getContext()).getFavoriteMealDAO(),
-                        AppDataBase.getInstance(getContext()).getMealDAO(),
                         AppDataBase.getInstance(getContext()).getMealPlanDAO()
                 ),
                 RemoteDataSourceImpl.getInstance()),
@@ -131,11 +131,39 @@ public class FavoriteMealsFragment extends Fragment implements FavoriteMealsFrag
         cancelButton.setText(R.string.back_to_home);
 
         goButton.setOnClickListener(v -> {
-            navController.navigate(R.id.action_favoriteMealsFragment_to_searchFragment);
+            if (NetworkUtils.isNetworkAvailable(getContext())) {
+                navController.navigate(R.id.action_favoriteMealsFragment_to_searchFragment);
+                dialog.dismiss();
+            }else{
+                dialog.dismiss();
+                title.setText(R.string.open_internet_connection_for_more_features);
+                message.setText(R.string.add_your_food_preferences_plan_your_meals_and_more);
+                goButton.setText(R.string.ok);
+                cancelButton.setVisibility(View.GONE);
+
+                goButton.setOnClickListener(vs -> {
+                    dialog.dismiss();
+                });
+                dialog.show();
+            }
 
         });
         cancelButton.setOnClickListener(v -> {
-            navController.navigate(R.id.action_favoriteMealsFragment_to_homeFragment);
+            if (NetworkUtils.isNetworkAvailable(getContext())) {
+                navController.navigate(R.id.action_favoriteMealsFragment_to_homeFragment);
+                dialog.dismiss();
+            }else {
+                dialog.dismiss();
+                title.setText(R.string.open_internet_connection_for_more_features);
+                message.setText(R.string.add_your_food_preferences_plan_your_meals_and_more);
+                goButton.setText(R.string.ok);
+                cancelButton.setVisibility(View.GONE);
+
+                goButton.setOnClickListener(vs -> {
+                    dialog.dismiss();
+                });
+                dialog.show();
+            }
         });
         dialog.show();
 
@@ -164,6 +192,7 @@ public class FavoriteMealsFragment extends Fragment implements FavoriteMealsFrag
         goButton.setOnClickListener(v -> {
             presenter.deleteFavoriteMeal(favoriteMeal);
             refreshFragment();
+            dialog.dismiss();
          });
         cancelButton.setOnClickListener(v -> {
             dialog.dismiss();

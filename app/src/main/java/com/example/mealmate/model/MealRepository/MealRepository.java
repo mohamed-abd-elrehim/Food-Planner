@@ -94,10 +94,6 @@ public class MealRepository implements MealRepositoryInterface {
         return localDataSource.getPlanMealsForUserSync(email);
     }
 
-    @Override
-    public void deletePlanMeal(MealPlan mealPlan) {
-        localDataSource.deletePlanMeal(mealPlan);
-    }
 
     @Override
     public void deleteFavoriteMeal(FavoriteMeal favoriteMeal) {
@@ -124,10 +120,6 @@ public class MealRepository implements MealRepositoryInterface {
         return localDataSource.getFavoriteMealsForUserSync(email);
     }
 
-    @Override
-    public void deleteFavorite(FavoriteMeal favoriteMeal) {
-        localDataSource.deleteFavorite(favoriteMeal);
-    }
 
 
 }

@@ -141,17 +141,16 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
 
         // Initialize the presenter
         presenter = new Search_Fragment_PresenterImpl(
-                AppDataBase.getInstance(getContext()),
                 MealRepository.getInstance(
                         LocalDataSourceImpl.getInstance(
                                 AppDataBase.getInstance(getContext()).getFavoriteMealDAO(),
-                                AppDataBase.getInstance(getContext()).getMealDAO(),
                                 AppDataBase.getInstance(getContext()).getMealPlanDAO()
                         ),
                         RemoteDataSourceImpl.getInstance()
                 ),
                 this
         );
+
 
         // Setup meal list RecyclerView
         allMealPagerAdapter = new AllMealPagerAdapter(

@@ -25,12 +25,10 @@ public class Search_Fragment_PresenterImpl implements Search_Fragment_Presenter_
     private Search_Fragment_Veiw_Interface view;
     public static final String TAG = "Search_Fragment_PresenterImpl";
     MealRepository mealRepository;
-    AppDataBase appDataBase;
 
-    public Search_Fragment_PresenterImpl(AppDataBase appDataBase, MealRepository mealRepository, Search_Fragment_Veiw_Interface view) {
+    public Search_Fragment_PresenterImpl( MealRepository mealRepository, Search_Fragment_Veiw_Interface view) {
         this.view = view;
         this.mealRepository = mealRepository;
-        this.appDataBase = appDataBase;
         this.mealRepository.updateBaseUrl("https://www.themealdb.com/api/json/v1/1/");
     }
 

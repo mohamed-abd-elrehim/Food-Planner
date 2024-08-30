@@ -8,7 +8,6 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.example.mealmate.model.database.DAOs.FavoriteMealDAO;
-import com.example.mealmate.model.database.DAOs.MealDAO;
 import com.example.mealmate.model.database.DAOs.MealPlanDAO;
 import com.example.mealmate.model.mealDTOs.favorite_meals.FavoriteMeal;
 import com.example.mealmate.model.mealDTOs.all_meal_details.MealDTO;
@@ -21,7 +20,6 @@ public abstract class AppDataBase extends RoomDatabase {
     private static AppDataBase appDataBase = null;
 
     // Abstract methods for DAO access
-    public abstract MealDAO getMealDAO();
     public abstract FavoriteMealDAO getFavoriteMealDAO();
     public abstract MealPlanDAO getMealPlanDAO();
 

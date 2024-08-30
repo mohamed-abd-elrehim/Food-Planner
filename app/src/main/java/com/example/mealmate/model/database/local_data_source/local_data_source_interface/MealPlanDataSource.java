@@ -20,7 +20,5 @@ public interface MealPlanDataSource {
     void deleteMealPlan (MealPlan mealPlan);
     void insertAllPlanMeals(List<MealPlan> mealPlans);
     List<MealPlan> getPlanMealsForUserSync(String email);
-    void deletePlanMeal(MealPlan mealPlan);
-
 
 }

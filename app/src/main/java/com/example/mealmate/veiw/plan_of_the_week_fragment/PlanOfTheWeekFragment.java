@@ -1,7 +1,7 @@
+
 package com.example.mealmate.veiw.plan_of_the_week_fragment;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -23,6 +23,8 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.mealmate.receiver.NetworkChangeReceiver;
+import com.example.mealmate.utils.NetworkUtils;
 import com.example.mealmate.veiw.plan_of_the_week_fragment.plan_of_the_week_fragment_interface.Handel_Delete_Plans;
 import com.example.mealmate.veiw.plan_of_the_week_fragment.plan_of_the_week_fragment_interface.PlanHandelSeeMoreClick;
 import com.example.mealmate.veiw.plan_of_the_week_fragment.related_adpter.PlanMealPagerAdapter;
@@ -61,7 +63,6 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
     private ArrayList<MealDTO> filterMealDTOs = new ArrayList<>();
     private ArrayList<MealPlan> mealPlans = new ArrayList<>();
     private ArrayList<MealPlan> filterMealPlans = new ArrayList<>();
-    private ArrayList<String> weekRanges = new ArrayList<>();
     private SimpleDateFormat dateFormat;
     private int currentWeekIndex;
     private TextView weekRangeTextView;
@@ -70,19 +71,21 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
     private ImageButton nextWeekButton;
 
     private List<String> lsitAvailableDays;
+    private List<String> weekRanges;
 
 
     private static final String TAG = "PlanOfTheWeekFragment";
+    private static final String TAG2 = "PlanOfTheWeekFragment2";
 
     private NavController navController;
     private ProgressBar progressBar;
 
     private Button butAll, butMonday, butTuesday, butWednesday, butThursday, butFriday, butSaturday, butSunday;
     // Access UI elements in the custom layout
-    TextView title ;
+    TextView title;
     TextView message;
-    Button goButton ;
-    Button cancelButton ;
+    Button goButton;
+    Button cancelButton;
     AlertDialog dialog;
 
     @Override
@@ -110,6 +113,12 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
         // Create and show the dialog
         dialog = builder.create();
 
+
+        title = dialogView.findViewById(R.id.custom_title);
+        message = dialogView.findViewById(R.id.custom_message);
+        goButton = dialogView.findViewById(R.id.button_go);
+        cancelButton = dialogView.findViewById(R.id.button_cancel);
+
         viewPager = view.findViewById(R.id.favorite_Meal_ViewPager);
         progressBar = view.findViewById(R.id.progressBar);
         navController = Navigation.findNavController(view);
@@ -126,14 +135,13 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
         weekRangeTextView = view.findViewById(R.id.weekRangeTextView);
 
 
-        presenter = new PlanOfTheWeekFragmentPresenter(AppDataBase.getInstance(getContext())
-                , MealRepository.getInstance(
-                LocalDataSourceImpl.getInstance(
-                        AppDataBase.getInstance(getContext()).getFavoriteMealDAO(),
-                        AppDataBase.getInstance(getContext()).getMealDAO(),
-                        AppDataBase.getInstance(getContext()).getMealPlanDAO()
-                ),
-                RemoteDataSourceImpl.getInstance()),
+        presenter = new PlanOfTheWeekFragmentPresenter(
+                MealRepository.getInstance(
+                        LocalDataSourceImpl.getInstance(
+                                AppDataBase.getInstance(getContext()).getFavoriteMealDAO(),
+                                AppDataBase.getInstance(getContext()).getMealPlanDAO()
+                        ),
+                        RemoteDataSourceImpl.getInstance()),
 
                 this
         );
@@ -152,6 +160,8 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
         viewPager.setPageTransformer(new ZoomOutPageTransformer());
 
         presenter.getAllPlanOfWeeksMeals(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        presenter.getWeekRange(mealPlans);
+        presenter.getDays(mealPlans);
 
         // Set onClick listeners
 
@@ -164,17 +174,22 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
         butSaturday.setOnClickListener(v -> filterList("Saturday", butSaturday));
         butSunday.setOnClickListener(v -> filterList("Sunday", butSunday));
 
+
         dateFormat = new SimpleDateFormat("dd MMM", Locale.getDefault());
 
         // Initialize the current week index to the first week in the list
         currentWeekIndex = 0;
+
         // Display the current week range
         prevWeekButton.setOnClickListener(v -> {
             // Move to the previous week if possible
             if (currentWeekIndex > 0) {
                 currentWeekIndex--;
-                updateWeekRange(currentWeekIndex);
+                presenter.updateWeekRange(currentWeekIndex, weekRanges, dateFormat);
                 filterList(weekRanges.get(currentWeekIndex), null);
+                resetButtonBackgrounds();
+                presenter.getDays(filterMealPlans);
+                updateDayButtons();
             }
         });
 
@@ -182,47 +197,43 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
             // Move to the next week if possible
             if (currentWeekIndex < weekRanges.size() - 1) {
                 currentWeekIndex++;
-                updateWeekRange(currentWeekIndex);
+                presenter.updateWeekRange(currentWeekIndex, weekRanges, dateFormat);
                 filterList(weekRanges.get(currentWeekIndex), null);
-
+                resetButtonBackgrounds();
+                presenter.getDays(filterMealPlans);
+                updateDayButtons();
             }
         });
     }
 
 
-    private void updateWeekRange(int weekIndex) {
-        // Get the week range from the predefined list
-        String weekRange = weekRanges.get(weekIndex);
-        weekRangeTextView.setText(weekRange);
-        // Extract the start and end dates from the week range string
-        String[] dates = weekRange.split(" - ");
-        if (dates.length == 2) {
-            try {
-                // Parse the start and end dates
-                Date startDate = dateFormat.parse(dates[0]);
-                Date endDate = dateFormat.parse(dates[1]);
-                if (startDate != null && endDate != null) {
-                    Calendar startCalendar = Calendar.getInstance();
-                    startCalendar.setTime(startDate);
-
-                    Calendar endCalendar = Calendar.getInstance();
-                    endCalendar.setTime(endDate);
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
-
-    private void setAvailableDays(List<String> days) {
+    public void setAvailableDays(List<String> days) {
         lsitAvailableDays.clear();
         lsitAvailableDays.addAll(days);
         Log.i(TAG, "setAvailableDays: " + lsitAvailableDays.toString());
     }
 
-    private void updateDayButtons() {
+    @Override
+    public void updateWeekRangeText(String weekRange) {
+        weekRangeTextView.setText(weekRange);
+
+    }
+
+    @Override
+    public void setWeekRange(List<String> weekRanges) {
+        this.weekRanges.clear();
+        this.weekRanges.addAll(weekRanges);
+        Log.i(TAG2, "setWeekRange: " + weekRanges.toString());
+
+    }
+
+    @Override
+    public void setDay(List<String> days) {
+        this.lsitAvailableDays.clear();
+        this.lsitAvailableDays.addAll(days);
+    }
+
+    public void updateDayButtons() {
         Log.i(TAG, "updateDayButtons: " + lsitAvailableDays.toString());
 
         // Create a map to associate day names with their corresponding buttons
@@ -278,6 +289,8 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
             filterMealPlans.addAll(mealPlans);
             filterMealDTOs.addAll(mealDTOS);
             weekRangeTextView.setText("Select Week");
+            presenter.getDays(filterMealPlans);
+            updateDayButtons();
         } else {
             for (MealPlan mealPlan : mealPlans) {
                 boolean shouldAdd = dayName.contains("-")
@@ -296,9 +309,7 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
                 }
             }
         }
-        getDays(filterMealPlans);
-        updateDayButtons();
-        Log.i(TAG, "filterList:=== "+lsitAvailableDays.toString());
+        Log.i(TAG, "filterList:=== " + lsitAvailableDays.toString());
         planMealPagerAdapter.notifyDataSetChanged();
     }
 
@@ -317,16 +328,13 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
         filterMealPlans.addAll(planMeals);
         mealPlans.addAll(planMeals);
         mealDTOS.addAll(data);
-        getWeekRange(mealPlans);
-        getDays(mealPlans);
+        presenter.getWeekRange(mealPlans);
+        presenter.updateWeekRange(currentWeekIndex, weekRanges, dateFormat);
+        presenter.getDays(mealPlans);
         updateDayButtons();
-        updateWeekRange(currentWeekIndex);
-
-
         planMealPagerAdapter.notifyDataSetChanged();
         Log.i(TAG, "showData: " + mealDTOS.size() + mealDTOS.get(0).getStrMeal() + mealDTOS.get(0).getIdMeal()
                 + mealDTOS.get(0).getStrMealThumb() + mealDTOS.get(0).getStrArea() + mealDTOS.get(0).getStrCategory());
-
         Log.d(TAG, "showData: " + mealDTOS.size());
     }
 
@@ -355,54 +363,64 @@ public class PlanOfTheWeekFragment extends Fragment implements PlanOfWeekFragmen
 
         goButton.setOnClickListener(v -> {
             presenter.deletePlanMeal(mealPlan);
+            dialog.dismiss();
             refreshFragment();
+
         });
         cancelButton.setOnClickListener(v -> {
             dialog.dismiss();
         });
         dialog.show();
 
-      
 
     }
 
 
     @Override
     public void showError() {
+        Log.i(TAG2, "showError: "+NetworkUtils.isNetworkAvailable(getContext()));
+            title.setText(R.string.no_data_found);
+            message.setText(R.string.add_your_meals_to_plan_first);
+            goButton.setText(R.string.ok);
+            cancelButton.setText(R.string.back_to_home);
+            goButton.setOnClickListener(v -> {
+                if (NetworkUtils.isNetworkAvailable(getContext())) {
+                    navController.navigate(R.id.action_planOfTheWeekFragment_to_searchFragment);
+                    dialog.dismiss();
+                }else{
+                    dialog.dismiss();
+                    title.setText(R.string.open_internet_connection_for_more_features);
+                    message.setText(R.string.add_your_food_preferences_plan_your_meals_and_more);
+                    goButton.setText(R.string.ok);
+                    cancelButton.setVisibility(View.GONE);
 
-        title.setText(R.string.no_data_found);
-        message.setText(R.string.add_your_meals_to_plan_first);
-        goButton.setText(R.string.ok);
-        cancelButton.setText(R.string.back_to_home);
-        goButton.setOnClickListener(v -> {
-            navController.navigate(R.id.action_planOfTheWeekFragment_to_searchFragment);
+                    goButton.setOnClickListener(vs -> {
+                        dialog.dismiss();
+                    });
+                    dialog.show();
+                }
 
-        });
-        cancelButton.setOnClickListener(v -> {
-            navController.navigate(R.id.action_planOfTheWeekFragment_to_homeFragment);
-        });
-        dialog.show();
+            });
+            cancelButton.setOnClickListener(v -> {
+                if (NetworkUtils.isNetworkAvailable(getContext())) {
+                    navController.navigate(R.id.action_planOfTheWeekFragment_to_homeFragment);
+                    dialog.dismiss();
+                }else{
+                    dialog.dismiss();
+                    title.setText(R.string.open_internet_connection_for_more_features);
+                    message.setText(R.string.add_your_food_preferences_plan_your_meals_and_more);
+                    goButton.setText(R.string.ok);
+                    cancelButton.setVisibility(View.GONE);
+
+                    goButton.setOnClickListener(vs -> {
+                        dialog.dismiss();
+                    });
+                    dialog.show();
+                }
+            });
+            dialog.show();
     }
 
-    public void getWeekRange(ArrayList<MealPlan> mealPlans) {
-        weekRanges.add("Select Week");
-        for (MealPlan mealPlan : mealPlans) {
-            if (!weekRanges.contains(mealPlan.getDate())) {
-                weekRanges.add(mealPlan.getDate());
-            }
-            Log.i(TAG, "getWeekRange: " + weekRanges.toString());
-
-        }
-    }
-
-    public void getDays(ArrayList<MealPlan> mealPlans) {
-        for (MealPlan mealPlan : mealPlans) {
-            if (!lsitAvailableDays.contains(mealPlan.getDayOfWeek())) {
-                lsitAvailableDays.add(mealPlan.getDayOfWeek());
-            }
-
-        }
-    }
 
     public void refreshFragment() {
         navController.navigate(R.id.planOfTheWeekFragment);

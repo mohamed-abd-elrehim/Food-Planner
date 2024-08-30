@@ -24,12 +24,10 @@ public class HomeFragmentPresenterImpl implements HomeFragmentPresenterInterface
     private HomeFragmentView view;
     public static final String TAG = "HomeFragmentPresenterImpl";
     MealRepository mealRepository;
-    AppDataBase appDataBase;
 
-    public HomeFragmentPresenterImpl(AppDataBase appDataBase, MealRepository mealRepository, HomeFragmentView view) {
+    public HomeFragmentPresenterImpl( MealRepository mealRepository, HomeFragmentView view) {
         this.view = view;
         this.mealRepository = mealRepository;
-        this.appDataBase = appDataBase;
         this.mealRepository.updateBaseUrl("https://www.themealdb.com/api/json/v1/1/");
     }
 

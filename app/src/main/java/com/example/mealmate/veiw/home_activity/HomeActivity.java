@@ -33,8 +33,10 @@ import com.example.mealmate.model.MealRepository.MealRepository;
 import com.example.mealmate.model.database.AppDataBase;
 import com.example.mealmate.model.database.local_data_source.LocalDataSourceImpl;
 import com.example.mealmate.model.network.RemoteDataSourceImpl;
+import com.example.mealmate.presenter.home_activity_presenter.Home_Activity_Presenter;
 import com.example.mealmate.receiver.NetworkChangeReceiver;
 import com.example.mealmate.utils.NetworkUtils;
+import com.example.mealmate.veiw.home_activity.home_activity_interface.Home_Activity_Interface;
 import com.example.mealmate.veiw.main_activity.MainActivity;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -45,7 +47,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements Home_Activity_Interface {
     private static final String TAG = "HomeActivity";
     private DrawerLayout drawerLayout;
     private Intent intent;
@@ -65,12 +67,16 @@ public class HomeActivity extends AppCompatActivity {
     Button goButton;
     Button cancelButton;
     AlertDialog dialog;
+    private Home_Activity_Presenter presenter;
+    TextView name;
+    TextView email;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        presenter = new Home_Activity_Presenter(this);
 
 
         // Create an instance of AlertDialog.Builder
@@ -83,14 +89,15 @@ public class HomeActivity extends AppCompatActivity {
         // Create and show the dialog
         dialog = builder.create();
 
-        dataPresenter = new DataPresenter(AppDataBase.getInstance(this)
-                , MealRepository.getInstance(
-                LocalDataSourceImpl.getInstance(
-                        AppDataBase.getInstance(this).getFavoriteMealDAO(),
-                        AppDataBase.getInstance(this).getMealDAO(),
-                        AppDataBase.getInstance(this).getMealPlanDAO()
-                ),
-                RemoteDataSourceImpl.getInstance()));
+        dataPresenter = new DataPresenter(
+                MealRepository.getInstance(
+                        LocalDataSourceImpl.getInstance(
+                                AppDataBase.getInstance(this).getFavoriteMealDAO(),
+                                AppDataBase.getInstance(this).getMealPlanDAO()
+                        ),
+                        RemoteDataSourceImpl.getInstance()),
+                this
+                );
         // Initialize NetworkChangeReceiver
         networkChangeReceiver = new NetworkChangeReceiver(this::handleNetworkChange);
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -112,8 +119,8 @@ public class HomeActivity extends AppCompatActivity {
 
         // Set up the navigation drawer header
         View headerView = navigationView.getHeaderView(0);
-        TextView name = headerView.findViewById(R.id.profile_name);
-        TextView email = headerView.findViewById(R.id.profile_email);
+         name = headerView.findViewById(R.id.profile_name);
+         email = headerView.findViewById(R.id.profile_email);
         coordinatorLayout = findViewById(R.id.snakeBar);
 
 
@@ -224,33 +231,10 @@ public class HomeActivity extends AppCompatActivity {
             coordinatorLayout.setVisibility(View.VISIBLE);
             // Set a listener for item selections in the BottomNavigationView
 
-        }
-
-        else {
+        } else {
             coordinatorLayout.setVisibility(View.GONE);
 
-            // Fetch user data from Firebase
-            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-            Log.i(TAG, "onCreate: " + firebaseAuth.getCurrentUser().getUid());
-
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            String userId = firebaseAuth.getCurrentUser().getUid();
-            DocumentReference userRef = db.collection("users").document(userId);
-
-            userRef.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                        name.setText(document.getString("name"));
-                        email.setText(firebaseAuth.getCurrentUser().getEmail());
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            });
+              presenter.getUserData();
 
             // Handle menu item clicks
             navigationView.setNavigationItemSelectedListener(item -> {
@@ -263,7 +247,7 @@ public class HomeActivity extends AppCompatActivity {
                     cancelButton.setText(R.string.no);
 
                     goButton.setOnClickListener(v -> {
-                        firebaseAuth.signOut();
+                        presenter.logout();
                         Toast.makeText(this, R.string.logged_out, Toast.LENGTH_SHORT).show();
                         finish();
                         Intent intent = new Intent(this, MainActivity.class);
@@ -276,13 +260,12 @@ public class HomeActivity extends AppCompatActivity {
                     dialog.show();
 
 
-
                 } else if (id == R.id.nav_beckup) {
                     dataPresenter.backupData();
-                    Toast.makeText(this, R.string.backup_success, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Starting backup process. Please wait...", Toast.LENGTH_SHORT).show();
                 } else if (id == R.id.nav_restore) {
                     dataPresenter.restoreData();
-                    Toast.makeText(this, R.string.restore_success, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Backup process initiated. This may take a few moments...", Toast.LENGTH_SHORT).show();
                 }
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return true;
@@ -358,8 +341,8 @@ public class HomeActivity extends AppCompatActivity {
             this.finish();
         });
         cancelButton.setOnClickListener(v -> {
-            dialog.dismiss();
             isDialogShown = false;
+            dialog.dismiss();
         });
         dialog.show();
     }
@@ -429,7 +412,6 @@ public class HomeActivity extends AppCompatActivity {
                         dialog.show();
 
 
-
                     }, 100); // Adjust the delay as needed
                 });
             } else {
@@ -464,6 +446,22 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void updateProfile(String name, String email) {
+        this.email.setText(email);
+        this.name.setText(name);
+    }
+
+    @Override
+    public void onSuccess(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onFailure(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+
+    }
 }
 
 

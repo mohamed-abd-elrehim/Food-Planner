@@ -21,7 +21,6 @@ public class FavoriteMealsFragmentPresenter implements FavoriteMealsFragmentPres
     private FavoriteMealsFragmentVeiwInterface view;
     private static final String TAG = "FavoriteMealsFragment_presenter";
     private MealRepository mealRepository;
-    private AppDataBase appDataBase;
 
     private LiveData<List<MealDTO>> allMeals;
     private LiveData<List<FavoriteMeal>> favoriteMeal;
@@ -31,10 +30,9 @@ public class FavoriteMealsFragmentPresenter implements FavoriteMealsFragmentPres
     private boolean isDataProcessed = false;
 
 
-    public FavoriteMealsFragmentPresenter(AppDataBase appDataBase, MealRepository mealRepository, FavoriteMealsFragmentVeiwInterface view) {
+    public FavoriteMealsFragmentPresenter( MealRepository mealRepository, FavoriteMealsFragmentVeiwInterface view) {
         this.view = view;
         this.mealRepository = mealRepository;
-        this.appDataBase = appDataBase;
         this.mealRepository.updateBaseUrl("https://www.themealdb.com/api/json/v1/1/");
     }
 

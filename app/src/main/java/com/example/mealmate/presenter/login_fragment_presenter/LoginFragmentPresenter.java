@@ -56,7 +56,7 @@ public class LoginFragmentPresenter implements LoginFragmentPresenterInterface {
                         saveUserData(user);
                     }
                 })
-                .addOnFailureListener(e -> view.onLoginFailure(String.valueOf(R.string.login_failed)));
+                .addOnFailureListener(e -> view.onLoginFailure("Login Failed"));
     }
 
     @Override
@@ -69,8 +69,8 @@ public class LoginFragmentPresenter implements LoginFragmentPresenterInterface {
 
         db.collection("users").document(user.getUid())
                 .set(userData)
-                .addOnSuccessListener(aVoid -> view.onLoginSuccess(String.valueOf(R.string.user_data_saved_successfully)))
-                .addOnFailureListener(e -> view.onUserDataSaveFailure(String.valueOf(R.string.user_data_save_failed) + e.getMessage()));
+                .addOnSuccessListener(aVoid -> view.onLoginSuccess("User Data Saved Successfully"))
+                .addOnFailureListener(e -> view.onUserDataSaveFailure("User Data Saved Failed" + e.getMessage()));
     }
 
     private boolean validateInputs(String email, String password) {
