@@ -1,5 +1,6 @@
 package com.example.mealmate.veiw.home_fragment_veiw;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -15,6 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mealmate.model.MealArea;
@@ -59,11 +62,30 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
     private ArrayList<MealArea> areaFilterList = new ArrayList<>();
     private List<MealDTO> meals = new ArrayList<>();
     private static final String TAG = "HomeFragment";
+    String mode=null;
+    // Access UI elements in the custom layout
+    TextView title;
+    TextView message;
+    Button goButton;
+    Button cancelButton;
+    AlertDialog dialog;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Retrieve the string passed through the bundle
+        if (getArguments() != null) {
+            mode = getArguments().getString("user_type");
+            Log.i("user_type2", "onCreateView: "+mode);
+        }
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.fragment_home, container, false);
+
     }
 
     @Override
@@ -79,6 +101,19 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         meals=new ArrayList<>();
 
 
+        // Create an instance of AlertDialog.Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        // Inflate the custom layout
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.custom_alert_dialog, null);
+        // Set the custom layout to the dialog
+        builder.setView(dialogView);
+        // Create and show the dialog
+        dialog = builder.create();
+        title = dialogView.findViewById(R.id.custom_title);
+        message = dialogView.findViewById(R.id.custom_message);
+        goButton = dialogView.findViewById(R.id.button_go);
+        cancelButton = dialogView.findViewById(R.id.button_cancel);
 
         presenter = new HomeFragmentPresenterImpl(
                  MealRepository.getInstance(
@@ -108,10 +143,15 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         presenter.loadMealsArea();
 
         mealOfTheDayPagerAdapter = new MealOfTheDayPagerAdapter(getContext(), meals, meal -> {
-           HomeFragmentDirections.ActionHomeFragmentToAllMealDetailsFragment action =
-                   HomeFragmentDirections.actionHomeFragmentToAllMealDetailsFragment(meal.getIdMeal(),"homeFragment");
-            navController.navigate(action);
-            Toast.makeText(getContext(), meal.getStrMeal(), Toast.LENGTH_SHORT).show();
+
+           if ("guest".equals(mode)) {
+               showRestrictedAccessDialog();
+           }else{
+               HomeFragmentDirections.ActionHomeFragmentToAllMealDetailsFragment action =
+                       HomeFragmentDirections.actionHomeFragmentToAllMealDetailsFragment(meal.getIdMeal(),"homeFragment");
+               navController.navigate(action);
+               Toast.makeText(getContext(), meal.getStrMeal(), Toast.LENGTH_SHORT).show();
+           }
         });
         viewPager.setAdapter(mealOfTheDayPagerAdapter);
         viewPager.setPageTransformer(new ZoomOutPageTransformer());
@@ -126,6 +166,9 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
                         HomeFragmentDirections.ActionHomeFragmentToSearchFragment action = HomeFragmentDirections.actionHomeFragmentToSearchFragment();
                         action.setFilterName(((MealCategory) meal).getStrCategory());
                         action.setFilterType("category");
+                        if (mode!=null && mode.equals("guest")){
+                            action.setUserType(mode);
+                        }
                         navController.navigate(action);
                         Log.i(TAG, "createFilterAdapter: "+ ((MealCategory) meal).getStrCategory());
                         Toast.makeText(getContext(), ((MealCategory) meal).getStrCategory(), Toast.LENGTH_SHORT).show();
@@ -133,12 +176,18 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
                         HomeFragmentDirections.ActionHomeFragmentToSearchFragment action = HomeFragmentDirections.actionHomeFragmentToSearchFragment();
                         action.setFilterName(((MealIngredient) meal).getStrIngredient());
                         action.setFilterType("ingredient");
+                        if (mode!=null && mode.equals("guest")){
+                            action.setUserType(mode);
+                        }
                         navController.navigate(action);
                         Toast.makeText(getContext(), ((MealIngredient) meal).getStrIngredient(), Toast.LENGTH_SHORT).show();
                     }else if (type.equals(MealArea.class)) {
                         HomeFragmentDirections.ActionHomeFragmentToSearchFragment action = HomeFragmentDirections.actionHomeFragmentToSearchFragment();
                         action.setFilterName(((MealArea) meal).getStrArea());
                         action.setFilterType("area");
+                        if (mode!=null && mode.equals("guest")){
+                            action.setUserType(mode);
+                        }
                         navController.navigate(action);
                         Toast.makeText(getContext(), ((MealArea) meal).getStrArea(), Toast.LENGTH_SHORT).show();
                     }
@@ -178,6 +227,35 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
     }
 
 
+    // Method to display the restricted access popup
+    private void showRestrictedAccessDialog() {
+
+        title.setText(R.string.sign_up_for_more_features);
+        message.setText(R.string.add_your_food_preferences_plan_your_meals_and_more);
+        goButton.setText(R.string.sign_up);
+        cancelButton.setText(R.string.cancel);
+
+        goButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), MainActivity.class);
+            intent.putExtra("destination_fragment", "startFragment");
+
+            // Start the MainActivity
+            if (getContext() != null) {
+                getContext().startActivity(intent);
+
+                // Finish the current Activity if this method is called within an Activity
+                if (getActivity() != null) {
+                    getActivity().finish();
+                }
+            }
+        });
+
+        cancelButton.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        dialog.show();
+    }
 
 
 }

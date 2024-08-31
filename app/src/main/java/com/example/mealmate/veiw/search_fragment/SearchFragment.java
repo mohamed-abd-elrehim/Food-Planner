@@ -1,10 +1,13 @@
 package com.example.mealmate.veiw.search_fragment;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -17,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.SearchView;
 
+import com.example.mealmate.veiw.main_activity.MainActivity;
 import com.example.mealmate.veiw.search_fragment.related_adapter_views.AllMealPagerAdapter;
 import com.example.mealmate.veiw.search_fragment.related_adapter_views.FilterAdapter;
 import com.example.mealmate.R;
@@ -62,9 +66,22 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
     private String filterName;
     private String filterType;
 
+    String mode = null;
+    // Access UI elements in the custom layout
+    TextView title;
+    TextView message;
+    Button goButton;
+    Button cancelButton;
+    AlertDialog dialog;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Retrieve the string passed through the bundle
+        if (getArguments() != null) {
+            mode = getArguments().getString("user_type");
+        }
+
     }
 
     @Override
@@ -84,15 +101,32 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
         searchView = view.findViewById(R.id.searchView);
         suggestionsRecyclerView = view.findViewById(R.id.suggestionsRecyclerView);
         fallbackMessage = view.findViewById(R.id.fallbackMessage);
-
+        // Create an instance of AlertDialog.Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        // Inflate the custom layout
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.custom_alert_dialog, null);
+        // Set the custom layout to the dialog
+        builder.setView(dialogView);
+        // Create and show the dialog
+        dialog = builder.create();
+        title = dialogView.findViewById(R.id.custom_title);
+        message = dialogView.findViewById(R.id.custom_message);
+        goButton = dialogView.findViewById(R.id.button_go);
+        cancelButton = dialogView.findViewById(R.id.button_cancel);
 
 
         suggestionsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         suggestionsAdapter = new SuggestionsAdapter<>(getContext(), new ArrayList<>(), item -> {
             if (item instanceof MealDTO) {
-                SearchFragmentDirections.ActionSearchFragmentToAllMealDetailsFragment action = SearchFragmentDirections.actionSearchFragmentToAllMealDetailsFragment(((MealDTO) item).getIdMeal(), "searchFragment");
-                NavController navController = Navigation.findNavController(requireView());
-                navController.navigate(action);
+                if (mode!=null&&mode.equals("guest")) {
+                    showRestrictedAccessDialog();
+                }else
+                {
+                    SearchFragmentDirections.ActionSearchFragmentToAllMealDetailsFragment action = SearchFragmentDirections.actionSearchFragmentToAllMealDetailsFragment(((MealDTO) item).getIdMeal(), "searchFragment");
+                    NavController navController = Navigation.findNavController(requireView());
+                    navController.navigate(action);
+                }
 
             } else if (item instanceof MealCategory) {
                 presenter.loadFilteredCategoriess(((MealCategory) item).getStrCategory());
@@ -100,15 +134,15 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
                 searchView.setQuery("", false);
 
 
-
             } else if (item instanceof MealIngredient) {
                 presenter.loadFilteredIngredient(((MealIngredient) item).getStrIngredient());
                 searchView.clearFocus();
                 searchView.setQuery("", false);
+            }else if (item instanceof MealArea) {
+                presenter.loadFilteredArea(((MealArea) item).getStrArea());
+                searchView.clearFocus();
+                searchView.setQuery("", false);
             }
-
-
-
 
             // Handle item click
         });
@@ -125,6 +159,7 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
                 // Handle query submission
                 return false;
             }
+
             @Override
             public boolean onQueryTextChange(String newText) {
                 // Handle empty query
@@ -181,8 +216,6 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
             else if (filterType.equals("area"))
                 presenter.loadFilteredArea(filterName);
         }
-
-
 
 
         // Set up filter button actions
@@ -310,11 +343,47 @@ public class SearchFragment extends Fragment implements Search_Fragment_Veiw_Int
     public void onSeeMoreClick(String id) {
         Log.i(TAG, "onSeeMoreClick: " + id);
         if (id != null) {
-            SearchFragmentDirections.ActionSearchFragmentToAllMealDetailsFragment action = SearchFragmentDirections.actionSearchFragmentToAllMealDetailsFragment(id,"searchFragment");
-            NavController navController = Navigation.findNavController(requireView());
-            navController.navigate(action);
+            if (mode!=null&&mode.equals("guest")) {
+                showRestrictedAccessDialog();
+
+            }else
+            {
+                SearchFragmentDirections.ActionSearchFragmentToAllMealDetailsFragment action = SearchFragmentDirections.actionSearchFragmentToAllMealDetailsFragment(id, "searchFragment");
+                NavController navController = Navigation.findNavController(requireView());
+                navController.navigate(action);
+            }
 
         }
 
+    }
+
+    // Method to display the restricted access popup
+    private void showRestrictedAccessDialog() {
+
+        title.setText(R.string.sign_up_for_more_features);
+        message.setText(R.string.add_your_food_preferences_plan_your_meals_and_more);
+        goButton.setText(R.string.sign_up);
+        cancelButton.setText(R.string.cancel);
+
+        goButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), MainActivity.class);
+            intent.putExtra("destination_fragment", "startFragment");
+
+            // Start the MainActivity
+            if (getContext() != null) {
+                getContext().startActivity(intent);
+
+                // Finish the current Activity if this method is called within an Activity
+                if (getActivity() != null) {
+                    getActivity().finish();
+                }
+            }
+        });
+
+        cancelButton.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 }

@@ -16,6 +16,11 @@
         <action
             android:id="@+id/action_homeFragment_to_allMealDetailsFragment"
             app:destination="@id/allMealDetailsFragment" />
+        <argument
+            android:name="user_type"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -32,6 +37,11 @@
             android:defaultValue="@null" />
         <argument
             android:name="filterType"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="user_type"
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null" />

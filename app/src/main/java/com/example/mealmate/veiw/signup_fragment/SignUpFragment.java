@@ -39,7 +39,15 @@ public class SignUpFragment extends Fragment implements SignUpFragmentViewInterf
     private final String TAG = "SignUpFragment";
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+
         return inflater.inflate(R.layout.fragment_sign_up, container, false);
     }
 
@@ -50,11 +58,6 @@ public class SignUpFragment extends Fragment implements SignUpFragmentViewInterf
 
         presenter = new Signup_Fragment_Presenter(this);
 
-        ImageView imageView = view.findViewById(R.id.blurredImagesignupView);
-        Glide.with(this)
-                .load(R.drawable.signupscreenbackground)
-                .apply(RequestOptions.bitmapTransform(new BlurTransformation(25, 1)))
-                .into(imageView);
 
         sginupEmail = view.findViewById(R.id.email_input);
         sginupPassword = view.findViewById(R.id.password_input);

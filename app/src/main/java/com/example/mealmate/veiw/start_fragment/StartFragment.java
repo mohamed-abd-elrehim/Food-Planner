@@ -135,14 +135,6 @@ public class StartFragment extends Fragment {
 
 
 
-
-
-        ImageView imageView = view.findViewById(R.id.blurredImageView);
-        Glide.with(this)
-                .load(R.drawable.startscreenbacground)
-                .apply(RequestOptions.bitmapTransform(new BlurTransformation(25, 1)))
-                .into(imageView);
-
         signupWithEmail = view.findViewById(R.id.signupwithemailBTU);
         continueWithGoogle = view.findViewById(R.id.continuewithgoogle);
         login = view.findViewById(R.id.alreadyhaveanaccountloginin);

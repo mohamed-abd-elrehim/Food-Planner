@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:contentDescription="@string/image_description"
         android:scaleType="centerCrop"
-        android:src="@drawable/signupscreenbackground"
+        android:src="@drawable/blursignupscreenbackground"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="-38dp" />
 

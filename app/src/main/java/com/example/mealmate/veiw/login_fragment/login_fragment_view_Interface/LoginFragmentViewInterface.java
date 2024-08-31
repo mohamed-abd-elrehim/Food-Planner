@@ -9,5 +9,4 @@ public interface LoginFragmentViewInterface {
     void onLoginSuccess(String message);
     void onLoginFailure(String message);
     void onUserDataSaveFailure(String errorMessage);
-    void saveUserDetails(FirebaseUser user);
 }

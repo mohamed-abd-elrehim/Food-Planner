@@ -14,7 +14,7 @@
         android:background="@android:drawable/screen_background_dark_transparent"
         android:contentDescription="@string/image_description"
         android:scaleType="centerCrop"
-        android:src="@drawable/startscreenbacground" />
+        android:src="@drawable/blurstartscreenbacground" />
 
     <!-- CardView on top of the ImageView -->
     <androidx.cardview.widget.CardView

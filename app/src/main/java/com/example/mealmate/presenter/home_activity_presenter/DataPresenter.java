@@ -100,12 +100,16 @@ public class DataPresenter implements DataRepository {
                         (mealPlans != null ? mealPlans.size() : 0)
         );
 
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
         if (favoriteMeals != null) {
             for (FavoriteMeal favoriteMeal : favoriteMeals) {
                 processMeal(favoriteMeal.getMealId(), allMeals, allMealMeasureIngredients, remainingMeals,
                         () -> performBackup(favoriteMeals, null, allMeals, allMealMeasureIngredients));
             }
         }
+        }, 2000); // Adjust delay as necessary
+
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
 
         if (mealPlans != null) {
             for (MealPlan mealPlan : mealPlans) {
@@ -113,7 +117,9 @@ public class DataPresenter implements DataRepository {
                         () -> performBackup(null, mealPlans, allMeals, allMealMeasureIngredients));
             }
         }
+        }, 2000); // Adjust delay as necessary
 
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
         if (remainingMeals.get() == 0) {
             performBackup(
                     favoriteMeals != null ? favoriteMeals : null,
@@ -122,7 +128,9 @@ public class DataPresenter implements DataRepository {
                     allMealMeasureIngredients.isEmpty() ? null : allMealMeasureIngredients
             );
         }
-    }
+    }, 3000); // Adjust delay as necessary
+
+}
 
     private void processMeal(String mealId, List<MealDTO> allMeals, List<MealMeasureIngredient> allMealMeasureIngredients,
                              AtomicInteger remainingMeals, Runnable onComplete) {
@@ -171,11 +179,11 @@ public class DataPresenter implements DataRepository {
                         .set(favoriteMealsData, SetOptions.merge())
                         .addOnSuccessListener(aVoid -> {
                             Log.d(TAG, "Favorite meals backup successful");
-                            view.onSuccess("Favorite meals backup successful");
+                            //view.onSuccess("Favorite meals backup successful");
                         })
                         .addOnFailureListener(e -> {
                             Log.e(TAG, "Error backing up favorite meals", e);
-                            view.onFailure("Error backing up favorite meals");
+                            //view.onFailure("Error backing up favorite meals");
                         });
             }
 
@@ -187,11 +195,11 @@ public class DataPresenter implements DataRepository {
                         .set(mealPlansData, SetOptions.merge())
                         .addOnSuccessListener(aVoid -> {
                             Log.d(TAG, "Meal plans backup successful");
-                            view.onSuccess("Meal plans backup successful");
+                         //   view.onSuccess("Meal plans backup successful");
                         })
                         .addOnFailureListener(e -> {
                             Log.e(TAG, "Error backing up meal plans", e);
-                            view.onFailure("Error backing up meal plans");
+                           // view.onFailure("Error backing up meal plans");
                         });
             }
 
@@ -203,11 +211,11 @@ public class DataPresenter implements DataRepository {
                         .set(mealsData, SetOptions.merge())
                         .addOnSuccessListener(aVoid -> {
                             Log.d(TAG, "Meals backup successful");
-                            view.onSuccess("Meals backup successful");
+                            //view.onSuccess("Meals backup successful");
                         })
                         .addOnFailureListener(e -> {
                             Log.e(TAG, "Error backing up meals", e);
-                            view.onFailure("Error backing up meals");
+                           // view.onFailure("Error backing up meals");
                         });
             }
 
@@ -219,11 +227,11 @@ public class DataPresenter implements DataRepository {
                         .set(ingredientsData, SetOptions.merge())
                         .addOnSuccessListener(aVoid -> {
                             Log.d(TAG, "Ingredients backup successful");
-                            view.onSuccess("Ingredients backup successful");
+                            view.onSuccess(" backup successful");
                         })
                         .addOnFailureListener(e -> {
                             Log.e(TAG, "Error backing up ingredients", e);
-                            view.onFailure("Error backing up ingredients");
+                            view.onFailure("Error backing up ");
                         });
             }
 
@@ -283,12 +291,12 @@ public class DataPresenter implements DataRepository {
 
                                 default:
                                     Log.e(TAG, "Unknown document ID: " + documentId);
-                                    view.onFailure("Unknown document ID: " + documentId);
+                                    view.onFailure("Failed to restore data");
                                     break;
                             }
                         } catch (JsonSyntaxException e) {
                             Log.e(TAG, "JSON parsing error: ", e);
-                            view.onFailure("JSON parsing error: " + e.getMessage());
+                            view.onFailure("Failed to restore data");
                         }
                     }
 
@@ -304,22 +312,22 @@ public class DataPresenter implements DataRepository {
                                        List<MealDTO> meals, List<MealMeasureIngredient> mealMeasureIngredients) {
         if (favoriteMeals != null) {
             mealRepository.insertAllFavoriteMeals(favoriteMeals);
-            view.onSuccess("Favorite meals restored successfully");
+           // view.onSuccess("Favorite meals restored successfully");
         }
 
         if (mealPlans != null) {
             mealRepository.insertAllPlanMeals(mealPlans);
-            view.onSuccess("Meal plans restored successfully");
+            //view.onSuccess("Meal plans restored successfully");
         }
 
         if (meals != null) {
                 mealRepository.insertAllMeals(meals);
-                view.onSuccess("Meals restored successfully");
+                //view.onSuccess("Meals restored successfully");
         }
 
         if (mealMeasureIngredients != null) {
             mealRepository.insertAllIngredients(mealMeasureIngredients);
-            view.onSuccess("Ingredients restored successfully");
+            view.onSuccess("Favorite meals restored successfully");
         }
     }
 }

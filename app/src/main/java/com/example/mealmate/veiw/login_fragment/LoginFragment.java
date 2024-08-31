@@ -59,9 +59,11 @@ public class LoginFragment extends Fragment implements LoginFragmentViewInterfac
     private static final Pattern PASSWORD_PATTERN = Pattern.compile(
             "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$"
     );
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         // Configure Google Sign-In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -83,11 +85,9 @@ public class LoginFragment extends Fragment implements LoginFragmentViewInterfac
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ImageView imageView = view.findViewById(R.id.blurredImageLoginView);
-        Glide.with(this)
-                .load(R.drawable.logninscreenbackground)
-                .apply(RequestOptions.bitmapTransform(new BlurTransformation(25, 1)))
-                .into(imageView);
+
+
+
 
         loginEmail = view.findViewById(R.id.email_input_login);
         loginPassword = view.findViewById(R.id.password_input_login);
@@ -154,8 +154,7 @@ public class LoginFragment extends Fragment implements LoginFragmentViewInterfac
     }
 
     @Override
-    public void hideLoading()
-    {
+    public void hideLoading() {
         progressBar.setVisibility(View.GONE);
     }
 
@@ -178,16 +177,6 @@ public class LoginFragment extends Fragment implements LoginFragmentViewInterfac
         Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
     }
 
-    @Override
-    public void saveUserDetails(FirebaseUser user) {
-        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("user_id", user.getUid());
-        editor.putString("user_name", user.getDisplayName());
-        editor.putString("user_email", user.getEmail());
-        editor.putString("user_photo_url", user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : null);
-        editor.apply();
-    }
 
     private void startHomeActivity() {
         Intent intent = new Intent(getActivity(), HomeActivity.class);

@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.MealMate" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <item name="colorPrimary">@color/Marigold</item>
-        <item name="colorPrimaryVariant">@color/Marigold</item>
+        <item name="colorPrimary">@color/startScreenBackgroundColor</item>
+        <item name="colorPrimaryVariant">@color/startScreenBackgroundColor</item>
 
     </style>
 

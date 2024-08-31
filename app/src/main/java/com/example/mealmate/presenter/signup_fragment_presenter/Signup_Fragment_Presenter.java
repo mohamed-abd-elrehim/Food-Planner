@@ -45,11 +45,11 @@ public class Signup_Fragment_Presenter implements Signup_Presenter_Interface {
 
         db.collection("users").document(id).set(user)
                 .addOnSuccessListener(aVoid -> {
-                    view.onSignUpSuccess("Sign-In successful");
+                    view.onSignUpSuccess("Sign-Up successful");
                     view.hideLoading();
                 })
                 .addOnFailureListener(e -> {
-                    view.onSignupFailure("Sign Up Failed" + e.getMessage());
+                    view.onSignupFailure("Sign-Up Failed" + e.getMessage());
                     view.hideLoading();
                 });
     }

@@ -97,11 +97,12 @@ public class HomeActivity extends AppCompatActivity implements Home_Activity_Int
                         ),
                         RemoteDataSourceImpl.getInstance()),
                 this
-                );
+        );
         // Initialize NetworkChangeReceiver
         networkChangeReceiver = new NetworkChangeReceiver(this::handleNetworkChange);
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(networkChangeReceiver, filter);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment2);
 
         // Retrieve the Intent that started this activity
         intent = getIntent();
@@ -109,6 +110,15 @@ public class HomeActivity extends AppCompatActivity implements Home_Activity_Int
         extraValue = intent.getStringExtra("user_type");
         Log.i(TAG, "onCreate: " + extraValue);
 
+        if (extraValue != null) {
+            if (extraValue.equals("guest")) {
+                Bundle bundle = new Bundle();
+                // Pass the string to the fragment via a bundle
+                bundle.putString("user_type", "guest");
+                Log.i("extraValue", "onCreate: " + bundle);
+                navController.navigate(R.id.homeFragment, bundle);
+            }
+        }
 
         Toolbar toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
@@ -119,10 +129,20 @@ public class HomeActivity extends AppCompatActivity implements Home_Activity_Int
 
         // Set up the navigation drawer header
         View headerView = navigationView.getHeaderView(0);
-         name = headerView.findViewById(R.id.profile_name);
-         email = headerView.findViewById(R.id.profile_email);
+        name = headerView.findViewById(R.id.profile_name);
+        email = headerView.findViewById(R.id.profile_email);
         coordinatorLayout = findViewById(R.id.snakeBar);
 
+
+        // Listen for navigation changes
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            // Check the destination and adjust visibility
+            if (destination.getId() == R.id.homeFragment) {
+                coordinatorLayout.setVisibility(View.VISIBLE);
+            } else {
+                coordinatorLayout.setVisibility(View.GONE);
+            }
+        });
 
         // Correctly initialize BottomNavigationView and BottomAppBar
         bottomNavigationView = findViewById(R.id.bottom_navigationView);
@@ -131,7 +151,7 @@ public class HomeActivity extends AppCompatActivity implements Home_Activity_Int
         message = dialogView.findViewById(R.id.custom_message);
         goButton = dialogView.findViewById(R.id.button_go);
         cancelButton = dialogView.findViewById(R.id.button_cancel);
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment2);
+
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
         if (NetworkUtils.isNetworkAvailable(this)) {
@@ -160,20 +180,7 @@ public class HomeActivity extends AppCompatActivity implements Home_Activity_Int
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-                if (item.getItemId() == R.id.nav_addplanmeal) {
-                    if (!NetworkUtils.isNetworkAvailable(HomeActivity.this)) {
-                        showNetWorkDialog();
-                        return false;
-                    }
-                    if ("guest".equals(extraValue)) {
-                        coordinatorLayout.setVisibility(View.GONE);
-                        navController.navigate(R.id.searchFragment);
-                        return true;
-                    }
-                    // Navigate to SearchFragment
-                    navController.navigate(R.id.searchFragment);
-                    return true;
-                } else if (item.getItemId() == R.id.homeFragment) {
+                if (item.getItemId() == R.id.homeFragment) {
                     if (!NetworkUtils.isNetworkAvailable(HomeActivity.this)) {
                         showNetWorkDialog();
                         return false;
@@ -181,7 +188,9 @@ public class HomeActivity extends AppCompatActivity implements Home_Activity_Int
 
                     if ("guest".equals(extraValue)) {
                         coordinatorLayout.setVisibility(View.VISIBLE);
-                        navController.navigate(R.id.homeFragment);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("user_type", "guest");
+                        navController.navigate(R.id.homeFragment,bundle);
                         return true;
                     }
 
@@ -195,7 +204,9 @@ public class HomeActivity extends AppCompatActivity implements Home_Activity_Int
                     }
                     if ("guest".equals(extraValue)) {
                         coordinatorLayout.setVisibility(View.GONE);
-                        navController.navigate(R.id.searchFragment);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("user_type", "guest");
+                        navController.navigate(R.id.searchFragment, bundle);
                         return true;
                     }
                     // Navigate to SearchFragment
@@ -234,7 +245,7 @@ public class HomeActivity extends AppCompatActivity implements Home_Activity_Int
         } else {
             coordinatorLayout.setVisibility(View.GONE);
 
-              presenter.getUserData();
+            presenter.getUserData();
 
             // Handle menu item clicks
             navigationView.setNavigationItemSelectedListener(item -> {
