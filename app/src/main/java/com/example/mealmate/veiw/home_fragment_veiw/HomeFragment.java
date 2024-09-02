@@ -157,6 +157,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         viewPager.setPageTransformer(new ZoomOutPageTransformer());
     }
 
+
     private <T> ListAllFilterAdapter<T> createFilterAdapter(List<T> filterList, Class<T> type) {
         return new ListAllFilterAdapter<>(
                 getContext(),

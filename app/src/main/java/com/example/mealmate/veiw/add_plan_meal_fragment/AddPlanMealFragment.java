@@ -50,6 +50,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 public class AddPlanMealFragment extends Fragment implements AddPlanMealFragmentVeiwInterface {
 
@@ -175,8 +176,14 @@ public class AddPlanMealFragment extends Fragment implements AddPlanMealFragment
             }
         });
 
-
         dateFormat = new SimpleDateFormat("dd MMM", Locale.getDefault());
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Africa/Cairo"));
+        Date currentDate = new Date();
+
+        String formattedDate = dateFormat.format(currentDate);
+
+
+        Log.i("mohammed", "onViewCreated: "+formattedDate);
 
         // Initialize the current week starting from Monday
         currentWeek = Calendar.getInstance();

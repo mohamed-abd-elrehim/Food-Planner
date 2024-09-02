@@ -405,7 +405,13 @@ public class HomeActivity extends AppCompatActivity implements Home_Activity_Int
 
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (networkChangeReceiver != null) {
+            unregisterReceiver(networkChangeReceiver);
+        }
+    }
     private void handleNetworkChange(boolean isConnected) {
         if (!isConnected) {
             if ("guest".equals(extraValue)) {

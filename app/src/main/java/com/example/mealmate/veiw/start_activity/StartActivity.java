@@ -1,12 +1,15 @@
 package com.example.mealmate.veiw.start_activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -37,13 +40,13 @@ public class StartActivity extends AppCompatActivity {
     Button cancelButton ;
     AlertDialog dialog;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_start);
+
+
 
         // Create an instance of AlertDialog.Builder
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

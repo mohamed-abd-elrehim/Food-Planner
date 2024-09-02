@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import retrofit2.Response;
 
@@ -135,22 +136,39 @@ public class AddPlanMealFragmentPresenter implements AddPlanMealFragmentPresente
     }
 
     public void updateWeekRange(Calendar currentWeek, SimpleDateFormat dateFormat) {
+        // Set Cairo time zone
+        TimeZone cairoTimeZone = TimeZone.getTimeZone("Africa/Cairo");
+
+        // Set time zone for the current week calendar
+        currentWeek.setTimeZone(cairoTimeZone);
+
         // Start of the week
         Calendar startOfWeek = (Calendar) currentWeek.clone();
+        startOfWeek.setTimeZone(cairoTimeZone);
         startOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+
         // End of the week
         Calendar endOfWeek = (Calendar) startOfWeek.clone();
+        endOfWeek.setTimeZone(cairoTimeZone);
         endOfWeek.add(Calendar.DAY_OF_WEEK, 6);
+
+        // Set the Cairo time zone for the date format
+        dateFormat.setTimeZone(cairoTimeZone);
+
+        // Create the week range string
         String weekRange = dateFormat.format(startOfWeek.getTime()) + " - " + dateFormat.format(endOfWeek.getTime());
-         view.updateWeekRangeText(weekRange);
+        view.updateWeekRangeText(weekRange);
 
         // List to store available days from the current day to Sunday
         List<String> availableDays = new ArrayList<>();
+
         // Date format for the day name (e.g., Monday, Tuesday)
         SimpleDateFormat dayNameFormat = new SimpleDateFormat("EEEE", Locale.getDefault());
+        dayNameFormat.setTimeZone(cairoTimeZone);
 
         // Get the current day in the week
         Calendar currentDay = Calendar.getInstance();
+        currentDay.setTimeZone(cairoTimeZone);
         currentDay.set(Calendar.HOUR_OF_DAY, 0);
         currentDay.set(Calendar.MINUTE, 0);
         currentDay.set(Calendar.SECOND, 0);
